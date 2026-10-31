@@ -10,4 +10,5 @@
 |- 2026-10-31 PR #11 Cisco Catalyst 9300X IOS-XE StackWise/Port-channel/VLAN merged (squash)
 |- 2026-10-31 PR #12 TP-Link Omada SX6632YF MSTP/LAG/VLAN merged (squash) — แก้ CLI reference ลวง (รายงานว่ามี แต่ไม่มีในไฟล์)
 |- 2026-10-31 PR #13 FortiAnalyzer 150G FAZ log ไม่เข้า/disk เต็ม/ADOM merged (squash) — families ไม่ใช่ fortinet_fortios (ต้องไม่ใส่), execute add/clear/disk-quota เป็น config ไม่อยู่ในบล็อกคำสั่งตรวจ
+|- 2026-10-31 PR #14 Cisco C1300 Stack/Port-channel/VLAN merged (squash) — PR ดีที่สุดใน repo: ทุกคำสั่งมีลิงก์ CLI Guide จริงทุกหน้า, syntax C1300 จริง, families ถูก cisco_sb
 |- 2026-10-31 check_playbook.py: ERROR อัตโนมัติ (ไม่มีคำสั่งตรวจ / บล็อกโค้ดอื่น / ตัวอย่าง output / อักษรจีน / commit ใน Huawei S) + ล้างตัวอย่าง output / commit ที่ค้างใน port-mirroring, ACL

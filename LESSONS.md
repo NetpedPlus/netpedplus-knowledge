@@ -22,3 +22,4 @@
 |- PR #12: ห้ามแนะนำ BPDU Filter / ปิดการป้องกัน loop เป็นวิธีแก้
 |- PR #13: families ต้องตรงกับ OS ของอุปกรณ์จริง (FortiAnalyzer ≠ FortiOS) — ถ้าไม่มี family ที่ตรง ให้เว้นว่างแล้วใช้ triggers + vendor แทน fortinet_fortios
 |- PR #13: คำสั่ง execute ... add / clear / disk-quota เป็นคำสั่งเปลี่ยนค่า config ห้ามอยู่ในบล็อกคำสั่งตรวจ
+|- PR #14: ต้องเช็คเอกสารของรุ่นนั้นจริงๆ ทุกคำสั่งต้องเจอในเอกสารของรุ่นนั้น (C1300 ≠ C9300X CLI)
