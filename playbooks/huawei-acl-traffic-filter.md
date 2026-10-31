@@ -2,7 +2,7 @@
 id: huawei-acl-traffic-filter
 title: Huawei S12700E / S5731 ACL / traffic-filter (traffic ถูกบล็อก)
 families: huawei_vrp_s
-triggers: huawei acl, traffic-filter, display acl, acl rule match, acl match counter, acl rule hit, traffic blocked by acl, acl permit deny, acl number 2001, acl number 3000, acl configuration, acl check
+triggers: huawei acl, traffic-filter, display acl, s12700e, s5731
 vendor: Huawei
 versions: VRP V200R019C00 ขึ้นไป (S12700, S12700E, S5731, S5735)
 sources: https://support.huawei.com/enterprise/doc/EDOC1100213165/configuring-acl-based-packet-filtering
@@ -16,12 +16,14 @@ sources: https://support.huawei.com/enterprise/doc/EDOC1100213165/configuring-ac
 ```
 display acl all
 display acl name <acl-name>
-display traffic-filter statistics
+display traffic-filter applied-record
+display traffic-filter statistics interface <interface> inbound
 ```
 อ่านผล:
 - `display acl all`: ดู acl ทุกตัว — จำนวน rule, rule ID, match-counter, time-range (Active/Inactive)
 - `display acl name <acl-name>`: ดู acl เฉพาะตัว — rule ID, source/destination IP, permit/deny, match-counter
-- `display traffic-filter statistics`: ดู traffic-filter statistics — acl, interface, direction, hit count
+- `display traffic-filter applied-record`: ดูว่า ACL ไหนถูก apply ที่ interface / VLAN ไหน ทิศทางไหน
+- `display traffic-filter statistics interface <interface> inbound`: ดูจำนวน packet ที่ match / ถูก deny ของ traffic-filter บน interface นั้น (outbound ใช้ outbound)
 - ตัวอย่าง match-counter ใน display acl:
 ```
 Advanced ACL 3000, 1 rule
@@ -35,9 +37,9 @@ rule 5 deny ip source 10.0.0.0 0.0.0.255 destination 10.0.0.1 0 time-range satim
 4. traffic-filter ยังไม่ได้ apply ไปยัง interface ที่ต้องการ
 วิธีแก้:
 - แก้ ACL rule: `acl 3000` → `rule 5 permit ip source 10.0.0.0 0.0.0.255` → `quit` (เอกสาร: Configuring ACL-based Packet Filtering, Huawei S12700 Configuration Guide V200)
-- แก้ match-order: `traffic policy <policy-name> match-order config` (เอกสาร: Configuring ACL-based Packet Filtering, Huawei S12700 Configuration Guide V200)
+- ลำดับการ match ของ rule: `acl number 3000 match-order { config | auto }` (config = ตามเลข rule, auto = เฉพาะเจาะจงก่อน; ตั้งได้ตอนสร้าง ACL) (เอกสาร: Configuring ACL-based Packet Filtering, Huawei S12700 Configuration Guide V200)
 - ลบ rule: `acl 3000` → `undo rule 5` → `quit` (เอกสาร: Configuring ACL-based Packet Filtering, Huawei S12700 Configuration Guide V200)
-- ตรวจสอบ traffic-filter: `display traffic-filter statistics` (เอกสาร: Configuring ACL-based Packet Filtering, Huawei S12700 Configuration Guide V200)
+- ตรวจสอบ traffic-filter: `display traffic-filter statistics interface <interface> inbound` (เอกสาร: Configuring ACL-based Packet Filtering, Huawei S12700 Configuration Guide V200)
 ที่มา: Configuring ACL-based Packet Filtering (Huawei S12700 Configuration Guide V200) https://support.huawei.com/enterprise/doc/EDOC1100213165/configuring-acl-based-packet-filtering
 
 ## ACL / traffic-filter | สร้าง ACL และ apply traffic-filter บน interface
@@ -46,11 +48,13 @@ rule 5 deny ip source 10.0.0.0 0.0.0.255 destination 10.0.0.1 0 time-range satim
 คำสั่งตรวจ:
 ```
 display acl all
-display traffic-filter statistics
+display traffic-filter applied-record
+display traffic-filter statistics interface <interface> inbound
 ```
 อ่านผล:
 - `display acl all`: ดู acl ทุกตัว — จำนวน rule, rule ID, source/destination IP, permit/deny, match-counter
-- `display traffic-filter statistics`: ดู traffic-filter statistics — acl, interface, direction, hit count
+- `display traffic-filter applied-record`: ดูว่า ACL ไหนถูก apply ที่ interface / VLAN ไหน ทิศทางไหน
+- `display traffic-filter statistics interface <interface> inbound`: ดูจำนวน packet ที่ match / ถูก deny ของ traffic-filter บน interface นั้น (outbound ใช้ outbound)
 - acl number range (IPv4):
   - 2000-2999: Basic ACL (source IP only)
   - 3000-3031: Advanced ACL (source+destination IP+port)
