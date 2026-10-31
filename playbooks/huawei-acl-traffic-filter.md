@@ -24,12 +24,6 @@ display traffic-filter statistics interface <interface> inbound
 - `display acl name <acl-name>`: ดู acl เฉพาะตัว — rule ID, source/destination IP, permit/deny, match-counter
 - `display traffic-filter applied-record`: ดูว่า ACL ไหนถูก apply ที่ interface / VLAN ไหน ทิศทางไหน
 - `display traffic-filter statistics interface <interface> inbound`: ดูจำนวน packet ที่ match / ถูก deny ของ traffic-filter บน interface นั้น (outbound ใช้ outbound)
-- ตัวอย่าง match-counter ใน display acl:
-```
-Advanced ACL 3000, 1 rule
-Acl's step is 5
-rule 5 deny ip source 10.0.0.0 0.0.0.255 destination 10.0.0.1 0 time-range satime (match-counter 42) (Active)
-```
 สาเหตุที่พบบ่อย:
 1. ACL rule 5 deny ip source/destination — traffic ตรงกับ condition แล้วถูก deny
 2. ACL rule มี time-range ที่ active/ inactive — traffic ถูกบล็อกเฉพาะเวลา

@@ -42,6 +42,7 @@ def check(p: pathlib.Path, ids: dict) -> tuple[list, list]:
             err.append(f"families '{f}' ไม่มีในโปรแกรม")
     if p.name.startswith("_"):
         warn.append("ชื่อไฟล์ขึ้นต้นด้วย _ โปรแกรมจะไม่โหลด")
+    huawei_s = "huawei_vrp_s" in head.get("families", "")
     secs = re.split(r"^## ", t[m.end():], flags=re.M)[1:]
     if not secs:
         err.append("ไม่มีหัวข้อ ## เลย")
@@ -60,6 +61,19 @@ def check(p: pathlib.Path, ids: dict) -> tuple[list, list]:
         if len(s) > 2600:
             err.append(f"{tag} ยาว {len(s)} ตัวอักษร (เกิน ~2,500 ให้แยกหัวข้อ)")
         blk = re.search(r"^คำสั่งตรวจ:\s*\n```[^\n]*\n(.*?)```", s, re.S | re.M)
+        if not blk:
+            err.append(f"{tag} ไม่มีบล็อก คำสั่งตรวจ: (อ่านอย่างเดียว) — ย้าย config ไป 'วิธีแก้' แล้วใส่ show / get / display แทน อย่าลบบล็อก")
+        fences = [m.start() for m in re.finditer(r"(?m)^```", s)]
+        for k in range(0, len(fences) - 1, 2):                       # ทุกบล็อกโค้ดต้องเป็น "คำสั่งตรวจ:" (โปรแกรมอ่านทุกบรรทัดในบล็อกเป็นคำสั่ง)
+            prev = s[:fences[k]].rstrip("\n").rsplit("\n", 1)[-1].strip()
+            if not prev.startswith("คำสั่งตรวจ"):
+                err.append(f"{tag} มีบล็อกโค้ดที่ไม่ใช่ คำสั่งตรวจ: (บรรทัดก่อนบล็อก: '{prev[:30]}') — คำสั่ง config ใส่ใน `...` ในวิธีแก้, ตัวอย่าง output ห้ามใส่")
+        if re.search(r"[\u4e00-\u9fff\u3040-\u30ff]", s):
+            err.append(f"{tag} มีอักษรจีน / ญี่ปุ่นปน — ใช้ไทย / อังกฤษเท่านั้น")
+        if re.search(r"ตัวอย่าง\s*output|example output|sample output", s, re.I):
+            err.append(f"{tag} มี 'ตัวอย่าง output' — ห้ามใส่ output ที่ไม่ได้คัดลอกจากเอกสาร (LESSONS)")
+        if huawei_s and any(re.search(r"\bcommit\b", ln) and not re.search(r"ไม่ต้อง|ไม่มี|ไม่ใช้|ห้าม", ln) for ln in s.splitlines()):
+            err.append(f"{tag} มี `commit` — Huawei S series (VRP V200) คำสั่งมีผลทันที ไม่มี commit (ใช้ save)")
         if blk:
             for line in blk.group(1).splitlines():
                 if WRITE.search(line):

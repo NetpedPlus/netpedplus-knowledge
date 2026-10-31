@@ -8,3 +8,4 @@
 - 2026-10-31 PR #9 FortiGate 7.4 Traffic Shaping / QoS merged (squash) — เพิ่ม LESSONS.md ข้อ 14, 15, 16
 - 2026-10-31 PR #10 H3C S6520X Comware 7 IRF/BAGG/VLAN merged (squash)
 - 2026-10-31 PR #11 Cisco Catalyst 9300X IOS-XE StackWise/Port-channel/VLAN merged (squash)
+- 2026-10-31 check_playbook.py: ERROR อัตโนมัติ (ไม่มีคำสั่งตรวจ / บล็อกโค้ดอื่น / ตัวอย่าง output / อักษรจีน / commit ใน Huawei S) + ล้างตัวอย่าง output / commit ที่ค้างใน port-mirroring, ACL

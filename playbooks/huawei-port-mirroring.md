@@ -43,23 +43,9 @@ display port-mirroring
 อ่านผล:
 - `display observe-port`: ดู observing port ที่ config ไว้ — `Index` (1-8), `Interface` (พอร์ตที่ใช้งานเป็น observing port), `Untag-packet` (No/Yes), `Forwarding` (Yes/No)
 - `display port-mirroring`: ดู Port-mirror section — `Mirror-port` (พอร์ตที่ mirror), `Direction` (Inbound/Outbound/Both), `Observe-port` (index ของ observing port)
-- ตัวอย่าง output:
-```
-display port-mirroring
-----------------------------------------------------------------------
-Observe-port 1 : GigabitEthernet1/0/1
-----------------------------------------------------------------------
-Port-mirror:
-----------------------------------------------------------------------
-Mirror-port         Direction    Observe-port
-----------------------------------------------------------------------
-GigabitEthernet1/0/2  Inbound     Observe-port 1
-----------------------------------------------------------------------
-```
 สาเหตุที่พบบ่อย:
 1. observe-port index ไม่ตรงกับ port-mirroring config
 2. Direction ไม่ถูก — ต้องใช้ `both` ถ้าต้องการทั้ง inbound และ outbound
-3. observe-port ยังไม่ได้ commit — config ไม่生效
 วิธีแก้:
 - แก้ observe-port config: `system-view` → `observe-port 1 interface gigabitethernet 1/0/1`
 - แก้ mirrored port direction: `interface gigabitethernet 1/0/2` → `port-mirroring to observe-port 1 both` (เอกสาร: Configuring Mirroring, Huawei S Series Troubleshooting Guide V200)
