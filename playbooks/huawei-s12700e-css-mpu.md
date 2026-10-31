@@ -55,7 +55,7 @@ display patch-information
 2. ISSU switchover timeout — ต้อง run `css issu switchover` ก่อน rollback timer expire
 3. ISSU confirm timeout — ต้อง run `css issu confirm` หลัง switchover เสร็จ
 4. Version ไม่รองรับ fast upgrade — ตรวจ software package support
-5. Standby chassis ไม่มี MPU → fast upgrade cancel ได้, cancel หลัง 10 นาที
+5. Standby chassis ไม่มี MPU → fast upgrade อาจถูกยกเลิก (ดูเงื่อนไขในหน้า Upgrading CSS Software)
 วิธีแก้:
 - ตรวจ ISSU feasibility ก่อน upgrade: `css issu check <system-file>`
 - Start ISSU: `css issu start <system-file>` (automatic) หรือ `css issu start rollback-timer <timer> <system-file>` (manual)
