@@ -14,3 +14,7 @@
 - PR #9: ก่อนสร้าง branch ใหม่ต้อง `git checkout main && git pull` เสมอ และ PR ต้องแก้แค่ไฟล์ของเรื่องนั้น (เช็กด้วย `git diff --stat origin/main`)
 - PR #10: ห้ามใส่ตัวอย่าง output ที่ไม่ได้คัดลอกจากเอกสาร
 - PR #10: ห้ามเดา syntax ของยี่ห้อหนึ่งจากอีกยี่ห้อ (Comware ≠ Huawei VRP) ทุกคำสั่งต้องเจอในเอกสารของยี่ห้อนั้น
+- PR #11: ก่อน push ทุกครั้งให้รัน `grep -n "ตัวอย่าง output" playbooks/*.md` ถ้าเจอ = ลบก่อน push
+- PR #11: show port-channel เป็นของ NX-OS ไม่ใช่ IOS-XE
+- PR #11: switch priority เป็นคำสั่ง EXEC ไม่ใช่ config
+- PR #11: flag ของ etherchannel ผิด (SU ≠ S,U — ต้องตรวจเอกสารจริง)
