@@ -36,3 +36,6 @@
 - PR #17: ห้ามแนะนำ auto firmware upgrade บน production — คำสั่ง `config system auto-update / set firmware-update` ไม่มีจริง และการอัปเดตอัตโนมัติอาจทำให้ device ล่มในกรณีที่ upgrade path ผิดหรือ firmware มี bug
 - PR #17: ห้ามมี code block (``` ...) ใน "วิธีแก้:" — ให้เขียนคำสั่งเป็น inline format เหมือน playbook อื่น (เช่น `config system admin`, `edit "name"`, `set trusthost1 ...` บนบรรทัดปกติ)
 - PR #18: two-factor มีแค่ fortitoken / fortitoken-cloud / email / sms (ไม่มี totp / rsa) / virtual-patch ใส่ใน local-in policy ที่ accept เท่านั้น / syslog TLS ต้อง mode reliable + enc-algorithm
+- PR #20: DoS policy ทำงานก่อน VIP/DNAT ให้ dstaddr เป็น IP ภายนอก / ตัวอย่าง DoS ให้เริ่มด้วย action pass + log ก่อน block
+- PR #20: reputation-minimum 4 ขึ้นไปตัดเว็บส่วนใหญ่ (ระดับ 3 = unverified) / ISDB คือ update-ffdb ไม่ใช่ update-extdb
+- PR #20: policy deny ไม่ match traffic ไป VIP ถ้าไม่ set match-vip enable / FortiGate match ตามลำดับในรายการ ไม่ใช่เลข ID
