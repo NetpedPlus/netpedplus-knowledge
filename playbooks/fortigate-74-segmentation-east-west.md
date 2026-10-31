@@ -54,7 +54,6 @@ show firewall policy
 - ไม่ต้องสร้าง policy ขากลับ: FortiGate เป็น stateful reply ของ session ที่อนุญาตแล้วผ่านอัตโนมัติ
 - ท้ายรายการมี implicit deny อยู่แล้ว ถ้าต้องการ log สิ่งที่ถูก implicit deny ให้เปิด `config log setting`, `set fwpolicy-implicit-log enable`, `end`
 - ชื่อ service ให้ตรวจจากเครื่องก่อนใช้ (`show firewall service custom`) หรือสร้าง custom service ตาม port จริง
-- สร้าง policy Deny ทั้งหมดท้ายสุด: `config firewall policy`, `edit 0`, `set name "DENY-ALL-SERVER"`, `set srcintf "SERV-ZONE"`, `set dstintf "SERV-ZONE"`, `set srcaddr "all"`, `set dstaddr "all"`, `set service "ALL"`, `set action deny`, `set schedule always`, `set logtraffic all`, `next`, `end`
 - ตั้งค่า UTM: `utm-status` ต้องเป็น `enable` ถ้าต้องการใช้ security profiles
 - ห้ามใช้ `any` ใน srcintf/dstintf และ `all` ใน srcaddr/dstaddr ของ policy east-west: ใช้ zone และ address object เฉพาะเจาะจง
 
@@ -110,19 +109,17 @@ show firewall profile-group
 อาการ: ต้องตรวจว่า traffic จาก <src> ไป <dst> ตรงกับ policy ไหน
 คำสั่งตรวจ:
 ```
-diagnose firewall iprope lookup <src_ip> <src_port> <dst_ip> <dst_port> <protocol> <src_intf> policy
+diagnose firewall iprope lookup <src_ip> <src_port> <dst_ip> <dst_port> <protocol> <src_intf>
 ```
 อ่านผล:
 - `diagnose firewall iprope lookup` จะแสดง policy index (policy ID) ที่ match, uuid, action, zone info, source/destination address/service ที่ match
 - ถ้า lookup ไม่ match ที่คาดไว้ ให้ใช้ debug flow (ในวิธีแก้) ดูทีละ packet ว่าเจอ route / policy ไหน
-ที่มา: [Policy lookup — FortiOS 7.4.x Admin Guide](https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/656084/firewall-policy), [diagnose firewall iprope lookup — FortiOS 7.6.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.6.4/cli-reference/253375604/diagnose-firewall)
+ที่มา: [Policy lookup — FortiOS 7.4.x Admin Guide](https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/656084/firewall-policy)
 วิธีแก้:
-- ตรวจ policy match: `diagnose firewall iprope lookup <src-ip> <src-port> <dst-ip> <dst-port> <protocol> <src-intf> policy` (เปลี่ยน <src_intf> เป็น interface name ที่ traffic เข้า)
-- ผลลัพธ์จะแสดง policy index (เช่น `policy index=2 uuid_idx=1300 action=accept`) — ต้องตรงกับ policy ที่ตั้งใจ
+- ผลจะแสดง policy ที่ match (เช่น `policy index=<id> ... action=accept`) ต้องตรงกับ policy ที่ตั้งใจ
 - debug flow (ส่ง traffic จริงแล้วดู): `diagnose debug flow filter clear`, `diagnose debug flow filter addr <dst_ip>`, `diagnose debug flow show function-name enable`, `diagnose debug enable`, `diagnose debug flow trace start 20`
 - ในผล debug ดูบรรทัด `find a route` (ออก interface ไหน) และ `Allowed by Policy-<id>` หรือ `Denied by forward policy check`
 - ระวัง: ปิดทุกครั้งหลังใช้: `diagnose debug flow trace stop`, `diagnose debug disable` (debug ค้างไว้กิน CPU)
-- ตรวจสอบว่า security profiles ถูกผูก: ใน debug flow ต้องเห็น IPS/AV profile names ที่ถูกใช้
 
 ---
 

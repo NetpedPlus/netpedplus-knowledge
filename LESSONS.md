@@ -39,11 +39,12 @@
 - PR #20: DoS policy ทำงานก่อน VIP/DNAT ให้ dstaddr เป็น IP ภายนอก / ตัวอย่าง DoS ให้เริ่มด้วย action pass + log ก่อน block
 - PR #20: reputation-minimum 4 ขึ้นไปตัดเว็บส่วนใหญ่ (ระดับ 3 = unverified) / ISDB คือ update-ffdb ไม่ใช่ update-extdb
 - PR #20: policy deny ไม่ match traffic ไป VIP ถ้าไม่ set match-vip enable / FortiGate match ตามลำดับในรายการ ไม่ใช่เลข ID
-|- PR #21: F5 AWAF ตั้งค่าเกือบทั้งหมดใน GUI ถ้าไม่เจอคำสั่ง tmsh ในหน้า tmsh reference ให้ใช้ "ตรวจใน GUI:" ห้ามเดาคำสั่ง show/list
-|- PR #21: ห้ามใช้เมนูของ BIG-IQ อ้างเป็น BIG-IP / ห้ามแนะนำให้แก้ไฟล์ระบบในอุปกรณ์ ให้อ้าง K article + เปิดเคส vendor
-|- PR #22: `set logsession disable` ไม่มีจริงใน FortiOS — ไม่มี option นี้ใน firewall policy / FortiOS เปิด log traffic ด้วย `set logtraffic all` เพียงอย่างเดียว
-|- PR #22: `get route all` ไม่มีจริง — ใช้ `get router info routing-table all` แทน
-|- PR #22: `diagnose debug flow test enable`, `diagnose debug flow show flow_list` ไม่มีจริง — ใช้ `diagnose debug flow filter clear` → `filter addr` → `show function-name enable` → `debug enable` → `trace start N` แทน
-|- PR #22: FortiGate ไม่มี concept `reverse-path check` — ใช้ `stateful inspection` (default) ซึ่ง session established จะ auto-allow ขากลับโดยอัตโนมัติ
-|- PR #22: ไม่มี interface ชื่อ `all` ใน FortiOS — ห้ามใช้ `set srcintf "all"` หรือ `set dstintf "all"` ให้ระบุ zone หรือ interface จริง
-|- PR #22: FortiGate match policy ตามลำดับบนลงล่าง (list order) ไม่ใช่ตามเลข policy ID — อธิบายให้ชัดในวิธีแก้
+- PR #21: F5 AWAF ตั้งค่าเกือบทั้งหมดใน GUI ถ้าไม่เจอคำสั่ง tmsh ในหน้า tmsh reference ให้ใช้ "ตรวจใน GUI:" ห้ามเดาคำสั่ง show/list
+- PR #21: ห้ามใช้เมนูของ BIG-IQ อ้างเป็น BIG-IP / ห้ามแนะนำให้แก้ไฟล์ระบบในอุปกรณ์ ให้อ้าง K article + เปิดเคส vendor
+- PR #22: `set logsession disable` ไม่มีจริงใน FortiOS — ไม่มี option นี้ใน firewall policy / FortiOS เปิด log traffic ด้วย `set logtraffic all` เพียงอย่างเดียว
+- PR #22: `get route all` ไม่มีจริง — ใช้ `get router info routing-table all` แทน
+- PR #22: `diagnose debug flow test enable`, `diagnose debug flow show flow_list` ไม่มีจริง — ใช้ `diagnose debug flow filter clear` → `filter addr` → `show function-name enable` → `debug enable` → `trace start N` แทน
+- PR #22: FortiGate **ทำ** reverse-path (RPF / anti-spoofing) check — ห้ามเขียนว่าไม่ทำ / เรื่อง reply traffic ให้ใช้คำว่า stateful (session ที่อนุญาตแล้ว ขากลับผ่านเอง)
+- PR #22: ไม่มี interface ชื่อ `all` ใน FortiOS — ห้ามใช้ `set srcintf "all"` หรือ `set dstintf "all"` ให้ระบุ zone หรือ interface จริง
+- PR #22: FortiGate match policy ตามลำดับบนลงล่าง (list order) ไม่ใช่ตามเลข policy ID — อธิบายให้ชัดในวิธีแก้
+- PR #22 (หลัง merge): แก้ conflict แล้วเอาข้อความที่ Claude ลบไปแล้วกลับมา (DENY-ALL, `iprope lookup ... policy`, ลิงก์ 7.6.4) และ merge commit ที่ Claude ยังไม่ได้ตรวจ — ถ้ามี conflict / แก้เพิ่มหลัง "ผ่าน พร้อม merge" ต้องให้ Claude ตรวจใหม่ก่อน merge เสมอ ห้าม force push ทับ commit ของ Claude

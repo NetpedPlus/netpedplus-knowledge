@@ -129,6 +129,12 @@ def main():
         for x in w:
             print("  WARN ", x)
         bad += bool(e)
+    les = ROOT / "LESSONS.md"
+    if les.exists():
+        pipe = [n for n, ln in enumerate(les.read_text(encoding="utf-8").splitlines(), 1) if ln.startswith("|- ")]
+        if pipe:
+            print(f"FAIL LESSONS.md\n  ERROR บรรทัด {', '.join(map(str, pipe[:10]))} ขึ้นต้นด้วย '|- ' ให้แก้เป็น '- '")
+            bad += 1
     print(f"\nตรวจ {len(files)} ไฟล์, ต้องแก้ {bad} ไฟล์")
     sys.exit(1 if bad else 0)
 

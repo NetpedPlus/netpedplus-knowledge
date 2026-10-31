@@ -35,6 +35,9 @@ WARN	*	\bset intf "?any"?	local-in บน intf any เสี่ยงตัด H
 WARN	*	\bset reputation-minimum [345]\b	ค่า 3 ขึ้นไปตัดเว็บที่ยังไม่ verified (ส่วนใหญ่ของอินเทอร์เน็ต) (PR #20)
 WARN	*	\bset asymroute enable\b	ปิด stateful inspection ทั้ง VDOM ห้ามแนะนำเป็นวิธีแก้ถาวร (PR #22)
 WARN	*	"deep-inspection"	traffic ขาเข้า server ของเราเองห้ามใช้ deep-inspection สำเร็จรูป (ใช้ cert ของ server / certificate-inspection) (PR #16)
+ERROR	*	\biprope lookup\b[^\n`]*\bpolicy\b	iprope lookup ไม่มีคำว่า policy ต่อท้าย: `diagnose firewall iprope lookup <src> <sport> <dst> <dport> <proto> <src-intf>` (PR #22)
+ERROR	*	DENY-ALL	ไม่ต้องสร้าง policy deny-all ท้ายสุด (มี implicit deny แล้ว) ใช้ `set fwpolicy-implicit-log enable` ถ้าต้องการ log (PR #22)
+WARN	*	docs\.fortinet\.com/document/fortigate/7\.6\.	ลิงก์เอกสาร 7.6 ใน playbook 7.4 ให้หาหน้า 7.4 แทน (PR #22)
 #
 # ---- Huawei ----
 ERROR	*	\bcreate eth-trunk\b	ไม่มีจริง ใช้ `interface eth-trunk <id>` (PR #15)
