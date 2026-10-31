@@ -7,4 +7,4 @@
 | Cisco Catalyst 9300X (IOS-XE): StackWise ไม่ขึ้น, Port-channel ไม่ขึ้น, trunk / VLAN | cisco_ios | กำลังทำ (Hermes) | |
 | TP-Link Omada SX6632YF: MSTP topology change บ่อย, LAG, VLAN | tplink_jetstream | กำลังทำ (Hermes) | |
 | Cisco Catalyst 1300 (C1300-24XS): Stack, LAG, VLAN | cisco_sb | รอ | |
-| FortiAnalyzer 150G (7.4): log ไม่เข้า, disk เต็ม, ADOM | fortinet_fortios | รอ | |
+| FortiAnalyzer 150G (7.4): log ไม่เข้า, disk เต็ม, ADOM | fortinet_fortios | รอตรวจ (PR #13) | #13 |
