@@ -17,4 +17,6 @@
 - PR #11: ก่อน push ทุกครั้งให้รัน `grep -n "ตัวอย่าง output" playbooks/*.md` ถ้าเจอ = ลบก่อน push
 - PR #11: show port-channel เป็นของ NX-OS ไม่ใช่ IOS-XE
 - PR #11: switch priority เป็นคำสั่ง EXEC ไม่ใช่ config
-- PR #11: flag ของ etherchannel ผิด (SU ≠ S,U — ต้องตรวจเอกสารจริง)
+|- PR #11: flag ของ etherchannel ผิด (SU ≠ S,U — ต้องตรวจเอกสารจริง)
+|- PR #12: สิ่งที่ต้องเขียนในรายงานต้องตรงกับไฟล์จริง — ถ้าบอกว่ามีลิงก์ CLI Reference ต้องมีลิงก์นั้นในไฟล์
+|- PR #12: ห้ามแนะนำ BPDU Filter / ปิดการป้องกัน loop เป็นวิธีแก้
