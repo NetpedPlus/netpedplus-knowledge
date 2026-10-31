@@ -14,4 +14,4 @@
 | F5 AWAF 17.x: credential stuffing, Behavioral (L7) DoS, Threat Campaigns | f5_tmsh | เสร็จ | #21 |
 | QRadar 7.5 rule: password spray, port scan, impossible travel | qradar_siem | รอ | |
 | Huawei S5731 access hardening: port security, storm control | huawei_vrp_s | รอ | |
-| FortiGate 7.4 segmentation โซน server (east-west) | fortinet_fortios | รอตรวจ (PR #22) | #22 |
+| FortiGate 7.4 segmentation โซน server (east-west) | fortinet_fortios | ✅ เสร็จแล้ว | #22 |
