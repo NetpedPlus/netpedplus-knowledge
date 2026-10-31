@@ -1,13 +1,14 @@
 # netpedplus-knowledge (private)
 
-ความรู้ (playbook) สำหรับ AI ในโปรแกรม NetPED+ — Hermes เขียน, Claude ตรวจ, เจ้าของ merge
+ความรู้ (playbook) สำหรับ AI ในโปรแกรม NetPED+ — Hermes เขียน, Claude ตรวจ, Hermes merge หลัง Claude ให้ผ่าน
 
 ## วิธีทำงาน
 1. **เลือกงาน**: ดู `TODO.md` แก้สถานะเป็น `กำลังทำ (Hermes)` ใน branch ของงานนั้น
 2. **Hermes**: สร้าง branch `pb/<ชื่อเรื่อง>` → เขียนไฟล์ใน `playbooks/` ตาม `GUIDE.md`
    → รัน `python tools/check_playbook.py` ต้องไม่มี ERROR → push → เปิด Pull Request (กรอกแม่แบบให้ครบ)
 3. **Claude**: ตรวจเฉพาะไฟล์ที่เปลี่ยนใน PR (diff) + สุ่มเทียบคำสั่งกับ URL ในตาราง → คอมเมนต์ใน PR (ไม่ merge เอง)
-4. **เจ้าของ**: แก้ตามคอมเมนต์ / merge → อัปเดต `CHANGELOG.md` → `git pull` บนเครื่องที่ใช้ NetPED+
+4. **Hermes merge เอง** ได้เฉพาะเมื่อ: คอมเมนต์ล่าสุดของ Claude ใน PR ขึ้นต้นด้วย "ผ่าน พร้อม merge" **และ** ไม่มี commit ใหม่หลังคอมเมนต์นั้น (มี commit ใหม่ = ต้องให้ Claude ตรวจอีกรอบ)
+   → merge แบบ squash → อัปเดต `CHANGELOG.md` → NetPED+ ดึงเองวันละครั้ง / กด "อัปเดตความรู้"
 
 ## ใช้กับ NetPED+
 โฟลเดอร์ `playbooks/` ของ repo นี้ = `<DATA_DIR>/playbooks/` (ลิงก์ครั้งเดียว แล้ว `git pull` ก็ได้ของใหม่)
