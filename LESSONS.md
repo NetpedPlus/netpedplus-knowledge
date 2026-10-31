@@ -27,3 +27,8 @@
 - PR #15: `list` ≠ `show` บน F5 — `list` แสดงแค่ config ไม่มี state ต้องใช้ `show` เพื่อดู up/down status
 - PR #15: Huawei S-series VRP V200 ไม่มี `commit` (ต่างจาก CE/NE/V600) — ตรวจทุกครั้งก่อนใส่
 - PR #15: ก่อนตอบว่า "แก้แล้ว" ให้ grep ไฟล์ยืนยันทุกข้อ (รอบ 1 แจ้งว่าลบ commit แล้ว แต่ยังเหลือ 3 จุด) / FortiOS ใช้ `grep -f` เพื่อเห็นทั้ง policy
+- PR #16: FortiOS config tree อยู่ระดับบน (ips sensor, antivirus profile, application list, dnsfilter profile) ไม่ได้อยู่ใต้ firewall
+- PR #16: IPS sensor สร้างด้วย `config ips sensor` → `config entries` → `edit <id>` → `set rule <ids>` → `set action` → `set status enable`
+- PR #16: ใน policy ต้องระบุ `ssl-ssh-profile` (deep-inspection/certificate-inspection) + `utm-status enable` + `inspection-mode` (flow/proxy) ถึง IPS/AV จะเห็นข้างใน HTTPS
+- PR #16: ลิงก์ "ที่มา" ต้องเป็นหน้าของเรื่องนั้นจริง (รอบ 2 ยังใช้หน้า file-filter อ้างเป็น AV / application / profile-group) / ห้ามแต่งเลข category หรือคำสั่ง get ที่ไม่มีในเอกสาร
+- ทุกครั้งที่เพิ่มบรรทัดใน LESSONS.md ให้ขึ้นต้นด้วย `- ` (ไม่ใช่ `|- `)
