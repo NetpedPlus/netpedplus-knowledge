@@ -5,3 +5,5 @@
 - 2026-10-31 PR #6 FortiGate 7.4 SSL Deep Inspection / Certificate / Exemption merged (squash) — เพิ่ม LESSONS.md ข้อ 11
 - 2026-10-31 PR #7 Huawei Port Mirroring (observe-port) merged (squash) — เพิ่ม LESSONS.md ข้อ 12
 - 2026-10-31 PR #8 Huawei ACL / traffic-filter merged (squash) — เพิ่ม LESSONS.md ข้อ 13
+- 2026-10-31 PR #9 FortiGate 7.4 Traffic Shaping / QoS merged (squash) — เพิ่ม LESSONS.md ข้อ 14, 15, 16
+- 2026-10-31 PR #10 H3C S6520X Comware 7 IRF/BAGG/VLAN merged (squash)
