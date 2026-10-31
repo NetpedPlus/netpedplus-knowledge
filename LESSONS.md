@@ -23,3 +23,6 @@
 |- PR #13: families ต้องตรงกับ OS ของอุปกรณ์จริง (FortiAnalyzer ≠ FortiOS) — ถ้าไม่มี family ที่ตรง ให้เว้นว่างแล้วใช้ triggers + vendor แทน fortinet_fortios
 |- PR #13: คำสั่ง execute ... add / clear / disk-quota เป็นคำสั่งเปลี่ยนค่า config ห้ามอยู่ในบล็อกคำสั่งตรวจ
 |- PR #14: ต้องเช็คเอกสารของรุ่นนั้นจริงๆ ทุกคำสั่งต้องเจอในเอกสารของรุ่นนั้น (C1300 ≠ C9300X CLI)
+|- PR #15: ห้ามเขียน "อ่านผล" ที่ไม่ได้เห็นจากเอกสาร/ตัวอย่าง output จริง — ต้องตรวจเอกสารจริงก่อนเขียนค่าที่ expected
+|- PR #15: `list` ≠ `show` บน F5 — `list` แสดงแค่ config ไม่มี state ต้องใช้ `show` เพื่อดู up/down status
+|- PR #15: Huawei S-series VRP V200 ไม่มี `commit` (ต่างจาก CE/NE/V600) — ตรวจทุกครั้งก่อนใส่
