@@ -16,19 +16,14 @@ sources: https://www.h3c.com/en/Support/Resource_Center/EN/Home/Public/00-Public
 ```
 display irf
 display irf topology
+display irf link
+display mad verbose
 ```
 อ่านผล:
 - `display irf`: ดู IRF fabric ทั้งหมด — member ID, role (Master/Slave), priority, bridge MAC, description, active ID
+- `display irf link`: สถานะลิงก์ IRF จริงของแต่ละ IRF-port (UP / DOWN)
+- `display mad verbose`: MAD (LACP / BFD / ARP / ND MAD) เปิดอยู่ไหม — ไม่มี MAD เมื่อ IRF แตกจะได้ 2 master (IP / MAC ชน)
 - `display irf topology`: ดู IRF topology — IRF-Port1/2, member ID, link state (UP/DOWN), link neighbor, belogn to
-- ตัวอย่าง output:
-```
-<Sysname> display irf
-Topology Info
-IRF-Port1 IRF-Port2
-MemberID Link neighbor Link neighbor Belong To
-1 DOWN --- UP 2 000f-cbb8-1a82
-2 UP 1 DOWN --- 000f-cbb8-1a82
-```
 สาเหตุที่พบบ่อย:
 1. IRF link ไม่ขึ้น — ตรวจสอบ physical connection, SFP, cable
 2. Active ID ไม่ตรงกัน — IRF fabric ได้ split
@@ -36,8 +31,8 @@ MemberID Link neighbor Link neighbor Belong To
 4. LACP MAD หรือ BFD MAD ไม่ทำงาน — IRF fabric ไม่ detect split
 วิธีแก้:
 - ตรวจ IRF link: `display irf topology` → ดู Link field — ถ้า DOWN ให้ตรวจ physical connection, SFP, cable (เอกสาร: IRF commands, H3C S6520X Comware 7)
-- แก้ IRF priority: `system-view` → `irf port 1` → `priority <1-9>` → `quit` (เอกสาร: 01-IRF configuration, H3C S6520X Comware 7)
-- แก้ IRF member ID: `system-view` → `irf member <id> priority <1-9>` → `quit` (เอกสาร: 01-IRF configuration, H3C S6520X Comware 7)
+- แก้ IRF priority (ตัวสูงกว่าเป็น master): `system-view` → `irf member <member-id> priority <priority>` (เอกสาร: 01-IRF configuration, H3C S6520X Comware 7)
+- เปลี่ยน member ID: `system-view` → `irf member <member-id> renumber <new-member-id>` (มีผลหลัง reboot) (เอกสาร: 01-IRF configuration, H3C S6520X Comware 7)
 - บันทึก config: `save` → `y` (Comware มีผลทันที บันทึกด้วย save) (เอกสาร: 01-IRF configuration, H3C S6520X Comware 7)
 ที่มา: IRF commands (H3C S6520X Comware 7) https://www.h3c.com/en/Support/Resource_Center/EN/Home/Public/00-Public/Technical_Documents/Configure___Deploy/Configuration_Guides/S6520X-EI_HI_SI_S6520-SI_CG-R65xx/02/202412/2328678_294551_0.htm
 
@@ -54,25 +49,13 @@ display link-aggregation member-port <interface-type> <interface-number>
 - `display link-aggregation summary`: ดู LAG ทั้งหมด — Aggregate Interface Type (BAGG=L2, RAGG=L3), group ID, status
 - `display link-aggregation verbose`: ดู LAG detail — member ports, LACP state, index, selected/not selected
 - `display link-aggregation member-port <interface>`: ดู member port detail — aggregate interface, port number, LACP state
-- ตัวอย่าง output:
-```
-<Sysname> display link-aggregation summary
-Aggregate Interface Type:
-BAGG -- Bridge-Aggregation, RAGG -- Route-Aggregation
-Bridge-Aggregation1:
-    Type: Dynamic Selected-Ports: 2 Total-Ports: 2
-    Port Status:
-        Ten-GigabitEthernet1/0/1 Selected
-        Ten-GigabitEthernet1/0/2 Selected
-```
 สาเหตุที่พบบ่อย:
-1. LACP mode ไม่ตรง — side 1 เป็น active, side 2 เป็น passive → ต้องใช้ active-active หรือ active-passive
+1. ฝั่งหนึ่งเป็น LACP (dynamic) อีกฝั่งเป็น static → ต้องเป็น LACP ทั้งสองฝั่ง
 2. LACP timeout ผิด — side 1 เป็น short timeout, side 2 เป็น long timeout → ต้องตรงกัน
-3. LACP system priority ไม่ตรง → ใช้ system MAC address ผิด
-4. Member port config ผิด → ต้องใช้ command ที่ถูกต้อง
+3. member port ต่างความเร็ว / ต่าง VLAN config กับพอร์ตอื่นใน group → ไม่ถูก Selected
 วิธีแก้:
-- สร้าง LAG: `system-view` → `bridge-aggregation <id>` → `lacp priority <0-65535>` → `quit` (เอกสาร: Ethernet link aggregation commands, H3C S6520X Comware 7)
-- เพิ่ม member port: `interface <type> <number>` → `link-aggregation mode dynamic` → `link-aggregation group <id>` → `quit` (เอกสาร: Ethernet link aggregation configuration, H3C S6520X Comware 7)
+- สร้าง LAG แบบ LACP: `system-view` → `interface bridge-aggregation <id>` → `link-aggregation mode dynamic` → `quit` (เอกสาร: Ethernet link aggregation commands, H3C S6520X Comware 7)
+- เพิ่ม member port: `interface <type> <number>` → `port link-aggregation group <id>` → `quit` (โหมด dynamic ตั้งที่ bridge-aggregation ไม่ใช่ที่ member) (เอกสาร: Ethernet link aggregation configuration, H3C S6520X Comware 7)
 - ตรวจ LACP: `display link-aggregation verbose` → ดู LACP state, selected/not selected (เอกสาร: Ethernet link aggregation commands, H3C S6520X Comware 7)
 - บันทึก config: `save` → `y` (Comware มีผลทันที บันทึกด้วย save) (เอกสาร: Ethernet link aggregation configuration, H3C S6520X Comware 7)
 ที่มา: Ethernet link aggregation commands (H3C S6520X Comware 7) https://www.h3c.com/en/d_202407/2219027_294551_0.htm
@@ -90,15 +73,6 @@ display port { trunk | hybrid }
 - `display vlan`: ดู VLAN ทั้งหมด — VLAN ID, name, status, member ports
 - `display vlan brief`: ดู VLAN สั้น — VLAN ID, status, number of ports
 - `display port { trunk | hybrid }`: ดู port config — port type (trunk/hybrid), permitted VLANs
-- ตัวอย่าง output:
-```
-<Sysname> display vlan 2
-VLAN ID: 2
-VLAN Type: static
-Description: VLAN 0002
-Bridge-Aggregation1: 1
-Ten-GigabitEthernet1/0/1: 1
-```
 สาเหตุที่พบบ่อย:
 1. Trunk port ยังไม่ได้ permit VLAN — ต้องใช้ command `port trunk permit vlan`
 2. Access port ยังไม่ได้ assign VLAN — ต้องใช้ command `port access vlan`
