@@ -1,7 +1,7 @@
 ---
 id: fortianalyzer-150g-log-disk-adom
 title: FortiAnalyzer 150G (7.4) — log ไม่เข้า / disk เต็ม / ADOM
-families: fortinet_fortios
+families:
 triggers: fortianalyzer, faz, faz-150g, adom, logd
 vendor: Fortinet
 versions: FortiAnalyzer 7.4.x
@@ -18,18 +18,18 @@ execute log device logstore list
 execute log device vdom list <Device Name>
 ```
 ตรวจใน GUI:
-1. **Log & Event → Device Management**: ดู device status — "Managed" หรือ "Unmanaged"
+1. **Device Manager**: device ที่ส่ง log มาแต่ยังไม่ Authorize จะอยู่ในรายการ Unauthorized — log จะไม่ถูกเก็บจนกว่าจะ Authorize
 2. **Log & Event → Log View → Select Device**: เลือก device → ดู log ที่เข้าจริง → filtrate ตาม time range
 3. **Log & Event → Log View → Select FAZ**: ดู log local ของ FAZ เอง
 4. **System Settings → ADOM**: เข้า ADOM ของ device → ตรวจสอบ device ว่าอยู่ใน ADOM ไหน
 5. **System Settings → ADOM → Edit ADOM → Device**: ดู list device ใน ADOM — หา device ที่ไม่มีอยู่
 สาเหตุที่พบบ่อย:
 1. Device ไม่ได้ assign เข้า ADOM — ต้องเพิ่ม device เข้า ADOM
-2. ADOM type ผิด — ADOM ต้องตรงกับ device type (FortiGate = Security Fabric ADOM)
-3. logd service หยุด — ต้อง restart
+2. Device ยังไม่ได้ Authorize ใน Device Manager (ขึ้นเป็น Unauthorized)
+3. ฝั่ง FortiGate ยังไม่ได้ตั้งส่ง log มา FAZ หรือ traffic ถูกบล็อกระหว่างทาง → ดูหัวข้อฝั่ง FortiGate "ส่ง log ไป FortiAnalyzer / syslog ไม่ได้"
 วิธีแก้ (GUI):
 1. เพิ่ม device เข้า ADOM: **System Settings → ADOM → เลือก ADOM → Edit → Devices → Add** → เลือก device → OK
-2. ตรวจ logd: **Log & Event → FortiView → FortiView Logs** — ถ้า log ไม่แสดง = logd มีปัญหา
+2. Authorize device: **Device Manager → Unauthorized → เลือก device → Authorize** → เลือก ADOM
 3. CLI: `execute log device logstore list` — ดู log directory ของ device
 ที่มา: FortiAnalyzer 7.4 Log and File Storage https://docs.fortinet.com/document/fortianalyzer/7.4.7/administration-guide/155934/log-and-file-storage + FortiAnalyzer 7.4 Creating ADOMs https://docs.fortinet.com/document/fortianalyzer/7.4.2/administration-guide/667061/creating-adoms
 
@@ -38,8 +38,6 @@ execute log device vdom list <Device Name>
 อาการ: disk เต็ม, ต้องการดู disk usage, ต้องการปรับ log storage policy, ต้องการดู adom disk quota
 คำสั่งตรวจ:
 ```
-execute log adom disk-quota <adom_name> <value>
-execute log device disk-quota <device_id> <value>
 execute log device logstore list
 ```
 ตรวจใน GUI:
@@ -52,10 +50,10 @@ execute log device logstore list
 3. Alert and Delete When Usage Reaches ไม่ตั้ง — FAZ ไม่ delete log อัตโนมัติเมื่อ disk เต็ม
 4. Device log directory สะสม (logstore) — ต้อง clear leftover log directory
 วิธีแก้ (GUI):
-1. ลด Analytics retention: **System Settings → ADOM → Edit ADOM → Data Policy → Keep Logs for Analytics** → set เป็น 7-30 days → OK
-2. ตั้ง Archive retention: **Data Policy → Keep Logs for Archive** → set ตาม compliance (เช่น 90 days) → OK
-3. ตั้ง auto delete: **Disk Utilization → Alert and Delete When Usage Reaches** → set เป็น 90% → OK
-4. CLI: `execute log device logstore clear <device_id>` — ลบ leftover log directory
+1. ลด Analytics retention: **System Settings → ADOM → Edit ADOM → Data Policy → Keep Logs for Analytics** → ตั้งตาม policy ขององค์กร (สั้นลง = ใช้ disk น้อยลง) → OK
+2. ตั้ง Archive retention: **Data Policy → Keep Logs for Archive** → ตั้งตาม compliance ขององค์กร → OK
+3. ตั้ง auto delete: **Disk Utilization → Alert and Delete When Usage Reaches** → ตั้งเปอร์เซ็นต์ที่ต้องการ → OK
+4. CLI: `execute log device logstore clear <device_id>` — ลบ log directory ที่ค้างของ device ที่ลบไปแล้ว (**ลบ log ถาวร** ตรวจด้วย `execute log device logstore list` ก่อน)
 5. CLI: `execute log adom disk-quota <adom_name> <value>` — ปรับ ADOM disk quota (MB)
 ที่มา: FortiAnalyzer 7.4 Configuring Log Storage Policy https://docs.fortinet.com/document/fortianalyzer/7.4.8/administration-guide/743670 + FortiAnalyzer 7.4 Log Storage Information https://docs.fortinet.com/document/fortianalyzer/7.4.1/administration-guide/62269/log-storage-information + CLI Reference https://docs.fortinet.com/document/fortianalyzer/7.4.0/cli-reference/425935/log#log16
 
@@ -65,7 +63,6 @@ execute log device logstore list
 คำสั่งตรวจ:
 ```
 execute log device vdom list <Device Name>
-execute log device vdom add <Device Name> <ADOM> <VDOM>
 ```
 ตรวจใน GUI:
 1. **System Settings → ADOM**: ดู list ADOMs — ADOM names, types, device count
