@@ -1,0 +1,9 @@
+*.pdf
+*.PDF
+*.netpedkb
+*.key
+*.pem
+*token*
+.env
+__pycache__/
+.DS_Store
