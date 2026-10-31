@@ -89,7 +89,7 @@ arista_eos, aruba_aos8, aruba_aos_switch, aruba_aoscx, checkpoint_gaia, cisco_as
 
 ## 6. Playbook ที่มีอยู่แล้ว (อย่าเขียนซ้ำ เขียนเรื่องที่ยังไม่มี)
 f5-bigip-17, f5-ltm-asm-build, f5-ops-advanced, fortigate-7.4, huawei-ac-wlan, huawei-vrp-switch, imaster-nce-campus, kaspersky-scan-engine, paloalto-panos, qradar-7.5, routing-concepts, sophos-sfos-21, windows-ad-dhcp-dns
-(เปิดอ่านหัวข้อ `## ` ในไฟล์เหล่านี้ก่อน — ใน zip ของโปรแกรมอยู่ที่ `catalog/playbooks/`)
+**ก่อนเลือกเรื่องต้องเปิด `EXISTING_TOPICS.md` (หัวข้อทั้งหมดที่โปรแกรมมีแล้ว) — ซ้ำ = PR ถูกปิด** (PR #4 / #5 ถูกปิดเพราะซ้ำ)
 
 ## 7. ห้ามเด็ดขาด
 - ข้อมูลลูกค้า: IP, hostname, config, SNMP community, ชื่อหน่วยงาน, รหัสผ่าน — ตัวอย่างใช้ค่าสมมติ (`10.0.0.1`, `SW-CORE`, `<community>`)
