@@ -41,3 +41,9 @@
 - PR #20: policy deny ไม่ match traffic ไป VIP ถ้าไม่ set match-vip enable / FortiGate match ตามลำดับในรายการ ไม่ใช่เลข ID
 |- PR #21: F5 AWAF ตั้งค่าเกือบทั้งหมดใน GUI ถ้าไม่เจอคำสั่ง tmsh ในหน้า tmsh reference ให้ใช้ "ตรวจใน GUI:" ห้ามเดาคำสั่ง show/list
 |- PR #21: ห้ามใช้เมนูของ BIG-IQ อ้างเป็น BIG-IP / ห้ามแนะนำให้แก้ไฟล์ระบบในอุปกรณ์ ให้อ้าง K article + เปิดเคส vendor
+|- PR #22: `set logsession disable` ไม่มีจริงใน FortiOS — ไม่มี option นี้ใน firewall policy / FortiOS เปิด log traffic ด้วย `set logtraffic all` เพียงอย่างเดียว
+|- PR #22: `get route all` ไม่มีจริง — ใช้ `get router info routing-table all` แทน
+|- PR #22: `diagnose debug flow test enable`, `diagnose debug flow show flow_list` ไม่มีจริง — ใช้ `diagnose debug flow filter clear` → `filter addr` → `show function-name enable` → `debug enable` → `trace start N` แทน
+|- PR #22: FortiGate ไม่มี concept `reverse-path check` — ใช้ `stateful inspection` (default) ซึ่ง session established จะ auto-allow ขากลับโดยอัตโนมัติ
+|- PR #22: ไม่มี interface ชื่อ `all` ใน FortiOS — ห้ามใช้ `set srcintf "all"` หรือ `set dstintf "all"` ให้ระบุ zone หรือ interface จริง
+|- PR #22: FortiGate match policy ตามลำดับบนลงล่าง (list order) ไม่ใช่ตามเลข policy ID — อธิบายให้ชัดในวิธีแก้
