@@ -2,7 +2,7 @@
 id: aruba-aoscx-vsx-lag-vlan
 title: Aruba AOS-CX — VSX, LAG, VLAN ไม่ผ่าน
 families: aruba_aoscx
-triggers: aruba, aoscx, aos-cx, aos cx, cx 6200, cx 6300, cx 6400, cx 8320, cx 8325, cx 8360, cx 8400, cx 10000, cx6200, cx6300, cx6400, cx8320, cx8325, cx8360, cx8400, cx10000, cx-6200, cx-6300, cx-6400, cx-8320, cx-8325, cx-8360, cx-8400, cx-10000, vsx, virtual switching extension, inter-switch-link, isl, multi-chassis, lacp, lacp mode, lacp hash, lacp port-priority, vlan trunk, vlan access, vlan not passing
+triggers: aruba, aoscx, aos-cx, aos cx, cx 6200, cx 6300, cx 6400, cx 8320, cx 8325, cx 8360, cx 8400, cx 10000, cx6200, cx6300, cx6400, cx8320, cx8325, cx8360, cx8400, cx10000, cx-6200, cx-6300, cx-6400, cx-8320, cx-8325, cx-8360, cx-8400, cx-10000, vsx, virtual switching extension, inter-switch-link
 vendor: Aruba (HPE)
 versions: AOS-CX 10.07 — 10.16
 sources: https://arubanetworking.hpe.com/techdocs/AOS-CX/10.07/HTML/5200-7839/Content/VSX_cmds/sho-vsx-sta-10.htm; https://arubanetworking.hpe.com/techdocs/AOS-CX/10.07/HTML/5200-7836/Content/VSX_cmds/sho-vsx-cnf-10.htm; https://www.arubanetworks.com/techdocs/AOS-CX/10.16/HTML/vsx/Content/VSX_cmds/vsx.htm; https://www.arubanetworks.com/techdocs/AOS-CX/10.07/HTML/5200-7888/Content/VSX_cmds/int-swi-lin-10.htm
