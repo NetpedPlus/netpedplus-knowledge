@@ -1,0 +1,52 @@
+# คำสั่ง / คำอธิบายที่รู้แล้วว่าผิด (เจอจาก review PR) — check_playbook.py อ่านไฟล์นี้
+# รูปแบบ: ระดับ<TAB>families (* = ทุกไฟล์)<TAB>regex (ไม่สนตัวพิมพ์เล็ก-ใหญ่)<TAB>ที่ถูก / เหตุผล
+# บรรทัดที่มีคำปฏิเสธ (ไม่มีจริง / ไม่ใช่ / ห้าม / ไม่เกี่ยว / ≠ / แทน) จะไม่ถูกตรวจ เพื่อให้เขียนอธิบายว่า "X ไม่มีจริง" ได้
+# เพิ่มบรรทัดใหม่ทุกครั้งที่ Claude review เจอคำสั่งแต่งขึ้น (PR อ้างอิงอยู่ท้ายข้อความ)
+#
+# ---- FortiOS ----
+ERROR	*	\bget system administrator\b	ไม่มีจริง ใช้ `show system admin` (PR #17)
+ERROR	*	\bfirewall (ips-sensor|av-profile|application-list)\b	ไม่ได้อยู่ใต้ firewall: `ips sensor` / `antivirus profile` / `application list` (PR #16)
+ERROR	*	\bget firewall profile\b	ไม่มีจริง ใช้ `show ips sensor` / `show antivirus profile` (PR #16)
+ERROR	*	\bpolicy reorder\b	ไม่มีจริง ใช้ `move <id> before|after <id>` (PR #16)
+ERROR	*	\bdiag(nose)? ips db-check\b	ไม่มีจริง ใช้ `diagnose autoupdate versions` (PR #16)
+ERROR	*	\breport-runner\b	ไม่มีจริง ใช้ `ตรวจใน GUI: Security Fabric > Security Rating` (PR #17)
+ERROR	*	\bget router info config route\b|\bget route all\b	ไม่มีจริง ใช้ `get router info routing-table all` (PR #17, #22)
+ERROR	*	\bset trustedhost\b	ไม่มีจริง ใช้ `set trusthost1 <ip> <mask>` … `trusthost10` (PR #17)
+ERROR	*	\bset allowedaccess\b	ไม่มีจริง (address ไม่มี allowaccess; ของ interface คือ `set allowaccess`) (PR #17)
+ERROR	*	\bset (https|ssh)-port\b	FortiOS ใช้ `set admin-sport` / `set admin-ssh-port` (PR #17)
+ERROR	*	\b(config|get|show) system backup\b	ไม่มีจริง backup เข้ารหัสด้วยรหัสตอน `execute backup config ...` หรือ GUI (PR #17)
+ERROR	*	fortitrace-dos|set-ip-src-session	ไม่มีจริง (PR #17)
+ERROR	*	\bset two-factor (totp|rsa)\b	ค่าที่มีคือ fortitoken | fortitoken-cloud | email | sms (PR #18)
+ERROR	*	\bset fortitoken-cloud\s+<	ไม่มีจริง ใช้ `set two-factor fortitoken-cloud` (PR #17)
+ERROR	*	\bset logsession\b	ไม่มีจริง (PR #22)
+ERROR	*	\bflow test enable\b|\bshow flow_list\b	ไม่มีจริง ใช้ filter clear → filter addr → show function-name enable → debug enable → trace start N (PR #22)
+ERROR	*	\bconfig system auto-update\b|\bset firmware-update\b	ไม่มีจริง และห้ามแนะนำ auto firmware upgrade บน production (PR #17)
+ERROR	*	\bdiagnose ip reputation list\b	ไม่เจอในเอกสาร ใช้ `diagnose autoupdate versions` (PR #20)
+ERROR	*	\bget system application control categories\b	ไม่มีจริง ดูเลข category ใน GUI (PR #16)
+ERROR	*	\bshow log event log\b	ไม่มีจริง ใช้ `ตรวจใน GUI: Log & Report` (PR #16)
+ERROR	*	\bFortinet-(Recommended|Critical|Monitor)\b	ไม่มี profile ชื่อนี้ ของจริงเช่น default / high_security / protect_http_server (PR #16)
+ERROR	*	\bssl min-version\b	ไม่มีจริง (PR #17)
+ERROR	*	\bconfig system ntp authkey\b	ไม่มีจริง (PR #17)
+ERROR	*	(policy|policy-id|\bID\b|เลข)[^\n]{0,40}(จากน้อยไปมาก|น้อยไปมาก)	FortiGate match policy ตามลำดับในรายการ (บนลงล่าง) ไม่ใช่เลข ID (PR #20, #22)
+ERROR	*	\b(srcintf|dstintf)\s+"?all"?(\s|`|$)	ไม่มี interface ชื่อ all ใช้ zone / interface จริง (any = ทุก interface) (PR #22)
+ERROR	*	\bupdate-extdb\b[^\n]*(isdb|reputation)|(isdb|reputation)[^\n]*\bupdate-extdb\b	ISDB คือ `update-ffdb` / update-extdb คือ IPS extended DB (PR #20)
+ERROR	*	reverse-path check	FortiGate ทำ RPF check — ถ้าจะพูดเรื่อง reply traffic ให้ใช้คำว่า stateful (PR #22)
+WARN	*	\bset intf "?any"?	local-in บน intf any เสี่ยงตัด HA / routing / VPN / FortiGuard ตรวจว่าจำกัด service แล้ว (PR #17)
+WARN	*	\bset reputation-minimum [345]\b	ค่า 3 ขึ้นไปตัดเว็บที่ยังไม่ verified (ส่วนใหญ่ของอินเทอร์เน็ต) (PR #20)
+WARN	*	\bset asymroute enable\b	ปิด stateful inspection ทั้ง VDOM ห้ามแนะนำเป็นวิธีแก้ถาวร (PR #22)
+WARN	*	"deep-inspection"	traffic ขาเข้า server ของเราเองห้ามใช้ deep-inspection สำเร็จรูป (ใช้ cert ของ server / certificate-inspection) (PR #16)
+#
+# ---- Huawei ----
+ERROR	*	\bcreate eth-trunk\b	ไม่มีจริง ใช้ `interface eth-trunk <id>` (PR #15)
+#
+# ---- Cisco ----
+ERROR	*	\bParsed\b	flag P ใน show etherchannel summary = bundled in port-channel (PR #15)
+ERROR	cisco_ios	\bshow port-channel\b	เป็นคำสั่ง NX-OS ไม่ใช่ IOS-XE (PR #11)
+#
+# ---- F5 ----
+ERROR	*	\basm statistics\b|\bshow /?ltm dos\b|\basm threat-campaigns\b|\basm policy-violations\b|\bshow asm log\b|security dos device-config|\basm analytics report\b	ไม่มีใน tmsh reference ใช้ `ตรวจใน GUI:` (PR #21)
+ERROR	*	\bsys cloud-service\b|\bsys service lcc\b|asm\.threatcampaigns	ไม่มีจริง (PR #21)
+ERROR	*	EasyClient\.pm|/usr/local/share/perl5	ห้ามแนะนำแก้ไฟล์ระบบในอุปกรณ์ ให้อ้าง K article + เปิดเคส vendor (PR #21)
+#
+# ---- VMware ----
+ERROR	*	LACP partner set	ไม่มีจริง (PR #15)

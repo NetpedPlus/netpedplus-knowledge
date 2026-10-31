@@ -176,7 +176,7 @@ show firewall policy
 show firewall policy
 ```
 อ่านผล:
-- ต้องเห็นลำดับ policies (policy-id เรียงจากน้อยไปมาก)
+- ดูลำดับ policy ในรายการ (FortiGate match จากบนลงล่าง ไม่ใช่ตามเลข policy-id)
 - ต้องเห็น `ssl-ssh-profile` ผูกกับ policy
 - หากไม่พบ ssl-ssh-profile = traffic HTTPS จะไม่ถูก IPS/AV ตรวจ
 ที่มา: [SSL & SSH Inspection — FortiOS 7.4.2 Admin Guide](https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/929997/ssl-ssh-inspection)

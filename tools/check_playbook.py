@@ -17,6 +17,26 @@ WRITE = re.compile(r"^\s*(system-view|configure|config |conf t|set |delete |undo
 IPV4 = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
 SAFE_IP = re.compile(r"^(10\.0\.0\.|192\.0\.2\.|198\.51\.100\.|203\.0\.113\.|0\.0\.0\.0|255\.|127\.0\.0\.1|224\.)")
 SECRET = re.compile(r"(password|passwd|secret|community|pre-shared|psk)\s+(?!<)\S{3,}", re.I)
+NEGATE = re.compile(r"ไม่มีจริง|ไม่ใช่|ห้าม|ไม่เกี่ยว|≠|แทน|ผิด")
+
+
+def load_bad() -> list:
+    """tools/known_bad.tsv: ระดับ / families / regex / ที่ถูก — คำสั่งที่เคยแต่งขึ้นใน PR ก่อนๆ"""
+    rules = []
+    f = ROOT / "tools" / "known_bad.tsv"
+    if not f.exists():
+        return rules
+    for n, ln in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
+        if not ln.strip() or ln.startswith("#"):
+            continue
+        parts = ln.split("\t")
+        if len(parts) != 4 or parts[0] not in ("ERROR", "WARN"):
+            raise SystemExit(f"known_bad.tsv บรรทัด {n}: ต้องมี 4 ช่องคั่นด้วย TAB (ระดับ, families, regex, ข้อความ)")
+        rules.append((parts[0], parts[1].strip(), re.compile(parts[2], re.I), parts[3].strip()))
+    return rules
+
+
+BAD = load_bad()
 
 
 def check(p: pathlib.Path, ids: dict) -> tuple[list, list]:
@@ -63,7 +83,7 @@ def check(p: pathlib.Path, ids: dict) -> tuple[list, list]:
         blk = re.search(r"^คำสั่งตรวจ:\s*\n```[^\n]*\n(.*?)```", s, re.S | re.M)
         if not blk and not re.search(r"(?m)^ตรวจใน (GUI|Controller)\s*:", s):
             err.append(f"{tag} ไม่มีบล็อก คำสั่งตรวจ: (อ่านอย่างเดียว) — ย้าย config ไป 'วิธีแก้' แล้วใส่ show / get / display แทน อย่าลบบล็อก (อุปกรณ์ที่ตรวจได้แค่ทาง GUI ใช้บรรทัด 'ตรวจใน GUI:' แทน)")
-        fences = [m.start() for m in re.finditer(r"(?m)^```", s)]
+        fences = [m.start() for m in re.finditer(r"(?m)^[ \t]*```", s)]   # รวมบล็อกที่ย่อหน้า (เคยหลุดใน PR #17–19)
         for k in range(0, len(fences) - 1, 2):                       # ทุกบล็อกโค้ดต้องเป็น "คำสั่งตรวจ:" (โปรแกรมอ่านทุกบรรทัดในบล็อกเป็นคำสั่ง)
             prev = s[:fences[k]].rstrip("\n").rsplit("\n", 1)[-1].strip()
             if not prev.startswith("คำสั่งตรวจ"):
@@ -80,6 +100,16 @@ def check(p: pathlib.Path, ids: dict) -> tuple[list, list]:
                     err.append(f"{tag} คำสั่งตรวจไม่ใช่อ่านอย่างเดียว: {line.strip()[:60]}")
                 if SECRET.search(line):
                     err.append(f"{tag} มีรหัส / community ในคำสั่งตรวจ")
+    fams = head.get("families", "")
+    for n, ln in enumerate(t.splitlines(), 1):
+        if NEGATE.search(ln) or re.match(r"(triggers|คำค้น):", ln):   # คำที่ผู้ใช้อาจพิมพ์ค้น ไม่ใช่คำแนะนำ
+            continue
+        for lvl, scope, rx, fix in BAD:
+            if scope != "*" and not any(x.strip() in fams for x in scope.split(",")):
+                continue
+            hit = rx.search(ln)
+            if hit:
+                (err if lvl == "ERROR" else warn).append(f"บรรทัด {n}: '{hit.group(0).strip()[:40]}' — {fix}")
     for ip in IPV4.findall(t):
         if not SAFE_IP.match(ip) and not ip.startswith("0."):
             warn.append(f"พบ IP {ip} — ถ้าเป็นของลูกค้าให้เปลี่ยนเป็น 10.0.0.x / <ip>")
