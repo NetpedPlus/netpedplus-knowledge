@@ -61,8 +61,8 @@ def check(p: pathlib.Path, ids: dict) -> tuple[list, list]:
         if len(s) > 2600:
             err.append(f"{tag} ยาว {len(s)} ตัวอักษร (เกิน ~2,500 ให้แยกหัวข้อ)")
         blk = re.search(r"^คำสั่งตรวจ:\s*\n```[^\n]*\n(.*?)```", s, re.S | re.M)
-        if not blk:
-            err.append(f"{tag} ไม่มีบล็อก คำสั่งตรวจ: (อ่านอย่างเดียว) — ย้าย config ไป 'วิธีแก้' แล้วใส่ show / get / display แทน อย่าลบบล็อก")
+        if not blk and not re.search(r"(?m)^ตรวจใน (GUI|Controller)\s*:", s):
+            err.append(f"{tag} ไม่มีบล็อก คำสั่งตรวจ: (อ่านอย่างเดียว) — ย้าย config ไป 'วิธีแก้' แล้วใส่ show / get / display แทน อย่าลบบล็อก (อุปกรณ์ที่ตรวจได้แค่ทาง GUI ใช้บรรทัด 'ตรวจใน GUI:' แทน)")
         fences = [m.start() for m in re.finditer(r"(?m)^```", s)]
         for k in range(0, len(fences) - 1, 2):                       # ทุกบล็อกโค้ดต้องเป็น "คำสั่งตรวจ:" (โปรแกรมอ่านทุกบรรทัดในบล็อกเป็นคำสั่ง)
             prev = s[:fences[k]].rstrip("\n").rsplit("\n", 1)[-1].strip()
