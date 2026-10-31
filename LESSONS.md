@@ -39,3 +39,5 @@
 - PR #20: DoS policy ทำงานก่อน VIP/DNAT ให้ dstaddr เป็น IP ภายนอก / ตัวอย่าง DoS ให้เริ่มด้วย action pass + log ก่อน block
 - PR #20: reputation-minimum 4 ขึ้นไปตัดเว็บส่วนใหญ่ (ระดับ 3 = unverified) / ISDB คือ update-ffdb ไม่ใช่ update-extdb
 - PR #20: policy deny ไม่ match traffic ไป VIP ถ้าไม่ set match-vip enable / FortiGate match ตามลำดับในรายการ ไม่ใช่เลข ID
+|- PR #21: F5 AWAF ตั้งค่าเกือบทั้งหมดใน GUI ถ้าไม่เจอคำสั่ง tmsh ในหน้า tmsh reference ให้ใช้ "ตรวจใน GUI:" ห้ามเดาคำสั่ง show/list
+|- PR #21: ห้ามใช้เมนูของ BIG-IQ อ้างเป็น BIG-IP / ห้ามแนะนำให้แก้ไฟล์ระบบในอุปกรณ์ ให้อ้าง K article + เปิดเคส vendor
