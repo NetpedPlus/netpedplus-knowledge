@@ -32,3 +32,6 @@
 - PR #16: ใน policy ต้องระบุ `ssl-ssh-profile` (deep-inspection/certificate-inspection) + `utm-status enable` + `inspection-mode` (flow/proxy) ถึง IPS/AV จะเห็นข้างใน HTTPS
 - PR #16: ลิงก์ "ที่มา" ต้องเป็นหน้าของเรื่องนั้นจริง (รอบ 2 ยังใช้หน้า file-filter อ้างเป็น AV / application / profile-group) / ห้ามแต่งเลข category หรือคำสั่ง get ที่ไม่มีในเอกสาร
 - ทุกครั้งที่เพิ่มบรรทัดใน LESSONS.md ให้ขึ้นต้นด้วย `- ` (ไม่ใช่ `|- `)
+- PR #17: FortiGate local-in policy ไม่มี implicit deny — ค่าเริ่มต้นคือ allow ถ้ามี policy ใดๆ ถูกสร้างแล้ว ดังนั้นการแนะนำ `deny all` บน `intf any` จะตัด HA heartbeat, BGP, OSPF, IPsec, DNS, FortiGuard, FortiAnalyzer ออกทั้งหมด ต้องเตือนห้ามทำอย่างชัดเจน
+- PR #17: ห้ามแนะนำ auto firmware upgrade บน production — คำสั่ง `config system auto-update / set firmware-update` ไม่มีจริง และการอัปเดตอัตโนมัติอาจทำให้ device ล่มในกรณีที่ upgrade path ผิดหรือ firmware มี bug
+- PR #17: ห้ามมี code block (``` ...) ใน "วิธีแก้:" — ให้เขียนคำสั่งเป็น inline format เหมือน playbook อื่น (เช่น `config system admin`, `edit "name"`, `set trusthost1 ...` บนบรรทัดปกติ)
