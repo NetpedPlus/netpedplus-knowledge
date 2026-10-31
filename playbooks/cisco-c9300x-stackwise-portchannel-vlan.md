@@ -18,25 +18,16 @@ show switch
 show switch stack-ports
 ```
 อ่านผล:
-- `show switch`: ดู switch stack ทั้งหมด — Stack ID, Model, Serial Number, Priority, Status (Ready/In RM/In ASM/Non-Ready/Invalid)
+- `show switch`: ดู switch stack ทั้งหมด — Stack ID, Model, Serial Number, Priority, State — ทุกตัวต้องเป็น Ready (ถ้าเป็น V-Mismatch = IOS-XE ไม่ตรงกัน, Provisioned = ยังไม่ join จริง)
 - `show switch stack-ports`: ดู stack port status — StackPort1/1, StackPort1/2, link status (UP/DOWN)
-- ตัวอย่าง output:
-```
-Switch/Stack Mac Address : <mac-address>
-H/W Current
-RJ-Mac Address     Priority Version  State
--------------------------------------------------
-*1 C9300X-XXXXXXXX  15     Running    Ready
- 2 C9300X-XXXXXXXX  15     Running    Ready
-```
 สาเหตุที่พบบ่อย:
 1. StackWise cable ไม่เชื่อมต่อ — ตรวจ physical connection
-2. Stack adapter ผิด — ต้องใช้ C9300-STACK หรือ STACK-T4-50CM
+2. สาย stack / stack adapter หลวมหรือเสีย (ดู stack port ที่ DOWN)
 3. Active switch ไม่ elected — ตรวจ switch priority
 4. Firmware ไม่ตรงกัน — switch จะไม่ join stack
 วิธีแก้:
 - ตรวจ StackWise cable: `show switch stack-ports` → ดู link status (เอกสาร: 217684, Cisco)
-- แก้ switch priority: `configure terminal` → `switch <id> priority <1-15>` → `end` (เอกสาร: Managing Switch Stacks, IOS-XE 17.15)
+- แก้ switch priority (privileged EXEC ไม่ต้องเข้า configure): `switch <stack-member-number> priority <new-value>` (ตัวที่ priority สูงกว่าเป็น active เมื่อ reload ทั้ง stack) (เอกสาร: Managing Switch Stacks, IOS-XE 17.15)
 - บันทึก config: `copy running-config startup-config` (เอกสาร: Managing Switch Stacks, IOS-XE 17.15)
 ที่มา: Cisco Catalyst 9300 StackWise troubleshooting (217684) https://www.cisco.com/c/en/us/support/docs/switches/catalyst-9300-series-switches/217684-verify-and-troubleshoot-stackwise-on-cat.html
 
@@ -46,24 +37,20 @@ RJ-Mac Address     Priority Version  State
 คำสั่งตรวจ:
 ```
 show etherchannel summary
-show port-channel <id>
+show etherchannel <id> detail
+show lacp neighbor
 ```
 อ่านผล:
-- `show etherchannel summary`: ดู EtherChannel ทั้งหมด — Group, Port-Channel, Protocol (P=PAgP, L=LACP), Ports (G=good, P=bundled)
-- `show port-channel <id>`: ดู port-channel detail — member ports, load balancing, mode
-- ตัวอย่าง output:
-```
-Group  Port-channel  Protocol    Ports
-------+-------------+-----------+-----------------------------------------------
-1      Po1(SU)        LACP       Fa1/0/1(P)   Fa1/0/2(P)
-```
+- `show etherchannel summary`: ดู EtherChannel ทั้งหมด — Group, Port-Channel, Protocol (P=PAgP, L=LACP), Ports — flag P = bundled, I = stand-alone (ไม่ได้ LACP จากอีกฝั่ง), s = suspended, D = down; Po ต้องเป็น SU (L2) หรือ RU (L3)
+- `show etherchannel <id> detail`: สถานะ member แต่ละพอร์ต + เหตุที่ไม่ bundle
+- `show lacp neighbor`: อีกฝั่งส่ง LACP มาไหม (ไม่มี neighbor = อีกฝั่งไม่ใช่ LACP / สายผิดพอร์ต)
 สาเหตุที่พบบ่อย:
-1. LACP mode ไม่ตรง — side 1 เป็น active, side 2 เป็น passive → ต้องใช้ active-active หรือ active-passive
+1. ฝั่งหนึ่ง LACP (active / passive) อีกฝั่ง static (mode on) หรือ passive ทั้งสองฝั่ง → ต้องมี active อย่างน้อยหนึ่งฝั่ง และเป็น LACP ทั้งคู่
 2. Speed/duplex ไม่ตรง — ต้องตรงกันทุก port
 3. VLAN ไม่ตรง — ต้องเป็น VLAN เดียวกันหรือ trunk
 วิธีแก้:
 - สร้าง EtherChannel: `configure terminal` → `interface range gigabitethernet 1/0/1 - 2` → `channel-group 1 mode active` → `end` (เอกสาร: Configuring EtherChannels, IOS-XE 17.15)
-- ตรวจ LACP: `show etherchannel summary` → ดู Po status (SU=up, S=down, D=down, m=missing) (เอกสาร: Configuring EtherChannels, IOS-XE 17.15)
+- ตรวจ LACP: `show etherchannel summary` → Po ต้องเป็น SU / RU และ member เป็น P (เอกสาร: Configuring EtherChannels, IOS-XE 17.15)
 - บันทึก config: `copy running-config startup-config` (เอกสาร: Configuring EtherChannels, IOS-XE 17.15)
 ที่มา: Cisco IOS-XE 17.15 Configuring EtherChannels https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst9300/software/release/17-15/configuration_guide/lyr2/b_1715_lyr2_9300_cg/configuring_etherchannels.html
 
@@ -80,14 +67,6 @@ show interface <interface-id> switchport
 - `show vlan brief`: ดู VLAN ทั้งหมด — VLAN ID, Name, Ports
 - `show interfaces trunk`: ดู trunk port — Port, Name, Status, Native VLAN, Allowed VLANs
 - `show interface <interface-id> switchport`: ดู switchport detail — Mode, Access VLAN, Trunking VLANs, Admin/Operational
-- ตัวอย่าง output:
-```
-VLAN Name                             Status    Ports
----- -------------------------------- --------- -------------------------------
-1    default                          active
-10    VLAN10                           active
-100   VLAN100                          active
-```
 สาเหตุที่พบบ่อย:
 1. Trunk port ยังไม่ได้ permit VLAN — ต้องใช้ command `switchport trunk allowed vlan add`
 2. Access port ยังไม่ได้ assign VLAN — ต้องใช้ command `switchport access vlan`
