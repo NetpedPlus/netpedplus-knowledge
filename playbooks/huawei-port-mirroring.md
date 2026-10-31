@@ -2,7 +2,7 @@
 id: huawei-port-mirroring
 title: Huawei S12700E / S5731 Port Mirroring (observe-port)
 families: huawei_vrp_s
-triggers: huawei, port mirroring, observe-port, traffic mirroring, capture, packet capture, mirroring inbound, mirroring outbound, mirroring both, mirror traffic, mirroring not working, display port-mirroring, display observe-port, local port mirroring, 1:n mirroring
+triggers: huawei, observe-port, display port-mirroring, display observe-port, local port mirroring, 1:n mirroring, s12700e, s5731
 vendor: Huawei
 versions: VRP V200R019C00 ขึ้นไป (S12700, S12700E, S5731, S5735)
 sources: https://support.huawei.com/enterprise/en/doc/EDOC1000091883/configuring-mirroring
@@ -25,10 +25,11 @@ display port-mirroring
 2. observe-port ยังเป็น unused — ต้อง config ก่อน mirrored port
 3. Mirror port config ไม่ถูก direction — inbound/outbound/both
 วิธีแก้:
-- Config observe-port: `system-view` → `observe-port 1 interface gigabitethernet 1/0/1` → `commit` (เอกสาร: Configuring Mirroring, Huawei S Series Troubleshooting Guide V200)
-- Config mirrored port: `interface gigabitethernet 1/0/2` → `port-mirroring to observe-port 1 inbound` → `commit` (เอกสาร: Configuring Mirroring, Huawei S Series Troubleshooting Guide V200)
+- Config observe-port: `system-view` → `observe-port 1 interface gigabitethernet 1/0/1` (เอกสาร: Configuring Mirroring, Huawei S Series Troubleshooting Guide V200)
+- Config mirrored port: `interface gigabitethernet 1/0/2` → `port-mirroring to observe-port 1 inbound` (เอกสาร: Configuring Mirroring, Huawei S Series Troubleshooting Guide V200)
 - Config mirrored port ทั้ง inbound และ outbound: `port-mirroring to observe-port 1 both` (เอกสาร: Configuring Mirroring, Huawei S Series Troubleshooting Guide V200)
 - Verify: `display observe-port` และ `display port-mirroring` — ต้องเห็น observe-port และ mirror-port ตรงกัน
+ระวัง: S series (VRP V200) คำสั่งมีผลทันที ไม่ต้อง `commit` (commit เป็นของ CloudEngine) / พอร์ต observe ที่ส่ง traffic ไปเครื่อง capture อาจมีปริมาณเท่าพอร์ตต้นทาง — ถอด mirroring ออกเมื่อเสร็จ
 ที่มา: Configuring Mirroring (Huawei S Series Troubleshooting Guide V200) https://support.huawei.com/enterprise/en/doc/EDOC1000091883/configuring-mirroring
 
 ## Port Mirroring | ตรวจ config mirroring ว่าถูกต้อง
@@ -60,8 +61,8 @@ GigabitEthernet1/0/2  Inbound     Observe-port 1
 2. Direction ไม่ถูก — ต้องใช้ `both` ถ้าต้องการทั้ง inbound และ outbound
 3. observe-port ยังไม่ได้ commit — config ไม่生效
 วิธีแก้:
-- แก้ observe-port config: `system-view` → `observe-port 1 interface gigabitethernet 1/0/1` → `commit`
-- แก้ mirrored port direction: `interface gigabitethernet 1/0/2` → `port-mirroring to observe-port 1 both` → `commit` (เอกสาร: Configuring Mirroring, Huawei S Series Troubleshooting Guide V200)
+- แก้ observe-port config: `system-view` → `observe-port 1 interface gigabitethernet 1/0/1`
+- แก้ mirrored port direction: `interface gigabitethernet 1/0/2` → `port-mirroring to observe-port 1 both` (เอกสาร: Configuring Mirroring, Huawei S Series Troubleshooting Guide V200)
 - ลบ mirroring: `undo port-mirroring to observe-port 1 inbound` (เอกสาร: Configuring Mirroring, Huawei S Series Troubleshooting Guide V200)
 - ลบ observe-port: `undo observe-port 1` (เอกสาร: Configuring Mirroring, Huawei S Series Troubleshooting Guide V200)
 ที่มา: Configuring Mirroring (Huawei S Series Troubleshooting Guide V200) https://support.huawei.com/enterprise/en/doc/EDOC1000091883/configuring-mirroring
