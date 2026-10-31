@@ -54,11 +54,11 @@ show ips sensor "<ชื่อ_sensor>"
 ที่มา: [IPS configuration options — FortiOS 7.4.2 Admin Guide](https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/419589/ips-configuration-options)
 วิธีแก้:
 - FortiGate มี IPS sensors ที่กำหนดไว้ล่วงหน้า: `default`, `high_security`, `protect_client`, `protect_email_server`, `protect_http_server`, `all_default`, `all_default_pass`, `sniffer-profile`, `wifi-default`
-- ใช้ `protect_http_server` สำหรับ server ใหม่: `config ips sensor`, `edit "IPS-Server"`, `set comment "Protect HTTP server"`, `set block-malicious-url enable`, `next`, `end`
-- เพิ่ม signature filter ลงใน sensor: `config ips sensor`, `edit "IPS-Server"`, `config entries`, `edit 1`, `set rule 10001`, `set action block`, `set status enable`, `next`, `end`, `next`, `end`
+- ใช้ sensor สำเร็จรูปผูกกับ policy ได้ทันที (เช่น `protect_http_server` สำหรับ web server) หรือสร้าง sensor ใหม่: `config ips sensor`, `edit "IPS-Server"`, `set block-malicious-url enable`, `next`, `end`
+- เพิ่ม signature filter ลงใน sensor: `config ips sensor`, `edit "IPS-Server"`, `config entries`, `edit 1`, `set rule <rule-id>`, `set action block`, `set status enable`, `next`, `end`, `next`, `end`
 - เพิ่ม filter โดย severity: `config ips sensor`, `edit "IPS-Server"`, `config entries`, `edit 2`, `set severity critical high medium`, `set action block`, `set status enable`, `next`, `end`, `next`, `end`
 - ตัด signature ออกจาก sensor: `config ips sensor`, `edit "IPS-Server"`, `config entries`, `edit <filter-id>`, `set status disable`, `next`, `end`, `next`, `end`
-- ระวัง: ใช้ `high_security` เป็นจุดเริ่มต้น แล้วค่อยๆ ปิด signatures ที่เกิด false positive
+- ระวัง: server ที่ใช้งานจริง ให้เริ่มด้วย `set action pass` + `set log enable` ดู log สักระยะก่อน แล้วค่อยเปลี่ยนเป็น `block`
 
 ---
 
@@ -73,10 +73,11 @@ show antivirus profile "<ชื่อ_av>"
 อ่านผล:
 - ต้องเห็น AV profile name, feature-set (proxy/flow), log setting, quarantine setting
 - หากไม่พบ = ยังไม่ได้สร้าง AV profile
-ที่มา: [FortiOS CLI Reference — AV section](https://docs.fortinet.com/document/fortigate/7.4.0/cli-reference/12848/file-filter)
+ที่มา: [AV security profile — FortiOS 7.4.4 NGFW/ATP Deployment Guide](https://docs.fortinet.com/document/fortigate/7.4.4/ngfw-atp-deployment-guide/520351/av-security-profile)
 วิธีแก้:
 - FortiGate มี AV profiles ที่กำหนดไว้ล่วงหน้า: `default`
-- ใช้ `default`: `config antivirus profile`, `edit "AV-Server"`, `set comment "AV for server traffic"`, `next`, `end`
+- ใช้ `default` ผูกกับ policy ได้ทันที หรือสร้างใหม่และเปิดสแกนรายโปรโตคอล: `config antivirus profile`, `edit "AV-Server"`, `config http`, `set av-scan block`, `end`, `next`, `end`
+- profile ใหม่ที่ไม่ได้ตั้ง `av-scan` ในโปรโตคอลใดเลย = ไม่สแกนอะไร
 - ระวัง: feature-set (proxy หรือ flow) ต้องตรงกับ inspection-mode ของ firewall policy
 
 ---
@@ -92,13 +93,12 @@ show application list "<ชื่อ_app_list>"
 อ่านผล:
 - ต้องเห็น application list name, entries (allow/deny/block rules)
 - หากไม่พบ = ยังไม่ได้สร้าง application list
-ที่มา: [FortiOS CLI Reference — Application section](https://docs.fortinet.com/document/fortigate/7.4.0/cli-reference/12848/file-filter)
+ที่มา: [config application list — FortiOS 7.4.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.4/cli-reference/117262721/config-application-list)
 วิธีแก้:
 - FortiGate มี application lists ที่กำหนดไว้ล่วงหน้า: `default`, `block-high-risk`
-- ใช้ `default`: `config application list`, `edit "App-List-Server"`, `set comment "Application list for server"`, `next`, `end`
-- เพิ่ม rule ควบคุมแอป: `config application list`, `edit "App-List-Server"`, `config entries`, `edit 1`, `set category 12`, `set action pass`, `set status enable`, `next`, `end`, `next`, `end`
-- `set category <id>` ใช้ category ID ของแอป (เช่น 12 = File Sharing)
-- ดู application categories: `get system application control categories`
+- ใช้ `default` หรือ `block-high-risk` ผูกกับ policy ได้ทันที หรือสร้างใหม่: `config application list`, `edit "App-List-Server"`, `next`, `end`
+- เพิ่ม rule ควบคุมแอป: `config application list`, `edit "App-List-Server"`, `config entries`, `edit 1`, `set category <category-id>`, `set action block`, `set status enable`, `next`, `end`, `next`, `end`
+- ดูเลข category / application ได้ใน GUI: Security Profiles > Application Control (ชี้ที่ชื่อหมวด) หรือ FortiGuard Application Control
 
 ---
 
@@ -117,9 +117,9 @@ show dnsfilter profile "<ชื่อ_dnsfilter>"
 วิธีแก้:
 - FortiGate มี DNS filter profiles ที่กำหนดไว้ล่วงหน้า: `default`
 - ใช้ `default`: `config dnsfilter profile`, `edit "DNS-Filter-Server"`, `set comment "DNS filter for server"`, `set block-botnet enable`, `next`, `end`
-- ตั้งค่า FortiGuard DNS filter: `config dnsfilter profile`, `edit "DNS-Filter-Server"`, `config ftgd-dns`, `set options all`, `config filters`, `edit 1`, `set category 5`, `set action block`, `next`, `end`, `end`, `next`, `end`
-- `set category <id>` ใช้ FortiGuard category ID (เช่น 5 = Adult)
-- `set options all` = ใช้ทุก FortiGuard category ที่มีการตั้งค่า filter
+- ตั้งค่า FortiGuard DNS filter: `config dnsfilter profile`, `edit "DNS-Filter-Server"`, `config ftgd-dns`, `config filters`, `edit 1`, `set category <category-id>`, `set action block`, `next`, `end`, `end`, `next`, `end`
+- เลข category ดูได้ใน GUI: Security Profiles > DNS Filter (ใช้ GUI เลือกหมวดจะง่ายกว่า)
+- domain เฉพาะ (allow/block) ใช้ตาราง `config dnsfilter domain-filter` แล้วอ้างจาก profile: `config domain-filter`, `set domain-filter-table <id>`
 
 ---
 
@@ -134,11 +134,11 @@ show firewall profile-group "<ชื่อ_profile_group>"
 อ่านผล:
 - ต้องเห็น profile group name, list of profiles ที่ผูก (av-profile, ips-sensor, application-list, dnsfilter-profile, webfilter-profile, ssl-ssh-profile, ฯลฯ)
 - หากไม่พบ = ยังไม่ได้สร้าง profile group
-ที่มา: [config firewall profile-group — FortiOS 7.4.0 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.0/cli-reference/12848/file-filter)
+ที่มา: [config firewall profile-group — FortiOS 7.4.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.4/cli-reference/109993161/config-firewall-profile-group)
 วิธีแก้:
 - สร้าง profile group: `config firewall profile-group`, `edit "PG-Server"`, `set av-profile "AV-Server"`, `set ips-sensor "IPS-Server"`, `set application-list "App-List-Server"`, `set dnsfilter-profile "DNS-Filter-Server"`, `next`, `end`
 - ตรวจสอบ profile group: `show firewall profile-group`
-- ระวัง: profile-type ใน policy ต้องเป็น `group` ถ้าจะใช่ profile group
+- ระวัง: profile-type ใน policy ต้องเป็น `group` ถ้าจะใช้ profile group
 
 ---
 
@@ -159,32 +159,13 @@ show firewall policy
 วิธีแก้:
 - FortiGate ใช้ profile-based firewall policies เป็นค่าเริ่มต้น (ไม่ใช่ policy-based ที่ใช้ `config firewall security-policy`)
 - ตรวจสอบโหมดด้วย: `get system settings | grep ngfw-mode`
-- ถ้าค่าว่าง = profile-based (ใช้ `config firewall policy`), ถ้าเป็น `policy-based` = ใช้ `config firewall security-policy`
-- สร้าง policy ใหม่พร้อม security profiles (ค่าเริ่มต้นคือ profile-based):
-  ```
-  config firewall policy
-      edit <policy-id>
-          set name "POLICY-SERVER-<ชื่อ>"
-          set srcintf "<src-interface>"
-          set dstintf "<dst-interface>"
-          set srcaddr "<src-address>"
-          set dstaddr "<server-address>"
-          set service "HTTPS" "HTTP"
-          set action accept
-          set schedule "always"
-          set utm-status enable
-          set ssl-ssh-profile "deep-inspection"
-          set inspection-mode flow
-          set av-profile "AV-Server"
-          set ips-sensor "IPS-Server"
-          set application-list "App-List-Server"
-          set dnsfilter-profile "DNS-Filter-Server"
-          set logtraffic all
-          next
-  end
-  ```
+- ผลเป็น `ngfw-mode : profile-based` = ใช้ `config firewall policy` / ถ้าเป็น `policy-based` = profile ผูกที่ `config firewall security-policy` (playbook นี้ไม่ครอบคลุม)
+- สร้าง policy ใหม่พร้อม security profiles: `config firewall policy`, `edit 0`, `set name "POLICY-SERVER-<ชื่อ>"`, `set srcintf <src-interface>`, `set dstintf <dst-interface>`, `set srcaddr <src-address>`, `set dstaddr <server-address>`, `set service HTTPS`, `set action accept`, `set schedule always`, `set utm-status enable`, `set inspection-mode flow`, `set ssl-ssh-profile <profile>`, `set av-profile AV-Server`, `set ips-sensor IPS-Server`, `set application-list App-List-Server`, `set dnsfilter-profile DNS-Filter-Server`, `set logtraffic all`, `next`, `end`
+- ระวัง: traffic ขาเข้า server ของเราเอง ห้ามใช้ `deep-inspection` สำเร็จรูป (ใช้ CA ของ FortiGate re-sign ทำให้ client เตือน cert) ให้สร้าง ssl-ssh-profile ใหม่ที่ `set server-cert-mode replace` + `set server-cert <cert ของ server>` หรือใช้ `certificate-inspection` ถ้าไม่มี cert/key ของ server
 - หรือใช้ profile group แทน single profiles: `set profile-type group`, `set profile-group "PG-Server"` (ไม่ต้องระบุแต่ละ profile ทีละตัว)
 - ระวัง: `utm-status` ต้องเป็น `enable` ถึงจะใช้ security profiles ได้
+
+---
 
 ## 8. ตรวจลำดับ Policy / SSL-SSH Inspection
 
@@ -196,7 +177,7 @@ show firewall policy
 ```
 อ่านผล:
 - ต้องเห็นลำดับ policies (policy-id เรียงจากน้อยไปมาก)
-- ต้องเห็น `ssl-ssh-profile` ผูกกับ policy (เช่น `deep-inspection`)
+- ต้องเห็น `ssl-ssh-profile` ผูกกับ policy
 - หากไม่พบ ssl-ssh-profile = traffic HTTPS จะไม่ถูก IPS/AV ตรวจ
 ที่มา: [SSL & SSH Inspection — FortiOS 7.4.2 Admin Guide](https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/929997/ssl-ssh-inspection)
 วิธีแก้:
@@ -213,12 +194,8 @@ show firewall policy
 
 คำค้น: fortigate false positive, fortigate false positive IPS, fortigate false positive antivirus, fortigate false positive application control, fortigate false positive DNS filter, fortigate false positive security profile, false positive FortiGate, false positive FortiGate IPS
 อาการ: security profiles บล็อก traffic ที่ถูกต้อง (false positive)
-คำสั่งตรวจ:
-```
-show log event log
-```
+ตรวจใน GUI: Log & Report > Security Events (เลือก IPS / AntiVirus / Application Control / DNS Query) ดู signature / app / domain ที่ถูก block
 อ่านผล:
-- ดู Security Events logs ใน GUI (Log & Report > Security Events)
 - รายการที่มี action = "Block" แต่เป็น traffic ที่ถูกต้อง = false positive
 - แต่ละรายการมีชื่อ signature, application, domain ที่ถูกบล็อก
 - หากไม่มี log = security profiles ไม่ถูกผูกกับ policy ที่ traffic ผ่าน
@@ -226,12 +203,11 @@ show log event log
 วิธีแก้:
 - (ก) ตัด signature/application/Domain ออกจาก profile ที่เกิด false positive
   - IPS: `config ips sensor`, `edit "<profile>"`, `config entries`, `edit <filter-id>`, `set status disable`, `next`, `end`, `next`, `end`
-  - AV: ตรวจสอบ log AV ใน GUI และเพิ่มไฟล์ที่เป็น false positive เข้า quarantine เพื่อตรวจสอบ
+  - AV: ถ้ามั่นใจว่าเป็น false positive ให้ส่งไฟล์ / hash ให้ FortiGuard ตรวจ (ไม่ปิด AV ทั้ง policy)
   - Application Control: เพิ่ม application เข้า allow list: `config application list`, `edit "<app-list>"`, `config entries`, `edit <rule-id>`, `set action pass`, `set status enable`, `next`, `end`, `next`, `end`
-  - DNS Filter: เพิ่ม domain เข้า allow list ใน ftgd-dns: `config dnsfilter profile`, `edit "<dnsfilter>"`, `config ftgd-dns`, `config filters`, `edit <id>`, `set action monitor`, `next`, `end`, `end`, `next`, `end`
+  - DNS Filter: allow เฉพาะ domain ด้วยตาราง domain-filter: `config dnsfilter domain-filter`, `edit <id>`, `config entries`, `edit 1`, `set domain "<domain>"`, `set action allow`, `next`, `end`, `next`, `end` แล้วอ้างจาก profile ด้วย `set domain-filter-table <id>`
 - (ข) ใช้ exempt-ip สำหรับ IPS (ปลอดภัยกว่าปิด signature ทั้งตัว):
   - `config ips sensor`, `edit "<profile>"`, `config entries`, `edit <filter-id>`, `config exempt-ip`, `edit 1`, `set src-ip <IP>/32`, `set dst-ip <IP>/32`, `next`, `end`, `next`, `end`, `next`, `end`
-- (ค) เปลี่ยน action จาก block เป็น monitor ชั่วคราว: `set action pass` ใน IPS entry
-- (ง) ใช้ exemption แทนการปิดการป้องกัน — เช่น ใช้ `set action pass` เฉพาะ signature/rule ที่เกิด false positive แทนการปิด profile ทั้งหมด
+- (ค) ให้ผ่านแต่ยังเก็บ log ชั่วคราว: ใน IPS entry `set action pass` + `set log enable`
 - ระวัง: อย่าปิดการป้องกันทั้งหมด (เช่น set status disable บนทั้ง profile) — ให้ตัดเฉพาะ signature/rule/IP ที่เกิด false positive
 - ตรวจด้วย diagnose flow: `diagnose firewall iprope lookup <src-ip> <src-port> <dst-ip> <dst-port> <protocol> <src-intf>` เพื่อดูว่า traffic ผ่าน policy ไหน และมี security profiles อะไรผูกอยู่
