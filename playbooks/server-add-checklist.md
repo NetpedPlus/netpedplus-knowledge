@@ -4,7 +4,7 @@ title: Checklist เพิ่ม server ใหม่ (ToR → FortiGate → F5)
 families:
 triggers: add server, เพิ่ม server, onboard server, new node, server provision, เพิ่ม node
 versions: FortiOS 7.4.x, BIG-IP 17.1 / 17.5, Huawei VRP V200R019 – V200R025, H3C Comware 7, Cisco IOS-XE 17.x
-sources: https://support.huawei.com/enterprise/en/doc/EDOC1100463967/4c4b03b5/creating-and-configuring-an-eth-trunk-interface, https://www.h3c.com/en/d_202511/2685240_294551_0.htm, https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst9300/software/release/17-7/configuration_guide/lyr2/b_177_lyr2_9300_cg/configuring_etherchannels.html, https://docs.fortinet.com/document/fortigate/7.4.2/cli-reference/227620/config-firewall-address, https://docs.fortinet.com/document/fortigate/7.4.4/cli-reference/333889629/config-firewall-policy, https://techdocs.f5.com/en-us/bigip-17-0-0/big-ip-local-traffic-manager-implementations/implementing-health-and-performance-monitoring.html, https://techdocs.f5.com/en-us/bigip-21-1-0/big-ip-local-traffic-management-basics/about-nodes.html, https://www.vmware.com/docs/vsphere-esxi-vcenter-server-80-performance-best-practices
+sources: https://support.huawei.com/enterprise/en/doc/EDOC1100463967/4c4b03b5/creating-and-configuring-an-eth-trunk-interface, https://www.h3c.com/en/d_202511/2685240_294551_0.htm, https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst9300/software/release/17-7/configuration_guide/lyr2/b_177_lyr2_9300_cg/configuring_etherchannels.html, https://docs.fortinet.com/document/fortigate/7.4.2/cli-reference/227620/config-firewall-address, https://docs.fortinet.com/document/fortigate/7.4.4/cli-reference/333889629/config-firewall-policy, https://techdocs.f5.com/en-us/bigip-17-0-0/big-ip-local-traffic-manager-implementations/implementing-health-and-performance-monitoring.html, https://techdocs.f5.com/en-us/bigip-21-1-0/big-ip-local-traffic-management-basics/about-nodes.html, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-networking-8-0/configuring-lacp-on-a-vsphere-distrubuted-switch-in-the-vsphere-web-client.html
 ---
 
 # Checklist เพิ่ม server ใหม่ (ToR → FortiGate → F5)
@@ -24,12 +24,11 @@ sources: https://support.huawei.com/enterprise/en/doc/EDOC1100463967/4c4b03b5/cr
 display eth-trunk <trunk-id> verbose
 ```
 อ่านผล:
-- Status ทุก member port ต้องเป็น `Selected` (ไม่ใช่ `Unselected`)
-- LACP State: ต้องมี `A` (LACP Active) และ `C/D` (aggregatable/aggregated)
-- Aggregation Type: `S` = Static LACP
+- Status ของ member port ต้องเป็น `Selected` (ไม่ใช่ `Unselected`)
+- Working Mode: ต้องเป็น `LACP`
 ที่มา: [Creating and Configuring an Eth-Trunk Interface (Huawei)](https://support.huawei.com/enterprise/en/doc/EDOC1100463967/4c4b03b5/creating-and-configuring-an-eth-trunk-interface)
 วิธีแก้:
-- สร้าง Eth-Trunk แบบ LACP: `create eth-trunk <trunk-id>`, `interface eth-trunk <trunk-id>`, `mode lacp-static`, `commit`
+- สร้าง Eth-Trunk แบบ LACP: `system-view`, `interface eth-trunk <trunk-id>`, `mode lacp`, `commit`
 - เพิ่ม port: `interface <port-range>`, `eth-trunk <trunk-id>`, `commit`
 - ตั้ง LACP fast timeout: `interface eth-trunk <trunk-id>`, `lacp timeout fast`, `commit`
 
@@ -45,8 +44,8 @@ display link-aggregation verbose
 ```
 อ่านผล:
 - Aggregation Mode: `D` = Dynamic (LACP)
-- Flags: `A=1` (LACP Active), `C=1` (aggregatable), `D=1` (aggregated)
-- Selected ports: port ที่เชื่อม server ต้องอยู่ใน Selected list
+- Flags แสดงตัวอักษรต่อกัน เช่น `ACDEF` (A = LACP Active, C = Aggregatable, D = Synchronized, E = Collecting, F = Distributing)
+- Port ที่ใช้งานได้ต้องมี Status = `S` (Selected)
 ที่มา: [02-Ethernet link aggregation configuration (H3C)](https://www.h3c.com/en/d_202511/2685240_294551_0.htm)
 วิธีแก้:
 - สร้าง Bridge-Aggregation: `system-view`, `interface bridge-aggregation <group-id>`, `link-aggregation mode dynamic`
@@ -63,13 +62,14 @@ display link-aggregation verbose
 show etherchannel summary
 ```
 อ่านผล:
-- Group port-channel ต้องมีตัว `P` (Parsed/LACP active) — ไม่ใช่ `D` (standalone)
-- Ports ในแต่ละ group ต้องมี `P` ใน Flag (แสดงว่าอยู่ LACP group แล้ว)
+- Flag ของ port-channel ควรเป็น `(SU)` — S = Standby/Selected, U = Up
+- Flag ของ port ในกลุ่ม: `P` = bundled in port-channel, `D` = down, `I` = stand-alone, `s` = suspended
 - Port assigned: แสดงจำนวน port ที่รวม group แล้ว (≥2)
 ที่มา: [Configuring EtherChannels — Catalyst 9300 (Cisco)](https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst9300/software/release/17-7/configuration_guide/lyr2/b_177_lyr2_9300_cg/configuring_etherchannels.html)
 วิธีแก้:
 - สร้าง EtherChannel LACP: `configure terminal`, `interface range <range>`, `channel-group <group-number> mode active`, `end`
-- `mode active` = LACP Active (เริ่ม negotiate), คู่ต้อง active/passive เท่านั้น
+- `mode active` = LACP Active (เริ่ม negotiate)
+- คู่ที่ถูกต้อง: active/active (ใช้ได้), active/passive (ใช้ได้), passive/passive (ไม่ขึ้น)
 
 ---
 
@@ -79,16 +79,16 @@ show etherchannel summary
 อาการ: ต้องเลือกรูปแบบ NIC teaming สำหรับ server VMware ESXi
 คำสั่งตรวจ:
 ```
-ตรวจใน GUI: Host > Manage > Networking > เลือก host > ตรวจสอบ uplink และ load balancing policy
+ตรวจใน GUI: vCenter > Hosts and Clusters > เลือก host > Configure > Networking > ตรวจสอบ LAG และ uplink
 ```
 อ่านผล:
-- VDS LACP: มี LACP partner set เป็น External, uplink assign ไป LAG
-- Legacy Teaming: Load balancing = Route based on source virtual port, uplink Primary/Secondary
-ที่มา: [Performance Best Practices for VMware vSphere 8.0](https://www.vmware.com/docs/vsphere-esxi-vcenter-server-80-performance-best-practices)
+- VDS LACP: มี LAG set ไว้, uplink assign ไป LAG, physical ToR ทำ LACP port-channel คู่กัน
+- Legacy Teaming: ใช้ vSS, Load balancing = Route based on source virtual port, uplink Primary/Secondary
+ที่มา: [LACP Support on a vSphere Distributed Switch — Broadcom/VMware](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-networking-8-0/configuring-lacp-on-a-vsphere-distrubuted-switch-in-the-vsphere-web-client.html)
 วิธีแก้:
-- LACP + VDS: สร้าง LACP partner ใน VDS (Host > Configure > Networking > Edit > VM Network > Edit LACP), เลือก External LAG, assign uplink
-- Legacy Teaming: ใช้ vSwitch ปกติ, Load balancing = Source virtual port, Failover = Active/Standby
-- สรุป: ถ้า switch รองรับ LACP และใช้ 2 uplink → LACP + VDS, ถ้า 1 uplink → Legacy Active-Standby
+- (ก) VDS + LAG: ใช้ vSphere Distributed Switch (vSS ไม่รองรับ LACP), สร้าง LAG บน vDS (vCenter > Distributed Switch > Configure > LACP > New Link Aggregation Group), ตั้ง LACP mode matching กับ ToR (active/active หรือ active/passive), assign uplink ไป LAG
+- (ข) vSS + ToR port ธรรมดา: ใช้ vSS + standard teaming แบบ "Route based on originating virtual port" (ไม่ทำ LACP)
+- สรุป: ถ้า ToR ทำ LACP จริงและใช้ 2 uplink → ต้องใช้ VDS + LAG, ถ้าใช้ vSS ได้แค่ active/standby เท่านั้น
 
 ---
 
@@ -98,15 +98,17 @@ show etherchannel summary
 อาการ: ต้องตรวจว่า address object ของ server ใหม่ถูกสร้างใน FortiGate แล้วหรือยัง
 คำสั่งตรวจ:
 ```
-get firewall address list <ชื่อ>
+show firewall address "<ชื่อ>"
 ```
 อ่านผล:
 - ต้องเห็น name, subnet/IP ที่กำหนด, type, interface
-- หากไม่พบ output = ยังไม่ได้สร้าง address object
+- หากไม่พบ output หรือแสดง "not found" = ยังไม่ได้สร้าง address object
 ที่มา: [config firewall address — FortiOS 7.4.2](https://docs.fortinet.com/document/fortigate/7.4.2/cli-reference/227620/config-firewall-address)
 วิธีแก้:
-- สร้าง address: `config firewall address`, `edit "SRV-<ชื่อ>_<IP>"`, `set subnet <IP>/32`, `set allowed-access [all|ssh|https|http|ping]`, `next`, `end`
-- ผูก policy: `config firewall policy`, `edit 0`, `set srcintf <src>`, `set dstintf <dst>`, `set srcaddr <src_addr>`, `set dstaddr "SRV-<ชื่อ>_<IP>"`, `set action accept`, `set schedule always`, `set service ALL`, `set logtraffic all`, `set nat enable`, `next`, `end`
+- สร้าง address: `config firewall address`, `edit "SRV-<ชื่อ>_<IP>"`, `set subnet <IP>/32`, `next`, `end`
+- สร้าง policy ใหม่: `config firewall policy`, `edit 0`, `set srcintf <src-interface>`, `set dstintf <dst-interface>`, `set srcaddr <src-address>`, `set dstaddr "SRV-<ชื่อ>_<IP>"`, `set action accept`, `set schedule always`, `set service <service-list>` (เฉพาะ port ที่ต้องใช้ เช่น HTTP HTTPS), `set logtraffic all`, `next`, `end`
+- ระวัง: trafficขาเข้า server ปกติไม่ NAT (ถ้าเปิดจากภายนอกใช้ VIP / port forward)
+- ตรวจลำดับ policy: ถ้ามี policy deny กว้างกว่าอยู่ก่อน ให้ใช้ `move <new-policy-id> before <deny-policy-id>`
 
 ---
 
@@ -116,43 +118,44 @@ get firewall address list <ชื่อ>
 อาการ: ต้องตรวจว่า firewall policy ที่อนุญาต traffic ไป server ใหม่ถูกสร้างแล้วหรือยัง
 คำสั่งตรวจ:
 ```
-get firewall policy list
-diagnose firewall policy list | grep <ชื่อ_server>
+show firewall policy | grep <ชื่อ_server>
 ```
 อ่านผล:
 - ต้องเห็น policy ที่ dstaddr = ชื่อ address ของ server, action = accept
 - หากไม่มี = traffic จะถูก drop โดย default deny
 ที่มา: [config firewall policy — FortiOS 7.4.4](https://docs.fortinet.com/document/fortigate/7.4.4/cli-reference/333889629/config-firewall-policy)
 วิธีแก้:
-- สร้าง policy ใหม่ที่ตำแหน่งที่ถูกต้อง (ลำดับก่อน default deny): `config firewall policy`, `edit 0`, `set srcintf <src-interface>`, `set dstintf <dst-interface>`, `set srcaddr <src-address>`, `set dstaddr "SRV-<ชื่อ>_<IP>"`, `set action accept`, `set schedule always`, `set service <service-list>`, `set logtraffic all`, `set nat enable`, `next`, `end`
+- ใช้ `show firewall policy` ดูลำดับ policy ทั้งหมด, ใช้ `move <id> before <id>` จัดลำดับให้ policy ใหม่อยู่ก่อน default deny
+- ตรวจด้วย diagnose flow: `diagnose firewall iprope lookup <src-ip> <src-port> <dst-ip> <dst-port> <protocol> <src-intf>` (เช่น `diagnose firewall iprope lookup 10.0.0.1 12345 10.0.0.2 80 6 port1`)
 
 ---
 
 ## 7. F5 BIG-IP / Node ตรวจว่ามีหรือยัง
 
-คำค้น: f5, big-ip, node, ltm node, tmsh, ltm, สร้าง node, f5 node, bigip 17
+คำค้น: f5, big-ip, node, ltm node, ltm, สร้าง node, f5 node, bigip 17
 อาการ: ต้องตรวจว่า F5 BIG-IP node ของ server ใหม่ถูกสร้างแล้วหรือยัง
 คำสั่งตรวจ:
 ```
-tmsh list ltm node <node_name>
+show ltm node <node_name>
 ```
 อ่านผล:
-- ต้องเห็น node name, address (IP), state (available/down)
+- ต้องเห็น node name, address (IP)
+- `list` แสดงแค่ config ไม่มี state, ต้องใช้ `show` เพื่อดู state (available/down)
 - หากไม่พบ = ยังไม่ได้สร้าง node
 ที่มา: [About Nodes — BIG-IP](https://techdocs.f5.com/en-us/bigip-21-1-0/big-ip-local-traffic-management-basics/about-nodes.html)
 วิธีแก้:
-- สร้าง node: `tmsh create ltm node <node_name> address <IP>`
+- สร้าง node: `create ltm node <node_name> address <IP>`
 
 ---
 
 ## 8. F5 BIG-IP / Pool Member ตรวจว่ามีหรือยัง
 
-คำค้น: f5, big-ip, pool member, pool, tmsh, ltm pool, health monitor, f5 pool, bigip 17
+คำค้น: f5, big-ip, pool member, pool, ltm pool, health monitor, f5 pool, bigip 17
 อาการ: ต้องตรวจว่า pool member ของ server ใหม่ถูกผูกและ monitor ทำงานแล้วหรือยัง
 คำสั่งตรวจ:
 ```
-tmsh list ltm pool <pool_name> members
-tmsh list ltm monitor <monitor_name>
+show ltm pool <pool_name> members
+show ltm monitor <monitor_name>
 ```
 อ่านผล:
 - Pool members ต้องแสดง server IP:port และ state (up/down/monitoring)
@@ -160,9 +163,9 @@ tmsh list ltm monitor <monitor_name>
 - หากไม่พบ member ใน pool = ยังไม่ได้ผูก pool member
 ที่มา: [Implementing Health and Performance Monitoring — BIG-IP 17.0](https://techdocs.f5.com/en-us/bigip-17-0-0/big-ip-local-traffic-manager-implementations/implementing-health-and-performance-monitoring.html)
 วิธีแก้:
-- สร้าง pool + member + monitor: `tmsh create ltm pool <pool_name> members add { <node_name>:<port> } monitor <monitor_name>`
-- สร้าง monitor ใหม่ถ้าต้องการ: `tmsh create ltm monitor icmp <monitor_name>`
-- สร้าง Virtual Server ที่ผูก pool: `tmsh create ltm virtual <vs_name> destination <VIP>:<port> pool <pool_name>`
+- สร้าง pool + member + monitor: `create ltm pool <pool_name> members add { <node_name>:<port> } monitor <monitor_name>`
+- สร้าง monitor ใหม่ถ้าต้องการ: `create ltm monitor icmp <monitor_name>`
+- สร้าง Virtual Server ที่ผูก pool: `create ltm virtual <vs_name> destination <VIP>:<port> pool <pool_name>`
 
 ---
 
@@ -175,19 +178,19 @@ tmsh list ltm monitor <monitor_name>
 display eth-trunk <trunk-id> verbose
 display link-aggregation verbose
 show etherchannel summary
-get firewall address list <ชื่อ>
-get firewall policy list
-tmsh list ltm node <node_name>
-tmsh list ltm pool <pool_name> members
-tmsh list ltm virtual <vs_name>
+show firewall address "<ชื่อ>"
+show firewall policy | grep <ชื่อ_server>
+show ltm node <node_name>
+show ltm pool <pool_name> members
+show ltm virtual <vs_name>
 ```
 อ่านผล:
-- ToR: ทุก member port แสดงสถานะ Selected/Active/Parsed (ไม่ใช่ Unselected/D)
+- ToR: ทุก member port แสดงสถานะ Selected (ไม่ใช่ Unselected)
 - FortiGate: address object มีอยู่, policy ผูก dstaddr ถูก, action = accept
 - F5: node มีอยู่, pool member status = up หรือ monitoring, virtual server = available
 - Traffic flow: ping จาก client ไป server ผ่านได้, server ตอบกลับผ่าน F5/FortiGate กลับได้
-ที่มา: https://support.huawei.com/enterprise/en/doc/EDOC1100463967/4c4b03b5/creating-and-configuring-an-eth-trunk-interface, https://www.h3c.com/en/d_202511/2685240_294551_0.htm, https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst9300/software/release/17-7/configuration_guide/lyr2/b_177_lyr2_9300_cg/configuring_etherchannels.html, https://docs.fortinet.com/document/fortigate/7.4.2/cli-reference/227620/config-firewall-address, https://docs.fortinet.com/document/fortigate/7.4.4/cli-reference/333889629/config-firewall-policy, https://techdocs.f5.com/en-us/bigip-17-0-0/big-ip-local-traffic-manager-implementations/implementing-health-and-performance-monitoring.html, https://techdocs.f5.com/en-us/bigip-21-1-0/big-ip-local-traffic-management-basics/about-nodes.html, https://www.vmware.com/docs/vsphere-esxi-vcenter-server-80-performance-best-practices
+ที่มา: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-networking-8-0/configuring-lacp-on-a-vsphere-distrubuted-switch-in-the-vsphere-web-client.html
 วิธีแก้:
-- ToR LACP ไม่ขึ้น: ตรวจ mode ทั้ง 2 ฝั่ง (Huawei: lacp-static, H3C: link-aggregation mode dynamic, Cisco: mode active), ตรวจ VLAN setting ต้องตรงกัน, ESXi: ตรวจ VDS LACP type = External
+- ToR LACP ไม่ขึ้น: ตรวจ mode ทั้ง 2 ฝั่ง (Huawei: mode lacp, H3C: link-aggregation mode dynamic, Cisco: mode active), ตรวจ VLAN setting ต้องตรงกัน, ESXi: ตรวจ VDS LAG mode matching กับ ToR
 - F5 pool member down: ตรวจ service port เปิดจริงที่ server, ping จาก BIG-IP, ตรวจ monitor interval/timeout
 - FortiGate policy ไม่จับ: ตรวจลำดับ policy, ชื่อ address ถูกต้อง, interface ผูกตรง
