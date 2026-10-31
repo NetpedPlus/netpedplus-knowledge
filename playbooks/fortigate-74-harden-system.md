@@ -29,14 +29,7 @@ get system global
 - ดูค่า `set dh-params` (default 2048 — ต้องเปลี่ยนเป็น 8192)
 ที่มา: [config system global — FortiOS 7.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.0/cli-reference/001620/config-system-global)
 วิธีแก้:
-- ปิด static key ciphers และเพิ่ม DH params เป็น 8192:
-  ```
-  config system global
-      set strong-crypto enable
-      set ssl-static-key-ciphers disable
-      set dh-params 8192
-  end
-  ```
+- ปิด static key ciphers และเพิ่ม DH params เป็น 8192: `config system global`, `set strong-crypto enable`, `set ssl-static-key-ciphers disable`, `set dh-params 8192`, `end`
 - **ระวัง:** การเปลี่ยน dh-params เป็น 8192 อาจส่งผลต่อ performance ของ HTTPS/SSH admin connection ในกรณีที่ device มี CPU ต่ำ — ต้องทดสอบก่อน
 
 ---
@@ -55,12 +48,7 @@ get system global
 - หากเป็น SSLv3 หรือ TLSv1 = ต้องเปลี่ยน
 ที่มา: [config system global — FortiOS 7.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.0/cli-reference/001620/config-system-global)
 วิธีแก้:
-- ตั้งค่า TLS minimum เป็น TLSv1.2:
-  ```
-  config system global
-      set ssl-min-proto-version TLSv1-2
-  end
-  ```
+- ตั้งค่า TLS minimum เป็น TLSv1.2: `config system global`, `set ssl-min-proto-version TLSv1-2`, `end`
 
 ---
 
@@ -78,13 +66,8 @@ get system global
 - หากยังอยู่ใน default = ยังไม่ได้เปิด
 ที่มา: [Hardening — FortiOS 7.4 Best Practices](https://docs.fortinet.com/document/fortigate/7.4.0/best-practices/555436)
 วิธีแก้:
-- เปิด private data encryption:
-  ```
-  config system global
-      set private-data-encryption enable
-  end
-  ```
-- **ระวัง:** เมื่อเปิด private data encryption แล้ว config backup จะเข้ารหัสด้วย — ต้องเก็บ encryption key ไว้ในที่ปลอดภัย (vault/turm) — หากสูญเสีย key จะไม่สามารถ restore config ได้
+- เปิด private data encryption: `config system global`, `set private-data-encryption enable`, `end`
+- **ระวัง:** เมื่อเปิด private data encryption แล้ว config backup จะเข้ารหัสด้วย — ต้องเก็บ encryption key ไว้ในที่ปลอดภัย (vault) — หากสูญเสีย key จะไม่สามารถ restore config ได้
 
 ---
 
@@ -102,21 +85,9 @@ get log setting
 - หาก local-out = enable = ถูกเปิดไว้แล้ว
 ที่มา: [config log setting — FortiOS 7.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.4/cli-reference/196223761/config-log-setting)
 วิธีแก้:
-- เปิด logging สำหรับ local-in policies:
-  ```
-  config log setting
-      set local-in-allow enable
-      set local-in-deny-unicast enable
-      set local-in-deny-broadcast enable
-  end
-  ```
-- เปิด extended log สำหรับ traffic logging:
-  ```
-  config log setting
-      set extended-log enable
-      set log-policy-comment enable
-  end
-  ```
+- ระวัง: `local-in-allow` และ `local-in-deny-broadcast` สร้าง log จำนวนมาก (ทุก ping / broadcast) เปิดเฉพาะตอนตรวจปัญหา หรือเช็กพื้นที่ log / license SIEM ก่อน
+- เปิด logging สำหรับ local-in policies: `config log setting`, `set local-in-allow enable`, `set local-in-deny-unicast enable`, `set local-in-deny-broadcast enable`, `end`
+- เปิด extended log สำหรับ traffic logging: `config log setting`, `set extended-log enable`, `set log-policy-comment enable`, `end`
 
 ---
 
@@ -135,22 +106,9 @@ get log syslogd setting
 - ดูว่า `set mode` เป็น udp หรือ legacy-reliable
 ที่มา: [config log syslogd setting — FortiOS 7.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.4/cli-reference/141516630)
 วิธีแก้:
-- ตั้งค่า syslog server:
-  ```
-  config log syslogd setting
-      set status enable
-      set server "<syslog-server-IP>"
-      set port 514
-      set mode udp
-      set facility local0
-  end
-  ```
-- หากต้องการ TLS encryption สำหรับ syslog:
-  ```
-  config log syslogd setting
-      set ssl-min-proto-version TLSv1-2
-  end
-  ```
+- ตั้งค่า syslog server: `config log syslogd setting`, `set status enable`, `set server "<syslog-server-IP>"`, `set port 514`, `set mode udp`, `set facility local0`, `end`
+- ส่งแบบเข้ารหัส TLS (ปลายทางต้องรับ syslog-TLS ได้ ปกติ TCP 6514): `config log syslogd setting`, `set mode reliable`, `set enc-algorithm high`, `set port 6514`, `set ssl-min-proto-version TLSv1-2`, `end`
+- ระวัง: `set mode` ต้องตรงกับฝั่ง SIEM (QRadar รับ UDP 514 เป็นค่าเริ่มต้น) เปลี่ยนแล้ว log จะหายถ้าปลายทางไม่รองรับ
 
 ---
 
