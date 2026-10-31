@@ -17,12 +17,13 @@
 - PR #11: ก่อน push ทุกครั้งให้รัน `grep -n "ตัวอย่าง output" playbooks/*.md` ถ้าเจอ = ลบก่อน push
 - PR #11: show port-channel เป็นของ NX-OS ไม่ใช่ IOS-XE
 - PR #11: switch priority เป็นคำสั่ง EXEC ไม่ใช่ config
-|- PR #11: flag ของ etherchannel ผิด (SU ≠ S,U — ต้องตรวจเอกสารจริง)
-|- PR #12: สิ่งที่ต้องเขียนในรายงานต้องตรงกับไฟล์จริง — ถ้าบอกว่ามีลิงก์ CLI Reference ต้องมีลิงก์นั้นในไฟล์
-|- PR #12: ห้ามแนะนำ BPDU Filter / ปิดการป้องกัน loop เป็นวิธีแก้
-|- PR #13: families ต้องตรงกับ OS ของอุปกรณ์จริง (FortiAnalyzer ≠ FortiOS) — ถ้าไม่มี family ที่ตรง ให้เว้นว่างแล้วใช้ triggers + vendor แทน fortinet_fortios
-|- PR #13: คำสั่ง execute ... add / clear / disk-quota เป็นคำสั่งเปลี่ยนค่า config ห้ามอยู่ในบล็อกคำสั่งตรวจ
-|- PR #14: ต้องเช็คเอกสารของรุ่นนั้นจริงๆ ทุกคำสั่งต้องเจอในเอกสารของรุ่นนั้น (C1300 ≠ C9300X CLI)
-|- PR #15: ห้ามเขียน "อ่านผล" ที่ไม่ได้เห็นจากเอกสาร/ตัวอย่าง output จริง — ต้องตรวจเอกสารจริงก่อนเขียนค่าที่ expected
-|- PR #15: `list` ≠ `show` บน F5 — `list` แสดงแค่ config ไม่มี state ต้องใช้ `show` เพื่อดู up/down status
-|- PR #15: Huawei S-series VRP V200 ไม่มี `commit` (ต่างจาก CE/NE/V600) — ตรวจทุกครั้งก่อนใส่
+- PR #11: flag ของ etherchannel ผิด (SU ≠ S,U — ต้องตรวจเอกสารจริง)
+- PR #12: สิ่งที่ต้องเขียนในรายงานต้องตรงกับไฟล์จริง — ถ้าบอกว่ามีลิงก์ CLI Reference ต้องมีลิงก์นั้นในไฟล์
+- PR #12: ห้ามแนะนำ BPDU Filter / ปิดการป้องกัน loop เป็นวิธีแก้
+- PR #13: families ต้องตรงกับ OS ของอุปกรณ์จริง (FortiAnalyzer ≠ FortiOS) — ถ้าไม่มี family ที่ตรง ให้เว้นว่างแล้วใช้ triggers + vendor แทน fortinet_fortios
+- PR #13: คำสั่ง execute ... add / clear / disk-quota เป็นคำสั่งเปลี่ยนค่า config ห้ามอยู่ในบล็อกคำสั่งตรวจ
+- PR #14: ต้องเช็คเอกสารของรุ่นนั้นจริงๆ ทุกคำสั่งต้องเจอในเอกสารของรุ่นนั้น (C1300 ≠ C9300X CLI)
+- PR #15: ห้ามเขียน "อ่านผล" ที่ไม่ได้เห็นจากเอกสาร/ตัวอย่าง output จริง — ต้องตรวจเอกสารจริงก่อนเขียนค่าที่ expected
+- PR #15: `list` ≠ `show` บน F5 — `list` แสดงแค่ config ไม่มี state ต้องใช้ `show` เพื่อดู up/down status
+- PR #15: Huawei S-series VRP V200 ไม่มี `commit` (ต่างจาก CE/NE/V600) — ตรวจทุกครั้งก่อนใส่
+- PR #15: ก่อนตอบว่า "แก้แล้ว" ให้ grep ไฟล์ยืนยันทุกข้อ (รอบ 1 แจ้งว่าลบ commit แล้ว แต่ยังเหลือ 3 จุด) / FortiOS ใช้ `grep -f` เพื่อเห็นทั้ง policy
