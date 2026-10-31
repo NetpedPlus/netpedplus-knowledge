@@ -134,7 +134,7 @@ show firewall profile-group "<ชื่อ_profile_group>"
 อ่านผล:
 - ต้องเห็น profile group name, list of profiles ที่ผูก (av-profile, ips-sensor, application-list, dnsfilter-profile, webfilter-profile, ssl-ssh-profile, ฯลฯ)
 - หากไม่พบ = ยังไม่ได้สร้าง profile group
-ที่มา: [config firewall profile-group — FortiOS 7.4.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.4/cli-reference/109993161/config-firewall-profile-group)
+ที่มา: [Profile groups — FortiOS 7.4.1 Admin Guide](https://docs.fortinet.com/document/fortigate/7.4.1/administration-guide/498347/profile-groups)
 วิธีแก้:
 - สร้าง profile group: `config firewall profile-group`, `edit "PG-Server"`, `set av-profile "AV-Server"`, `set ips-sensor "IPS-Server"`, `set application-list "App-List-Server"`, `set dnsfilter-profile "DNS-Filter-Server"`, `next`, `end`
 - ตรวจสอบ profile group: `show firewall profile-group`

@@ -29,23 +29,15 @@ show system admin
 - หากมี ให้ตรวจสอบว่า IP ที่กำหนดเป็น management subnet จริงหรือไม่
 ที่มา: [config system admin — FortiOS 7.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.0/cli-reference/13620/config-system-admin)
 วิธีแก้:
-- กำหนด trusted hosts สำหรับ admin account ที่สำคัญ:
-  ```
-  config system admin
-      edit "<admin_name>"
-          set trusthost1 <MGMT-subnet> 255.255.255.0
-          set trusthost2 <DR-subnet> 255.255.255.0
-          set trusthost3 <remote-branch> 255.255.255.0
-      next
-  end
-  ```
-- สำหรับ emergency account (ต้องมี MFA แต่ไม่มี trusted host) ให้เก็บรหัสไว้ใน vault/nicki
+- กำหนด trusted hosts สำหรับ admin account ที่สำคัญ: `config system admin`, `edit "<admin_name>"`, `set trusthost1 <MGMT-subnet> 255.255.255.0`, `set trusthost2 <DR-subnet> 255.255.255.0`, `set trusthost3 <remote-branch> 255.255.255.0`, `next`, `end`
+- บัญชีฉุกเฉิน (break-glass) ที่ไม่เปิด MFA ต้องมี trusthost จำกัดเสมอ และเก็บรหัสไว้ใน vault / ตู้นิรภัย
+- ระวัง: ตั้ง trusthost ให้บัญชีที่กำลัง login อยู่ ต้องใส่ IP ของตัวเองด้วย ไม่งั้นจะหลุดและเข้าไม่ได้
 
 ---
 
-## 2. เปิด Admin MFA: OTP / RSA / FortiToken
+## 2. เปิด Admin MFA: FortiToken / Email / SMS
 
-คำค้น: fortigate MFA admin, fortigate two-factor authentication, fortigate OTP admin, fortigate fortitoken mobile admin, fortigate RSA admin
+คำค้น: fortigate MFA admin, fortigate two-factor authentication, fortigate OTP admin, fortigate fortitoken mobile admin, fortigate fortitoken cloud admin
 อาการ: ต้องเปิด MFA สำหรับผู้ดูแลระบบทุก account
 
 คำสั่งตรวจ:
@@ -53,40 +45,17 @@ show system admin
 show system admin
 ```
 อ่านผล:
-- ดูว่า admin account ใดบ้างมี `set two-factor [fortitoken|totp|rsa|email|sms]`
-- ดูว่า admin account ใดบ้างมี `set two-factor-authentication [fortitoken|totp|rsa|email|sms]`
-- หากไม่มี = ยังไม่ได้เปิด MFA
+- ดูว่า admin account ใดบ้างมี `set two-factor fortitoken|fortitoken-cloud|email|sms`
+- ไม่มีบรรทัด `two-factor` = ปิดอยู่ (ค่าเริ่มต้น disable)
 ที่มา: [config system admin — FortiOS 7.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.0/cli-reference/13620/config-system-admin)
 วิธีแก้:
-- เปิด MFA ผ่าน FortiToken Cloud (OTP):
-  ```
-  config system admin
-      edit "<admin_name>"
-          set two-factor fortitoken
-          set two-factor-authentication fortitoken
-      next
-  end
-  ```
-- เปิด MFA ผ่าน email OTP:
-  ```
-  config system admin
-      edit "<admin_name>"
-          set two-factor totp
-          set two-factor-authentication totp
-          set email-to "<admin_email>"
-      next
-  end
-  ```
-- เปิด MFA ผ่าน RSA SecurID:
-  ```
-  config system admin
-      edit "<admin_name>"
-          set two-factor rsa
-          set two-factor-authentication rsa
-      next
-  end
-  ```
-- **ระวัง:** emergency account ที่ไม่สามารถเปิด MFA ได้ (เช่น account  recovery) ต้องมี trusted host จำกัด และเก็บรหัสไว้ใน vault — ห้ามใช้ MFA สำหรับ account ที่ต้องเข้าถึงฉุกเฉิน
+- FortiToken (hardware / mobile ที่ลงทะเบียนในเครื่องแล้ว): `config system admin`, `edit "<admin_name>"`, `set two-factor fortitoken`, `set fortitoken <serial>`, `set email-to "<admin_email>"` (ใช้ส่ง activation code ของ mobile token), `next`, `end`
+- FortiToken Cloud: `set two-factor fortitoken-cloud` แล้วเลือกช่องทางด้วย `set two-factor-authentication fortitoken|email|sms` (ต้องมี license FortiToken Cloud)
+- Email OTP: `set two-factor email`, `set email-to "<admin_email>"` (เครื่องต้องตั้ง email server ได้)
+- SMS: `set two-factor sms`, `set sms-server fortiguard`, `set sms-phone <phone-number>`
+- ระวัง: ทำทีละบัญชี และเปิด session ที่ login ค้างไว้อีกหน้าต่างจนทดสอบ login ใหม่ผ่าน
+- ระวัง: บัญชีฉุกเฉิน (break-glass) ที่ไม่เปิด MFA ต้องมี trusthost จำกัด และเก็บรหัสไว้ใน vault
+- ระวัง: OTP แบบ token ต้องใช้เวลาตรงกัน ตรวจ NTP ก่อน
 
 ---
 
@@ -104,13 +73,7 @@ get system global
 - หากยังอยู่ใน default port = ต้องเปลี่ยน
 ที่มา: [config system global — FortiOS 7.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.0/cli-reference/001620/config-system-global)
 วิธีแก้:
-- เปลี่ยน HTTPS admin port เป็น 8443 และ SSH admin port เป็น 2222:
-  ```
-  config system global
-      set admin-sport 8443
-      set admin-ssh-port 2222
-  end
-  ```
+- เปลี่ยน HTTPS admin port เป็น 8443 และ SSH admin port เป็น 2222: `config system global`, `set admin-sport 8443`, `set admin-ssh-port 2222`, `end`
 - **ระวัง:** ต้องบันทึก port ใหม่ใน documented runbook และแจ้งผู้ดูแลระบบทุกคน
 
 ---
@@ -130,14 +93,8 @@ show system interface "<wan-interface>"
 - หากมี `fgfm` (FortiManager) และ `radius-acct` = อาจจำเป็น
 ที่มา: [config system interface — FortiOS 7.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.0/cli-reference/8620/config-system-interface)
 วิธีแก้:
-- ตั้งค่า allowaccess บน WAN ให้เปิดเฉพาะที่จำเป็น (เช่น ping + https จาก trusted hosts ผ่าน local-in policy):
-  ```
-  config system interface
-      edit "<wan-interface>"
-          set allowaccess ping https ssh
-      next
-  end
-  ```
+- เปิดเฉพาะที่จำเป็นบน WAN (ส่วนใหญ่ไม่ต้องมี https / ssh / http / snmp บน WAN ให้จัดการผ่าน interface ภายในหรือ MGMT แทน): `config system interface`, `edit "<wan-interface>"`, `set allowaccess ping`, `next`, `end`
+- `set allowaccess` จะแทนที่ค่าเดิมทั้งหมด ต้องใส่ทุก service ที่ยังต้องใช้ในบรรทัดเดียว (เช่น `fgfm` ถ้าใช้ FortiManager ผ่าน WAN)
 - **ระวัง:** การตั้งค่า allowaccess จะควบคุม traffic ที่เข้า interface แต่ไม่ควบคุม IPsec VPN (UDP 500/4500) — หากต้องการปิด IPsec บน WAN ให้ใช้ local-in policy
 
 ---
@@ -152,57 +109,14 @@ show system interface "<wan-interface>"
 show firewall local-in-policy
 ```
 อ่านผล:
-- หากไม่มี local-in policies = FortiGate ใช้ค่าเริ่มต้น (allow ทั้งหมด)
+- หากไม่มี local-in policies = เข้าตัวเครื่องได้ทุก service ที่เปิดใน allowaccess
 - หากมี local-in policy แล้ว ดูว่ามี `set virtual-patch enable` หรือไม่
 ที่มา: [config firewall local-in-policy — FortiOS 7.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.2/cli-reference/297620)
 วิธีแก้:
-- สร้าง local-in policy เพื่อจำกัดบริการที่เข้าถึง FortiGate จาก WAN (ตัวอย่าง: อนุญาตเฉพาะ HTTPS จาก trusted subnet):
-  ```
-  config firewall address
-      edit "MGMT-SUBNET"
-          set subnet <MGMT-IP> 255.255.255.0
-      next
-  end
-  config firewall local-in-policy
-      edit 1
-          set intf "wan-interface"
-          set srcaddr "MGMT-SUBNET"
-          set dstaddr "all"
-          set service "HTTPS" "SSH"
-          set action accept
-          set schedule "always"
-      next
-      edit 2
-          set intf "wan-interface"
-          set srcaddr "all"
-          set dstaddr "all"
-          set service "HTTPS" "SSH" "SNMP" "HTTP"
-          set action deny
-          set schedule "always"
-      next
-  end
-  ```
-- เปิด virtual-patching ใน local-in policy เพื่อป้องกัน vulnerability บน management interface:
-  ```
-  config firewall local-in-policy
-      edit 3
-          set intf "wan-interface"
-          set srcaddr "all"
-          set dstaddr "all"
-          set service "HTTPS"
-          set action deny
-          set schedule "always"
-          set virtual-patch enable
-      next
-  end
-  ```
-- เปิด log เพื่อติดตามการถูก deny:
-  ```
-  config log setting
-      set local-in-deny-unicast enable
-      set local-in-allow enable
-  end
-  ```
-- **ระวัง:** local-in policy จะตัด traffic ที่เข้าตัว FortiGate เอง (ไม่ใช traffic ที่ไหลผ่าน) — ดังนั้นการตั้งค่าผิดอาจทำให้ HA heartbeat, BGP, OSPF, IPsec, FortiGuard, FortiAnalyzer ขาดการเชื่อมต่อ — ห้ามใช้ `deny all` บน `intf any`
+- สร้าง local-in policy เพื่อจำกัดบริการที่เข้าถึง FortiGate จาก WAN (ตัวอย่าง: อนุญาตเฉพาะ HTTPS จาก trusted subnet): `config firewall address`, `edit "MGMT-SUBNET"`, `set subnet <MGMT-IP> 255.255.255.0`, `next`, `end`, `config firewall local-in-policy`, `edit 1`, `set intf "wan-interface"`, `set srcaddr "MGMT-SUBNET"`, `set dstaddr "all"`, `set service "HTTPS" "SSH"`, `set action accept`, `set schedule "always"`, `set virtual-patch enable`, `next`, `edit 2`, `set intf "wan-interface"`, `set srcaddr "all"`, `set dstaddr "all"`, `set service "HTTPS" "SSH" "SNMP" "HTTP"`, `set action deny`, `set schedule "always"`, `next`, `end`
+- `virtual-patch` ใส่ใน policy ที่ accept (ตรวจ traffic ที่ยอมให้เข้า admin) ไม่มีผลกับ policy deny
+- ลำดับสำคัญ: local-in ตรงข้อแรกแล้วหยุด ต้องวาง accept จาก MGMT ก่อน deny
+- เปิด log เพื่อติดตามการถูก deny: `config log setting`, `set local-in-deny-unicast enable`, `end`
+- **ระวัง:** local-in policy จะตัด traffic ที่เข้าตัว FortiGate เอง (ไม่ใช่ traffic ที่ไหลผ่าน) — ดังนั้นการตั้งค่าผิดอาจทำให้ HA heartbeat, BGP, OSPF, IPsec, FortiGuard, FortiAnalyzer ขาดการเชื่อมต่อ — ห้ามใช้ `deny all` บน `intf any`
 
 ---
