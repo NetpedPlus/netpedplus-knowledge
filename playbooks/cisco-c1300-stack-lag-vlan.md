@@ -2,7 +2,7 @@
 id: cisco-c1300-stack-lag-vlan
 title: Cisco Catalyst 1300 (C1300-24XS) — Stack ไม่ขึ้น, Port-channel ไม่ขึ้น, VLAN ไม่ผ่าน
 families: cisco_sb
-triggers: catalyst-1300, c1300, cisco-stack, catalyst-1200, cisco-sb
+triggers: catalyst 1300, catalyst-1300, c1300, c1300-24xs, catalyst 1200, catalyst-1200, cisco-sb
 vendor: Cisco
 versions: C1300 Firmware 4.10.x
 sources: https://www.cisco.com/c/en/us/td/docs/switches/campus-lan-switches-access/Catalyst-1200-and-1300-Switches/cli/C1300-cli/stack-commands.html, https://www.cisco.com/c/en/us/td/docs/switches/campus-lan-switches-access/Catalyst-1200-and-1300-Switches/cli/C1300-cli/lacp-commands.html, https://www.cisco.com/c/en/us/td/docs/switches/campus-lan-switches-access/Catalyst-1200-and-1300-Switches/cli/C1300-cli/port-channel-commands.html, https://www.cisco.com/c/en/us/td/docs/switches/campus-lan-switches-access/Catalyst-1200-and-1300-Switches/cli/C1300-cli/vlan-commands.html
@@ -29,7 +29,7 @@ show stack configuration
 วิธีแก้:
 1. ตรวจ stack cable: `show stack links` — ดู link status ว่าแต่ละ port connected หรือไม่
 2. Set stack member: `stack unit <unit-id> <member-id>` — กำหนด member ID
-3. Set stack priority: `set stack unit-type unit <unit-id> network <type> uplink <type>` — กำหนด network/uplink type
+3. กำหนดชนิด unit / network / uplink ของ stack: `set stack unit-type unit <unit-id> network <type> uplink <type>` — กำหนด network/uplink type
 4. ตรวจ stack status: `show stack` — ดู member status เป็น Ready หรือยัง
 ที่มา: Cisco C1300 CLI Guide — Stack Commands https://www.cisco.com/c/en/us/td/docs/switches/campus-lan-switches-access/Catalyst-1200-and-1300-Switches/cli/C1300-cli/stack-commands.html
 
@@ -38,16 +38,14 @@ show stack configuration
 อาการ: port-channel ไม่ขึ้น, ต้องการดู lacp status, ต้องการดู channel-group mode, ต้องการดู lacp port-channel
 คำสั่งตรวจ:
 ```
-show lacp
-show lacp port-channel
+show lacp port-channel <number>
 show interfaces port-channel
 ```
 อ่านผล:
-- `show lacp`: ดู LACP info — LACP system priority, port priority, port state (active/standby)
 - `show lacp port-channel <number>`: ดู port-channel LACP info — port type, member ports, selected/not selected
 - `show interfaces port-channel`: ดู port-channel status — line protocol, bandwidth, load balancing
 สาเหตุที่พบบ่อย:
-1. Mode ไม่ตรง — side 1 เป็น `on`, side 2 เป็น `auto` → ต้องใช้ on-on หรือ auto-auto
+1. Mode ไม่ตรง — `mode on` = static, `mode auto` = LACP → อีกฝั่งต้องเป็นแบบเดียวกัน (static คู่ static / LACP คู่ LACP)
 2. Port ยังไม่ได้ใส่ channel-group — ต้องใช้ `channel-group <number> mode on`
 3. LACP timeout ไม่ตั้งค่า → port ไม่ตอบ LACP PDU
 วิธีแก้:
