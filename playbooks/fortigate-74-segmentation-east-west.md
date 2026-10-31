@@ -1,16 +1,16 @@
 ---
 id: fortigate-74-segmentation-east-west
 title: FortiGate 7.4 Segmentation: Server Zone (East-West)
-families:
+families: fortinet_fortios
 triggers: fortigate server zone, fortigate segmentation, fortigate east-west, fortigate intrazone, fortigate web app db, fortigate zone-based policy, fortigate east-west traffic, fortigate server separation, fortigate intra-zone, fortigate asymmetric routing, fortigate iprope lookup, fortigate diagnose flow
 versions: FortiOS 7.4.x
-sources: https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/656084/firewall-policy, https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/538358/using-ssl-vpn-interfaces-in-zones, https://docs.fortinet.com/document/fortigate/7.4.7/cli-reference/84620/config-system-zone, https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/139692/routing-concepts, https://docs.fortinet.com/document/fortigate/7.4.0/best-practices/862226/policies, https://docs.fortinet.com/document/fortigate/7.4.1/fortios-release-notes/743723/new-features-or-enhancements, https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/116821/zone, https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/498347/profile-groups
+sources: https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/656084/firewall-policy, https://docs.fortinet.com/document/fortigate/7.4.7/cli-reference/84620/config-system-zone, https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/139692/routing-concepts, https://docs.fortinet.com/document/fortigate/7.4.0/best-practices/862226/policies, https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/116821/zone, https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/498347/profile-groups
 ---
 
 # FortiGate 7.4 Segmentation: Server Zone (East-West)
 
 คำค้น: fortigate server zone, fortigate segmentation, fortigate east-west, fortigate intrazone, fortigate zone-based policy, fortigate intra-zone
-อาการ: ต้องออกแบบและติดตั้ง zone-based segmentation สำหรับ server (เช่น web → app → db) บน FortiGate 7.4.x, ตั้งค่า intra-zone traffic, ผูก security profileeast-west, ตรวจ policy ด้วย diagnose flow, และระวัง asymmetric routing
+อาการ: ต้องออกแบบและติดตั้ง zone-based segmentation สำหรับ server (เช่น web → app → db) บน FortiGate 7.4.x, ตั้งค่า intra-zone traffic, ผูก security profile กับ east-west, ตรวจ policy ด้วย diagnose flow, และระวัง asymmetric routing
 
 ---
 
@@ -27,10 +27,11 @@ show system zone
 - หากไม่พบ = ยังไม่ได้สร้าง zone
 ที่มา: [config system zone — FortiOS 7.4.7 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.7/cli-reference/84620/config-system-zone)
 วิธีแก้:
-- สร้าง zone สำหรับ tier แต่ละระดับด้วย `config system zone`, `edit "WEB-ZONE"`, `set interface <web-vlan-if1>, <web-vlan-if2>`, `set intrazone deny`, `next`, `end` (ค่า default ของ intrazone คือ deny หากไม่ตั้งค่า)
-- สร้าง zone APP: `config system zone`, `edit "APP-ZONE"`, `set interface <app-vlan-if1>, <app-vlan-if2>`, `set intrazone deny`, `next`, `end`
-- สร้าง zone DB: `config system zone`, `edit "DB-ZONE"`, `set interface <db-vlan-if1>`, `set intrazone deny`, `next`, `end`
-- หมายเหตุ: interfaces ใน zone ต้องไม่ถูกผูกกับ policy อื่นก่อน และต้องไม่ belong to another zone
+- สร้าง zone สำหรับ tier แต่ละระดับด้วย `config system zone`, `edit "WEB-ZONE"`, `set interface "<web-vlan-if1>" "<web-vlan-if2>"`, `set intrazone deny`, `next`, `end` (ค่า default ของ intrazone คือ deny หากไม่ตั้งค่า)
+- สร้าง zone APP: `config system zone`, `edit "APP-ZONE"`, `set interface "<app-vlan-if1>" "<app-vlan-if2>"`, `set intrazone deny`, `next`, `end`
+- สร้าง zone DB: `config system zone`, `edit "DB-ZONE"`, `set interface "<db-vlan-if1>"`, `set intrazone deny`, `next`, `end`
+- หมายเหตุ: interface ที่จะใส่ใน zone ต้องยังไม่ถูกอ้างใน policy / config อื่น และอยู่ได้แค่ zone เดียว
+- ระวัง: segmentation ใช้ได้เฉพาะ server ที่อยู่**ต่าง subnet / VLAN** และใช้ FortiGate เป็น gateway server ใน subnet เดียวกันคุยกันตรงผ่าน switch โดยไม่ผ่าน FortiGate
 - ดู zone ทั้งหมด: `show system zone`
 
 ---
@@ -45,15 +46,16 @@ show firewall policy
 ```
 อ่านผล:
 - ต้องเห็น policy name, srcintf (จาก zone), dstintf (target zone), srcaddr, dstaddr, service, action, utm-status, logtraffic
-- ต้องเห็นลำดับ policy (policy-id) — FortiGate match ตามลำดับจากน้อยไปมาก
+- FortiGate match ตาม**ลำดับในรายการ** (บนลงล่าง) ไม่ใช่ตามเลข policy-id
 ที่มา: [Firewall policy — FortiOS 7.4.2 Admin Guide](https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/656084/firewall-policy)
 วิธีแก้:
-- สร้าง policy Web → App (เช่น HTTP/HTTPS port 80, 443): `config firewall policy`, `edit 0`, `set name "POLICY-WEB-TO-APP"`, `set srcintf "WEB-ZONE"`, `set dstintf "APP-ZONE"`, `set srcaddr "all"`, `set dstaddr "all"`, `set service HTTPS HTTP`, `set action accept`, `set schedule always`, `set logtraffic all`, `set logsession disable`, `next`, `end`
-- สร้าง policy App → DB (เช่น port 1433, 3306, 5432): `config firewall policy`, `edit 0`, `set name "POLICY-APP-TO-DB"`, `set srcintf "APP-ZONE"`, `set dstintf "DB-ZONE"`, `set srcaddr "all"`, `set dstaddr "all"`, `set service MSSQL MYSQL POSTGRESQL`, `set action accept`, `set schedule always`, `set logtraffic all`, `set logsession disable`, `next`, `end`
-- สร้าง policy กลับทาง (reply): FortiGate ไม่ทำ reverse-path check — session established จะถูก auto-allow ใน policy เดียวกัน (ไม่ต้องสร้าง policy กลับทางแยก)
-- สร้าง policy Deny ทั้งหมดท้ายสุด: `config firewall policy`, `edit 0`, `set name "DENY-ALL-SERVER"`, `set srcintf "all"`, `set dstintf "all"`, `set srcaddr "all"`, `set dstaddr "all"`, `set service "ALL"`, `set action deny`, `set schedule always`, `set logtraffic all`, `next`, `end`
+- สร้าง policy Web → App (เปิดเฉพาะ port ที่ app ใช้จริง): `config firewall policy`, `edit 0`, `set name "POLICY-WEB-TO-APP"`, `set srcintf "WEB-ZONE"`, `set dstintf "APP-ZONE"`, `set srcaddr "<web-servers>"`, `set dstaddr "<app-servers>"`, `set service "<app-service>"`, `set action accept`, `set schedule always`, `set logtraffic all`, `next`, `end`
+- สร้าง policy App → DB (เฉพาะ port ของฐานข้อมูลที่ใช้จริง): `config firewall policy`, `edit 0`, `set name "POLICY-APP-TO-DB"`, `set srcintf "APP-ZONE"`, `set dstintf "DB-ZONE"`, `set srcaddr "<app-servers>"`, `set dstaddr "<db-servers>"`, `set service "<db-service>"`, `set action accept`, `set schedule always`, `set logtraffic all`, `next`, `end`
+- ไม่ต้องสร้าง policy ขากลับ: FortiGate เป็น stateful reply ของ session ที่อนุญาตแล้วผ่านอัตโนมัติ
+- ท้ายรายการมี implicit deny อยู่แล้ว ถ้าต้องการ log สิ่งที่ถูก implicit deny ให้เปิด `config log setting`, `set fwpolicy-implicit-log enable`, `end`
+- ชื่อ service ให้ตรวจจากเครื่องก่อนใช้ (`show firewall service custom`) หรือสร้าง custom service ตาม port จริง
 - ตั้งค่า UTM: `utm-status` ต้องเป็น `enable` ถ้าต้องการใช้ security profiles
-- ห้ามใช้ `any` ใน srcintf/dstintf/srvaddr (best practice): ใช้ zone และ address object เฉพาะเจาะจง
+- ห้ามใช้ `any` ใน srcintf/dstintf และ `all` ใน srcaddr/dstaddr ของ policy east-west: ใช้ zone และ address object เฉพาะเจาะจง
 
 ---
 
@@ -81,7 +83,7 @@ show system zone
 ## 4. ผูก Security Profile กับ Policy East-West
 
 คำค้น: fortigate security profile east-west, fortigate profile group server, fortigate IPS AV app control สำหรับ zone
-อาการ: ต้องผูก security profiles (IPS, AV, Application Control, DNS Filter) กับ policyeast-west ของ server zone
+อาการ: ต้องผูก security profiles (IPS, AV, Application Control, DNS Filter) กับ policy east-west ของ server zone
 คำสั่งตรวจ:
 ```
 show firewall policy
@@ -95,9 +97,9 @@ show firewall profile-group
 - อ้าง playbook: `fortigate-74-security-profiles` สำหรับรายละเอียดการสร้าง IPS sensor, AV profile, Application list, DNS filter profile, และ Profile group
 - สร้าง Profile Group สำหรับ server: `config firewall profile-group`, `edit "PG-SERVER"`, `set av-profile "AV-Server"`, `set ips-sensor "IPS-Server"`, `set application-list "App-List-Server"`, `set dnsfilter-profile "DNS-Filter-Server"`, `next`, `end`
 - ผูกกับ policy East-West: `config firewall policy`, `edit <policy-id>`, `set utm-status enable`, `set profile-type group`, `set profile-group "PG-SERVER"`, `next`, `end`
-- หรือผูกทีละ profile: `set av-profile "AV-Server"`, `set ips-sensor "IPS-Server"`, `set application-list "App-List-Server"`, `set dnsfilter-profile "DNS-Filter-Server"`, `set ssl-ssh-profile "deep-inspection"`
+- หรือผูกทีละ profile: `set av-profile "AV-Server"`, `set ips-sensor "IPS-Server"`, `set application-list "App-List-Server"`, `set dnsfilter-profile "DNS-Filter-Server"`, `set ssl-ssh-profile <profile>`
 - ระวัง: `utm-status` ต้องเป็น `enable` ถึงจะใช้ security profiles ได้
-- ระวัง: `ssl-ssh-profile` ต้องระบุ (เช่น `deep-inspection`) ถึง IPS/AV จะเห็นข้างใน HTTPS traffic
+- ระวัง: traffic ที่ไป server ของเราเอง ห้ามใช้ `deep-inspection` สำเร็จรูป (client จะเห็น cert ของ FortiGate) ให้ใช้ profile ที่ `server-cert-mode replace` + cert ของ server หรือ `certificate-inspection` (ดู fortigate-74-security-profiles)
 
 ---
 
@@ -107,25 +109,17 @@ show firewall profile-group
 อาการ: ต้องตรวจว่า traffic จาก <src> ไป <dst> ตรงกับ policy ไหน
 คำสั่งตรวจ:
 ```
-diagnose firewall iprope lookup <src_ip> <src_port> <dst_ip> <dst_port> <protocol> <src_intf> policy
-diagnose debug flow test enable
-diagnose debug flow filter daddr <dst_ip>
-diagnose debug flow filter dport <dst_port>
-diagnose debug flow filter proto <protocol>
-diagnose debug flow show flow_list 0
-diagnose debug enable
+diagnose firewall iprope lookup <src_ip> <src_port> <dst_ip> <dst_port> <protocol> <src_intf>
 ```
 อ่านผล:
 - `diagnose firewall iprope lookup` จะแสดง policy index (policy ID) ที่ match, uuid, action, zone info, source/destination address/service ที่ match
-- `diagnose debug flow` จะแสดง session ที่สร้าง, policy ID ที่ match, security profiles ที่ถูกใช้
-ที่มา: [Policy lookup — FortiOS 7.4.x Admin Guide](https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/656084/firewall-policy), [diagnose firewall iprope lookup — FortiOS 7.6.4 CLI Reference](https://docs.fortinet.com/document/fortigate/7.6.4/cli-reference/253375604/diagnose-firewall)
+- ถ้า lookup ไม่ match ที่คาดไว้ ให้ใช้ debug flow (ในวิธีแก้) ดูทีละ packet ว่าเจอ route / policy ไหน
+ที่มา: [Policy lookup — FortiOS 7.4.x Admin Guide](https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/656084/firewall-policy)
 วิธีแก้:
-- ตรวจ policy match: `diagnose firewall iprope lookup <src-ip> <src-port> <dst-ip> <dst-port> <protocol> <src-intf> policy` (เปลี่ยน <src_intf> เป็น interface name ที่ traffic เข้า)
-- ผลลัพธ์จะแสดง policy index (เช่น `policy index=2 uuid_idx=1300 action=accept`) — ต้องตรงกับ policy ที่ตั้งใจ
-- ใช้ `diagnose debug flow test enable` แล้วส่ง traffic จริง: FortiGate จะแสดง debug output ว่า traffic ผ่าน policy ไหน, security profiles อะไรถูกใช้
-- `diagnose debug flow filter daddr <dst_ip>` แล้ว `diagnose debug flow show flow_list 0` จะแสดง session ที่ match
-- `diagnose debug enable` — เปิด debug (ระวัง: จะ verbose)
-- ตรวจสอบว่า security profiles ถูกผูก: ใน debug flow ต้องเห็น IPS/AV profile names ที่ถูกใช้
+- ผลจะแสดง policy ที่ match (เช่น `policy index=<id> ... action=accept`) ต้องตรงกับ policy ที่ตั้งใจ
+- debug flow (ส่ง traffic จริงแล้วดู): `diagnose debug flow filter clear`, `diagnose debug flow filter addr <dst_ip>`, `diagnose debug flow show function-name enable`, `diagnose debug enable`, `diagnose debug flow trace start 20`
+- ในผล debug ดูบรรทัด `find a route` (ออก interface ไหน) และ `Allowed by Policy-<id>` หรือ `Denied by forward policy check`
+- ระวัง: ปิดทุกครั้งหลังใช้: `diagnose debug flow trace stop`, `diagnose debug disable` (debug ค้างไว้กิน CPU)
 
 ---
 
@@ -135,7 +129,7 @@ diagnose debug enable
 อาการ: server มี gateway อยู่นอก FortiGate ทำให้ response traffic bypass FortiGate
 คำสั่งตรวจ:
 ```
-get route all
+get router info routing-table all
 get system settings | grep asymroute
 ```
 อ่านผล:
@@ -143,12 +137,11 @@ get system settings | grep asymroute
 - `asymroute` default คือ `disable` — หาก enable = FortiGate จะยอม asymmetric routing (ไม่แนะนำ)
 ที่มา: [Routing concepts — FortiOS 7.4.2 Admin Guide](https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/139692/routing-concepts)
 วิธีแก้:
-- ตรวจสอบ routing table: `get route all` — ต้องเห็นว่า route ไปยัง server subnet ผ่าน interface ที่ FortiGate control
+- ตรวจสอบ routing table: `get router info routing-table all` — ต้องเห็นว่า route ไปยัง server subnet ผ่าน interface ที่ FortiGate control
 - หาก server gateway ชี้ไป interface อื่น (bypass FortiGate) — response traffic จะไม่ผ่าน FortiGate
-- ใน TCP: FortiGate จะบล็อก packet เพราะ TCP handshake ไม่ผ่าน FortiGate (SYN ผ่าน FortiGate แต่ SYN/ACK bypass)
+- อาการ: FortiGate เห็น packet แค่ทางเดียว ขาที่ไม่มี session (เช่น SYN/ACK ที่ไม่เคยเห็น SYN) จะถูก drop การเชื่อมต่อจะค้าง / timeout
 - แก้: ตั้ง server gateway ให้ชี้มาที่ FortiGate interface (preferred solution)
-- หากแก้ routing ไม่ได้: สามารถเปิด `set asymroute enable` ใน `config system settings` ได้ แต่ต้องระวัง: FortiGate จะไม่ inspect traffic ที่ bypass, อาจมี malicious traffic ผ่านได้
-- ระวัง: asymmetric routing ไม่กระทบ UDP — UDP packets จะถูก check ด้วย session table แม้จะ asymmetric
-- กรณี server ที่มี external gateway: ต้องทำ policy ทั้งสองทาง (symmetric) — หรือใช้ static route เพื่อบังคับให้ traffic ผ่าน FortiGate ทั้งขาไปและขากลับ
+- หากแก้ routing ไม่ได้: สามารถเปิด `set asymroute enable` ใน `config system settings` ได้ แต่**ไม่แนะนำ**: เป็นการปิด stateful inspection ของทั้ง VDOM ไม่ใช่เฉพาะ server นั้น ใช้แค่ชั่วคราวตอนแก้ปัญหา
+- กรณี server มีหลาย NIC / gateway อยู่ที่อุปกรณ์อื่น: ใส่ static route บน server ให้ subnet ของ server zone อื่นวิ่งกลับทาง FortiGate เพื่อให้ขาไปและขากลับผ่าน FortiGate ทั้งคู่
 
 ---
