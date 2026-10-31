@@ -13,7 +13,7 @@ FAMILIES = set("""arista_eos aruba_aos8 aruba_aos_switch aruba_aoscx checkpoint_
 dell_os10 extreme_exos f5_tmsh fortinet_fortios hpe_comware huawei_ac huawei_ce huawei_vrp_s juniper_junos juniper_srx linux
 mikrotik_ros7 paloalto_panos ruckus_fastiron ruijie_rgos sonicwall_sonicos sophos_sfos tplink_jetstream""".split())
 WRITE = re.compile(r"^\s*(system-view|configure|config |conf t|set |delete |undo |reset |reboot|restart|shutdown|save|commit|"
-                   r"write |copy |modify |create |tmsh (create|modify|delete|save)|execute (reboot|factoryreset|formatlogdisk))", re.I)
+                   r"write |copy |modify |create |tmsh (create|modify|delete|save)|execute (reboot|factoryreset|formatlogdisk|restore|shutdown)|execute .*\b(add|clear|delete|disk-quota|reset|set)\b)", re.I)
 IPV4 = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
 SAFE_IP = re.compile(r"^(10\.0\.0\.|192\.0\.2\.|198\.51\.100\.|203\.0\.113\.|0\.0\.0\.0|255\.|127\.0\.0\.1|224\.)")
 SECRET = re.compile(r"(password|passwd|secret|community|pre-shared|psk)\s+(?!<)\S{3,}", re.I)
