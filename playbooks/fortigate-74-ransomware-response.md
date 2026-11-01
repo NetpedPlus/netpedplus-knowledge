@@ -89,11 +89,11 @@ show application list
 วิธีการ:
 - **เพิ่ม Application List:** Security Profiles → Application Control → Edit → เพิ่ม entry ที่ต้องการ block
 - **ค้นชื่อแอปใน FortiGuard Application Control Database:** ไปที่ [FortiGuard App Control Database](https://www.fortiguard.com/appcontrol) → ค้นหาชื่อแอป (เช่น ngrok, Cloudflare Tunnel, MEGA, ScreenConnect) → ดู FortiGuard category จริงของแอปนั้น → ใช้ category ที่ถูกต้อง
-- **Category ที่มักใช้บล็อก Remote Access/Tunnel/Storage:**
-  - **Remote.Access:** TeamViewer, AnyDesk, ScreenConnect, RustDesk
-  - **Proxy:** ngrok, Cloudflare Tunnel, OpenVPN, HTTP Tunnel
-  - **Storage.Backup:** MEGA, Dropbox, Google Drive, OneDrive
-  - **Cloud.IT:** บางแอป cloud storage อยู่หมวดนี้
+- **Category ที่มักใช้บล็อก:**
+  - **Remote.Access** — แอป remote control/access
+  - **Proxy** — proxy/tunnel
+  - **Storage.Backup** — cloud backup/storage
+  - **Cloud.IT** — cloud services ด้าน IT
 - **ผูกกับ Policy:** Security Profiles → Application Control → เลือก profile ที่สร้าง → ผูกกับ firewall policy
 - **ตั้ง Action = Block:** สำหรับ remote access, proxy, storage
 
@@ -133,7 +133,7 @@ show firewall service custom
   2. ตั้งค่า: `set name "BLOCK-SMB-RDP-EW"`, `set srcintf "<src-zone>"`, `set dstintf "<dst-zone>"`, `set srcaddr "all"`, `set dstaddr "all"`, `set service "SMB-RDP-URGENT"`, `set action deny`, `set logtraffic all`
   3. `next`, `end`
   4. หา ID ของ policy บนสุด (ลำดับแรก): `show firewall policy` → ดูลำดับลำดับที่ 1 (Policy & Objects > Firewall Policy → ดู Sequence)
-  5. ย้าย policy ใหม่มาไว้ลำดับแรก: `config firewall policy`, `edit <ID ใหม่ที่ได้จากขั้นตอน 1>`, `move <ID ใหม่> before <ID ของ policy บนสุดตามลำดับ>`, `next`, `end`
+  5. ย้าย policy ใหม่มาไว้ลำดับแรก: `config firewall policy`, `move <ID ใหม่> before <ID ของ policy ลำดับแรก>`, `end`
   6. ตรวจ: `show firewall policy` — policy ที่ block SMB/RDP ต้องเป็นลำดับแรก (Sequence = 1)
 
 อ้างอิง playbook: `fortigate-74-segmentation-east-west` สำหรับ zone-based policy
