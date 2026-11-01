@@ -38,6 +38,11 @@ WARN	*	"deep-inspection"	traffic ขาเข้า server ของเราเ
 ERROR	*	\biprope lookup\b[^\n`]*\bpolicy\b	iprope lookup ไม่มีคำว่า policy ต่อท้าย: `diagnose firewall iprope lookup <src> <sport> <dst> <dport> <proto> <src-intf>` (PR #22)
 ERROR	*	DENY-ALL	ไม่ต้องสร้าง policy deny-all ท้ายสุด (มี implicit deny แล้ว) ใช้ `set fwpolicy-implicit-log enable` ถ้าต้องการ log (PR #22)
 WARN	*	docs\.fortinet\.com/document/fortigate/7\.6\.	ลิงก์เอกสาร 7.6 ใน playbook 7.4 ให้หาหน้า 7.4 แทน (PR #22)
+ERROR	*	\bconfig system policy-route\b|\bget system policy-route\b	policy route ของ FortiOS คือ `config router policy` / ดูด้วย `show router policy` หรือ `diagnose firewall proute list` (PR #25)
+ERROR	*	\bget system routing static\b	ไม่มีจริง ใช้ `show router static` (PR #25)
+ERROR	*	\bget system router-policy\b	ไม่มีจริง ใช้ `show router route-map` / `show router prefix-list` (PR #25)
+ERROR	*	\bdiagnose ip route filter\b	ไม่มีจริง ใช้ `get router info routing-table details <ip>` (PR #25)
+ERROR	*	\bdiagnose sdwan\b	FortiOS 7.x ใช้ `diagnose sys sdwan ...` (PR #25)
 #
 # ---- Huawei ----
 ERROR	huawei_vrp_s	\bstorm-control action shutdown\b	S-series ใช้ `storm-control action block|error-down` (PR #24)
