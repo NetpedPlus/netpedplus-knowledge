@@ -214,13 +214,13 @@ EHF (Engineering Hotfix) — ถ้ามี hotfix เฉพาะ CVE:
 
 ตรวจใน GUI:
 - **Device Management → Devices** → ตรวจสถานะ standby → ควรแสดง **Offline**
-- **Device Management → Devices** → ตรวจสถานะ active → ควรแสดง **Online****
+- **Device Management → Devices** → ตรวจสถานะ active → ควรแสดง **Online**
 
 ที่มา: [Update or upgrade HA systems (K15134306)](https://my.f5.com/manage/s/article/K15134306), [Upgrade using TMOS (K60339442)](https://my.f5.com/manage/s/article/K60339442)
 
 วิธีดำเนินการ:
 1. **Release Offline standby (ที่ upgrade แล้ว):**
-   - เข้า GUI ของเครื่องที่ยังไม่ได้ upgrade แล้ว (standby)
+   - เข้า GUI ของเครื่องที่ upgrade แล้ว (standby ที่ Force Offline ไว้)
    - **Device Management** → **Devices** → เลือกเครื่อง standby → **Release Offline**
    - เครื่องจะกลับมาเป็น standby และพร้อมรับ traffic
 2. **Force to Standby ที่ active:**
