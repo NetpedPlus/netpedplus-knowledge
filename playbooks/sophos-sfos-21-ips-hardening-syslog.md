@@ -58,6 +58,9 @@ Device access เป็นหน้าควบคุมว่า service ใด
 Device access ไม่ใช่ firewall rule — ไม่สามารถควบคุมผ่าน firewall rule ได้
 การ hardening device access เป็นขั้นตอนพื้นฐานที่จำเป็นสำหรับทุก firewall
 
+จดพอร์ตที่ใช้ก่อนปิด WAN access — Administration > Admin and user settings:
+ WebAdmin TCP 4444, User Portal TCP 4443, VPN Portal TCP 443, SSL VPN TCP 8443 (ค่าเริ่มต้นตาม Avanet)
+
 คำค้น:
 - Device access hardening
 - ปิด WAN access Web Admin
@@ -84,8 +87,6 @@ Device access ไม่ใช่ firewall rule — ไม่สามารถ�
    - สำหรับ mobile users ที่ source address เปลี่ยนแนะนำให้ใช้ VPN แทนการเปิด WAN access
 3. สร้าง admin profile เฉพาะหน้าที่ — ไปที่ Profiles > Device access > New
    - เลือกสิทธิ์ตามหน้าที่ (read-only, full administrator, network administrator ฯลฯ)
-      แหล่ง: https://docs.sophos.com/nsg/sophos-firewall/21.5/Help/en-us/webhelp/onlinehelp/AdministratorHelp/BackupAndFirmware/API/HowToArticles/APIAllowAccess/index.html
-   - กำหนด Login restriction: เลือก Selected nodes แล้วใส่ IP ของ admin
 
 ## Admin 2FA / public key authentication
 
