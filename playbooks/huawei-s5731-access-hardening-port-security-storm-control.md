@@ -19,7 +19,6 @@ sources: S Series Switches Security Hardening Guide V200 (EDOC1100038362 — Por
 display mac-address security interface gigabitethernet 0/0/1
 display mac-address sec-config interface gigabitethernet 0/0/1
 display mac-address sticky interface gigabitethernet 0/0/1
-display mac-address security interface gigabitethernet 0/0/1
 display mac-address interface gigabitethernet 0/0/1
 display current-configuration interface gigabitethernet 0/0/1
 ```
