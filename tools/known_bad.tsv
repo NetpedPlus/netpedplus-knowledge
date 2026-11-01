@@ -40,6 +40,8 @@ ERROR	*	DENY-ALL	ไม่ต้องสร้าง policy deny-all ท้า�
 WARN	*	docs\.fortinet\.com/document/fortigate/7\.6\.	ลิงก์เอกสาร 7.6 ใน playbook 7.4 ให้หาหน้า 7.4 แทน (PR #22)
 #
 # ---- Huawei ----
+ERROR	huawei_vrp_s	\bstorm-control action shutdown\b	S-series ใช้ `storm-control action block|error-down` (PR #24)
+ERROR	huawei_vrp_s	\bdisplay port-security\b	ไม่เจอในเอกสาร S-series V200 ใช้ `display mac-address security|sticky` หรือ `display current-configuration interface` (PR #24)
 ERROR	*	\bcreate eth-trunk\b	ไม่มีจริง ใช้ `interface eth-trunk <id>` (PR #15)
 #
 # ---- Cisco ----
