@@ -48,3 +48,5 @@
 - PR #22: ไม่มี interface ชื่อ `all` ใน FortiOS — ห้ามใช้ `set srcintf "all"` หรือ `set dstintf "all"` ให้ระบุ zone หรือ interface จริง
 - PR #22: FortiGate match policy ตามลำดับบนลงล่าง (list order) ไม่ใช่ตามเลข policy ID — อธิบายให้ชัดในวิธีแก้
 - PR #22 (หลัง merge): แก้ conflict แล้วเอาข้อความที่ Claude ลบไปแล้วกลับมา (DENY-ALL, `iprope lookup ... policy`, ลิงก์ 7.6.4) และ merge commit ที่ Claude ยังไม่ได้ตรวจ — ถ้ามี conflict / แก้เพิ่มหลัง "ผ่าน พร้อม merge" ต้องให้ Claude ตรวจใหม่ก่อน merge เสมอ ห้าม force push ทับ commit ของ Claude
+- PR #23: แหล่งบุคคลที่สาม (Reddit / blog) ต้องเขียนกำกับในหัวข้อว่า "บุคคลที่สาม" และค่าตัวเลขจากแหล่งนั้นให้เขียนว่าเป็นค่าตั้งต้นที่ต้องปรับ
+- PR #23: test ของ QRadar rule ให้เขียนตามรูปแบบจริง เช่น "when at least N events are seen with the same <A> and different <B> in N minutes" / ทดสอบ rule ย้อนหลังใช้ Historical Correlation ไม่มีปุ่ม Test
