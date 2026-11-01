@@ -1,23 +1,23 @@
 ---
 id: fortigate-74-breach-investigation
-title: FortiGate 7.4 — ตรวจว่าอุปกรณ์ขอบเครือข่ายโดนเจาะแล้วหรือยัง
+title: FortiGate 7.4: ตรวจ security event / log / session หลังได้รับแจ้งเหตุ
 families: fortinet_fortios
-triggers: fortigate breach investigate, fortigate compromised check, fortigate threat detection, fortigate security event review
+triggers: fortigate security event review, fortigate log filter, fortigate session check, fortigate fortiview browse
 versions: FortiOS 7.4.x
-sources: https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/876272/security-events-log-page, https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/668197/log-related-diagnose-commands, https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/345190/dashboards-and-monitors
+sources: https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/876272/security-events-log-page, https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/668197/log-related-diagnose-commands, https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/345190/dashboards-and-monitors, https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/562859/using-a-session-table
 ---
 
-# FortiGate 7.4 — ตรวจว่าอุปกรณ์ขอบเครือข่ายโดนเจาะแล้วหรือยัง
+# FortiGate 7.4: ตรวจ security event / log / session หลังได้รับแจ้งเหตุ
 
-คำค้น: fortigate breach investigate, fortigate compromised check, fortigate threat detection, fortigate security event review
-อาการ: ได้รับแจ้งว่าอุปกรณ์ขอบเครือข่ายอาจโดนโจมตีหรือเจาะระบบ — ต้องตรวจสอบ security event, log, session ว่ามีเหตุการณ์ผิดปกติหรือไม่
+คำค้น: fortigate security event review, fortigate log filter, fortigate session check, fortigate fortiview browse
+อาการ: ได้รับแจ้งเหตุแล้วต้องตรวจ security event, log, session ว่ามีกิจกรรมผิดปกติในเครือข่ายหรือไม่
 
 ---
 
-## 1. ตรวจ FortiView / ภาพรวมการโจมตี (GUI-only)
+## 1. ตรวจ FortiView / ภาพรวมเครือข่าย (GUI-only)
 
-คำค้น: fortigate fortiview sources, fortiview sessions, fortiview top source destination, fortiview cloud application
-อาการ: ต้องดูภาพรวมการโจมตีจาก FortiView — ใช้เป็นจุดเริ่มต้นที่ดีสุด
+คำค้น: fortigate fortiview sources, fortiview sessions
+อาการ: ต้องดูภาพรวม network จาก FortiView — ใช้เป็นจุดเริ่มต้นเมื่อได้รับแจ้งเหตุ
 
 คำสั่งตรวจ:
 ```
@@ -25,12 +25,11 @@ sources: https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide
 ```
 
 ตรวจใน GUI:
-- *Dashboard > FortiView > FortiView Sources* — ดู source IP ที่เป็น top attacker
-- *Dashboard > FortiView > FortiView Sessions* — ดู sessions ทั้งหมด
-- *Dashboard > FortiView > Top Source and Top Destination Firewall Objects monitors* — ดู IP ที่ส่ง/receive traffic มากที่สุด
-- *Dashboard > FortiView > Cloud Application View* — ดู cloud application ที่ใช้ traffic มากที่สุด
+- *Dashboard > FortiView Sources* — ดู source ที่ traffic มากสุด / เรียงตาม Threat Score ได้
+- *Dashboard > FortiView Sessions* — ดู sessions ทั้งหมด
+- อ้าง playbook: `fortigate-74-ransomware-response` §5 สำหรับการไล่ log ของเครื่องเป้าหมาย
 
-ที่มา: [Dashboards and Monitors — FortiOS 7.4](https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/345190/dashboards-and-monitors)
+ที่มา: [FortiView monitors — FortiOS 7.4.0](https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/433781/fortiview-monitors)
 
 ---
 
@@ -67,8 +66,8 @@ execute log display
 ```
 
 อ่านผล:
-- `device disk` = ดู log จาก disk (device = 0, disk = 1, fortianalyzer = 2)
-- `category event` = ดู event log (login/logout events)
+- `device disk` = อ่าน log จาก disk
+- `category event` = เลือกหมวด event log
 - `field action login` = กรองเฉพาะ login events
 - `log display` = แสดง log ที่ filter แล้ว
 
@@ -79,7 +78,7 @@ execute log display
 ## 4. ตรวจ Active Sessions / Connections ที่น่าสงสัย
 
 คำค้น: fortigate diagnose sys session list, fortigate active sessions check, fortigate suspicious session, fortigate diagnose sys session filter
-อาการ: ต้องดูว่า sessions ที่กำลังเปิดอยู่ มี connections จากภายนอกที่ไม่ได้รับอนุญาต หรือ connections ที่ผิดปกติหรือไม่
+อาการ: ต้องดูว่า sessions ที่กำลังเปิดอยู่ มี connections จากภายนอกหรือไม่
 
 คำสั่งตรวจ:
 ```
@@ -92,14 +91,14 @@ diagnose sys session list
 - ดูว่า session ใดมาจาก IP ภายนอก
 - ดูว่า session ใดมี destination port ที่ไม่ปกติ
 
-ที่มา: [Log-related diagnostic commands — FortiOS 7.4.4](https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/668197/log-related-diagnose-commands)
+ที่มา: [Using a session table — FortiOS 7.4.2](https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/562859/using-a-session-table)
 
 ---
 
-## 5. สรุป / การตอบสนองเบื้องต้น
+## 5. สรุป / การอ้างอิง playbook อื่น
 
-คำค้น: fortigate incident response, fortigate block compromised ip, fortigate quarantine infected
-อาการ: เมื่อพบเหตุการณ์ที่น่าสงสัย ต้องดำเนินการตอบสนองทันที
+คำค้น: fortigate incident response, fortigate block compromised ip
+อาการ: เมื่อพบเหตุการณ์ที่น่าสงสัย ต้องดำเนินการอ้างอิง playbook อื่นที่เกี่ยวข้อง
 
 คำสั่งตรวจ:
 ```
@@ -110,22 +109,22 @@ diagnose sys session list
 - ต้องเห็น session ที่กำลังเปิดอยู่ทั้งหมด
 
 ตรวจใน GUI:
-- *Dashboard > FortiView > FortiView Sources* — ดู top attacker
+- *Dashboard > FortiView Sources* — ดู source ที่ traffic มากสุด
 
 วิธีแก้:
 1. **หยุดการแพร่กระจาย** — กักเครื่อง/บล็อก IP: อ้าง playbook: `fortigate-74-ransomware-response` §1
 2. **บล็อก IOC** — เพิ่ม Threat Feed: อ้าง playbook: `fortigate-74-ransomware-response` §2
-3. **ตรวจสอบการเข้าถึงเพิ่มเติม** — เปลี่ยน password admin: อ้าง playbook: `fortigate-74-harden-admin` §1
-4. **ตรวจสอบความเสียหาย** — ดู FortiView > FortiView Sessions > ดู top talkers
+3. **ตรวจสอบการเข้าถึงเพิ่มเติม** — ตรวจ admin account: อ้าง playbook: `fortigate-74-harden-admin` §1
+4. **ตรวจสอบ log ย้อนหลัง** — ไล่ log ของเครื่องเป้าหมาย: อ้าง playbook: `fortigate-74-ransomware-response` §5
 
-ที่มา: [FortiOS 7.4 Ransomware Response Playbook](https://github.com/NetpedPlus/netpedplus-knowledge/blob/main/playbooks/fortigate-74-ransomware-response.md)
+ที่มา: [Using a session table — FortiOS 7.4.2](https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/562859/using-a-session-table)
 
 ---
 
 ## บทเรียน
 
-คำค้น: fortigate breach investigation lessons, fortigate security event check, fortigate fortiview guide
-อาการ: บทเรียนจากการตรวจว่าอุปกรณ์โดนเจาะหรือไม่
+คำค้น: fortigate breach investigation lessons
+อาการ: บทเรียนจากการตรวจ security event / log / session
 
 คำสั่งตรวจ:
 ```
@@ -135,21 +134,15 @@ diagnose sys session list
 อ่านผล:
 - ต้องเห็น session ที่กำลังเปิดอยู่ทั้งหมด
 
-ตรวจใน GUI:
-- *Log & Report > Security Events* — ดูเหตุการณ์ security ทั้งหมด
-- *Dashboard > FortiView > FortiView Sources* — ดู top attacker
-- *Dashboard > FortiView > FortiView Sessions* — ดู sessions ทั้งหมด
+ที่มา: [Using a session table — FortiOS 7.4.2](https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/562859/using-a-session-table)
 
-ที่มา: [Security Events log page — FortiOS 7.4](https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/876272/security-events-log-page)
-
-- การตรวจว่าอุปกรณ์โดนเจาะหรือไม่ ต้องดู FortiView เป็นจุดเริ่มต้น (GUI-only)
-- ใช้ FortiView > FortiView Sources ดู top attacker
-- ใช้ FortiView > FortiView Sessions ดู sessions ทั้งหมด
-- ใช้ FortiView > Top Source and Top Destination Firewall Objects monitors ดู top IP
-- ใช้ FortiView > Cloud Application View ดู cloud application ที่ใช้ traffic มาก
+- FortiView มีเฉพาะใน GUI — ไม่มีคำสั่ง CLI
+- ใช้ `Dashboard > FortiView Sources` ดู source ที่ traffic มากสุด / เรียงตาม Threat Score
+- ใช้ `Dashboard > FortiView Sessions` ดู sessions ทั้งหมด
 - ใช้ *Log & Report > Security Events* ดูเหตุการณ์ security ทั้งหมด
 - ใช้ `execute log filter device disk` + `category` + `field` + `log display` เพื่อกรอง log แต่ละหมวด
 - ใช้ `diagnose sys session list` ดู sessions ที่กำลังเปิดอยู่
+- หากไม่มี log disk / remote log FortiView จะดึงจาก session table และช่วงเวลาค่าเริ่มต้นเป็น Now ([Using the FortiView interface — FortiOS 7.4.1](https://docs.fortinet.com/document/fortigate/7.4.1/administration-guide/96300/using-the-fortiview-interface))
 - สำหรับบล็อก IP และกักเครื่อง → อ้าง playbook: `fortigate-74-ransomware-response`
 - สำหรับตรวจ admin account → อ้าง playbook: `fortigate-74-harden-admin`
 - สำหรับ log backup → อ้าง playbook: `fortigate-74-harden-system`
