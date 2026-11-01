@@ -18,3 +18,4 @@
 | FortiGate 7.4 segmentation โซน server (east-west) | fortinet_fortios | ✅ เสร็จแล้ว | #22 |
 | Sophos XGS / IPS / Hardening / Syslog | sophos_sfos | ✅ เสร็จแล้ว | #26 |
 | FortiGate 7.4 + Sophos XGS Ransomware Response: กักเครื่อง, บล็อก IOC, บล็อก Remote Access/Tunnel, บล็อก SMB/RDP, ค้น Log | fortinet_fortios + sophos_sfos | ✅ เสร็จแล้ว | #27 |
+|| F5 BIG-IP 17.x ประเมินผลกระทบช่องโหว่ + อัปเกรดบนคู่ HA: ตรวจว่าเครื่องอยู่ในข่ายช่องโหว่, ประเมินผลกระทบก่อน upgrade, hotfix vs EHF, ขั้นตอนลง HA, ตรวจหลัง upgrade + rollback | f5_tmsh | รอตรวจรอบ 4 (PR #28) | #28 |
