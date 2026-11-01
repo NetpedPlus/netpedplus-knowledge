@@ -32,7 +32,7 @@ IPS policy ไม่ทำงานถ้าไม่ได้ผูกกับ
 คำสั่งตรวจ:
 ตรวจใน GUI: ไปที่ Intrusion prevention > IPS policies — ต้องเห็น policy ที่มี signature rules
 ตรวจใน GUI: ไปที่ Firewall > Firewall rules — rule ที่ต้องการให้ IPS ทำงานต้องมี IPS policy ที่เลือกไว้ (ไม่ใช่ None)
-ตรวจใน GUI: ไปที่ Logs > Event log > IPS — ต้องเห็น signature ที่ถูก trigger
+ตรวจใน GUI: ไปที่ Log viewer > IPS — ต้องเห็น signature ที่ถูก trigger
 
 วิธีแก้:
 1. ไปที่ Intrusion prevention > IPS policies > New — ตั้งชื่อ policy
@@ -40,17 +40,17 @@ IPS policy ไม่ทำงานถ้าไม่ได้ผูกกับ
    - filter ตาม category / severity / platform / target
    - เลือก action สำหรับแต่ละ rule ตามชื่อจริงของ Sophos:
      - Recommended: ใช้ action ตามที่ signature แนะนำ
-     - Allow packet: ปล่อย packet ที่ผ่าน (log ไว้)
+     - Allow packet: ปล่อย packet ที่ผ่าน
      - Drop packet: ตัด packet ที่ตรวจพบ
      - Disable: ปิด signature นั้น (ไม่ตรวจ traffic ด้วย signature นี้)
      - Drop session: ตัด session ทั้งหมด
      - Reset: ตัด session และส่ง TCP reset ไปที่ originator
      - Bypass session: อนุญาต traffic และไม่ตรวจ signature ต่อใน session นั้น
    - ถ้าเจอ false positive: ถ้าต้องการไม่ตรวจ signature นี้เลยให้ใช้ Disable (ไม่ block แต่หยุดตรวจ) / ถ้าต้องการ block ให้ใช้ Drop packet
-   - ตรวจผลใน log: ไปที่ Logs > Event log > IPS ดูว่า action ทำงานตามที่ต้องการ
+   - ตรวจผลใน log: ไปที่ Log viewer > IPS ดูว่า action ทำงานตามที่ต้องการ
 3. ผูก policy กับ firewall rule — ไปที่ Firewall > Firewall rules > เลือก rule > Policies > IPS policy เลือก policy ที่สร้างไว้ (ไม่ใช่ None)
 4. ระวัง: signature-based IPS ไม่ตรวจจับ encryption (HTTPS) ได้โดยตรง — traffic HTTPS ต้องใช้ SSL/TLS inspection ก่อน
-5. ตรวจว่า IPS ทำงานจริง — ไปที่ Logs > Event log > IPS — ดูว่า signature ที่ตั้งใจ monitor ถูก log
+5. ตรวจว่า IPS ทำงานจริง — ไปที่ Log viewer > IPS — ดูว่า signature ที่ตั้งใจ monitor ถูก log
 
 ## Hardening การเข้าถึงตัวเครื่อง / Device access ต่อ zone
 
@@ -70,7 +70,7 @@ Device access ไม่ใช่ firewall rule — ไม่สามารถ�
 คำสั่งตรวจ:
 ตรวจใน GUI: ไปที่ Administration > Device access — ต้องเห็นว่า HTTPS/SSH เปิดเฉพาะ zone ที่ต้องการ (เช่น LAN) ไม่ใช่ WAN
 ตรวจใน GUI: ไปที่ Administration > Device access > Local service ACL exception rule — ต้องเห็น rule เฉพาะ IP admin ที่อนุญาตเข้าถึงจาก WAN
-ตรวจใน GUI: ไปที่ Profiles > Device access profiles — ต้องเห็น admin profile ที่แยกบทบาท
+ตรวจใน GUI: ไปที่ Profiles > Device access — ต้องเห็น admin profile ที่แยกบทบาท
 
 วิธีแก้:
 1. ปิด WAN access สำหรับ HTTPS และ SSH — ไปที่ Administration > Device access แล้วยกเลิกเลือก WAN สำหรับ HTTPS และ SSH (เปิดเฉพาะ LAN / DMZ ที่จำเป็น)
@@ -79,11 +79,13 @@ Device access ไม่ใช่ firewall rule — ไม่สามารถ�
    - Source zone: WAN
    - Source network/host: ใช้ IP admin โดยตรง (ห้ามใช้ Any / 0.0.0.0 — Sophos ไม่อนุญาต)
    - Destination host: IP ของ firewall ที่ใช้เข้าจัดการ (ห้ามเป็น Any)
-   - Services: เลือก HTTPS (หรือ SSH ตามต้องการ)
+   - Services: เลือก HTTPS
    - Action: Accept
    - สำหรับ mobile users ที่ source address เปลี่ยนแนะนำให้ใช้ VPN แทนการเปิด WAN access
-3. สร้าง admin profile เฉพาะหน้าที่ — ไปที่ Profiles > Device access profiles > New
+3. สร้าง admin profile เฉพาะหน้าที่ — ไปที่ Profiles > Device access > New
    - เลือกสิทธิ์ตามหน้าที่ (read-only, full administrator, network administrator ฯลฯ)
+      แหล่ง: https://docs.sophos.com/nsg/sophos-firewall/21.5/Help/en-us/webhelp/onlinehelp/AdministratorHelp/BackupAndFirmware/API/HowToArticles/APIAllowAccess/index.html
+   - กำหนด Login restriction: เลือก Selected nodes แล้วใส่ IP ของ admin
 
 ## Admin 2FA / public key authentication
 
@@ -106,23 +108,22 @@ Device access ไม่ใช่ firewall rule — ไม่สามารถ�
 1. MFA สำหรับ admin ทั่วไป — ไปที่ Authentication > Multi-factor authentication
    - เลือก Specific users and groups (ทดสอบก่อน, ใช้ All users เฉพาะหลังทดสอบแล้ว)
    - Enable Generate OTP token with next sign-in สำหรับ authenticator app
-   - Require MFA for: เลือก Web admin console (และ service อื่นที่ต้องการเช่น VPN portal, SSL VPN)
-   - OTP hash algorithm: เลือก SHA1 หรือ SHA256
+   - Require MFA for: เลือก Web admin console
+      หมายเหตุ: รายการ Require MFA for (VPN portal, SSL VPN, IPsec remote access, Web application firewall) มาจากเอกสาร SFOS 22 — ต้องตรวจสอบว่ามีใน 21.5 ก่อนใช้งานจริง
    - Apply แล้วทดสอบด้วย pilot group
-   - สำคัญ: เก็บ passcode ไว้ใน password manager — ถ้ามือถือหายจะเข้าไม่ได้
 2. MFA สำหรับ default admin — ไปที่ Administration > Device access
    - เปิด MFA สำหรับ default admin, เลือก token method
    - software token: สแกน QR code ด้วย authenticator app
    - hardware token: กรอก key ของ hardware token
    - Validate แล้ว Apply
-   - สำคัญ: เก็บ passcode ไว้ใน password manager — ถ้ามือถือหายจะเข้าไม่ได้
+   - ถ้า token หายถาวร (มือถือหาย): CLI Main Menu > 2. System Configuration ตัวเลือก 7 (reset MFA)
+   - ถ้า token ใช้ไม่ได้ชั่วคราว: ตัวเลือก 6 (login WebAdmin ครั้งเดียวไม่ต้อง MFA สำหรับ default admin)
 3. เปิด public key authentication สำหรับ SSH — ไปที่ Administration > Device access
    - เปิด Enable authentication สำหรับ public key
    - หมายเหตุ: public key authentication ตั้งได้เฉพาะ default admin (admin account)
-   - กรอก authorized keys: RSA >= 2048 bits, DSA >= 2048 bits, ECDSA (ไม่ใช้ ED25519)
+   - ตรวจชนิด key ที่รองรับกับเวอร์ชันที่ใช้ก่อน — แล้วกรอก authorized keys: RSA >= 2048 bits, DSA >= 2048 bits, ECDSA (ไม่ใช้ ED25519)
    - สร้าง key pair ด้วย PuTTYgen, paste public key, Apply
    - Admin เข้า SSH ด้วย private key
-4. ก่อนเปลี่ยน port — ไปที่ Administration > Admin and user settings เพื่อจดพอร์ตปัจจุบัน (WebAdmin TCP 4444 โดย default, User Portal TCP 4443) และ SSL VPN global settings (SSL VPN TCP 8443 โดย default)
 
 ## ส่ง log ไป SIEM ผ่าน syslog / เปิด log ใน firewall rule และ Log settings
 
@@ -141,7 +142,7 @@ Sophos Firewall ส่ง event log ไป syslog server สำหรับเ�
 คำสั่งตรวจ:
 ตรวจใน GUI: ไปที่ Firewall > Firewall rules > rule ที่ต้องการ log — ต้องเลือก Log firewall traffic
 ตรวจใน GUI: ไปที่ System services > Log settings — ต้องเห็น syslog server ที่กำหนด
-ตรวจใน GUI: ไปที่ Logs > Event log — ต้องเห็น log traffic ที่ log ไว้
+ตรวจใน GUI: ไปที่ Log viewer — ต้องเห็น log traffic ที่ log ไว้
 
 วิธีแก้:
 1. เปิด log ใน firewall rule — ไปที่ Firewall > Firewall rules > เลือก rule > ติ๊ก Log firewall traffic
@@ -160,7 +161,7 @@ Sophos Firewall ส่ง event log ไป syslog server สำหรับเ�
    - System health: CPU, memory, disk usage
    - Wireless: access point activity
 3. ระวัง: firewall rule log + Log settings ต้องเปิดทั้งคู่ — rule ต้องเปิด log + Log settings ต้องเลือกส่ง category นั้นไป syslog (2 ชั้น)
-4. ตรวจว่า log ปรากฏ — ไปที่ Logs > Event log — ดูว่ามี traffic log ที่ log ไว้
+4. ตรวจว่า log ปรากฏ — ไปที่ Log viewer — ดูว่ามี traffic log ที่ log ไว้
 
 ## เพิ่ม syslog server / ส่ง log ไป SIEM
 
@@ -186,5 +187,5 @@ Sophos Firewall ส่ง event log ไป syslog server สำหรับเ�
    - Severity Level: Emergency / Alert / Critical / Error / Warning / Notification / Information / Debug
    - Format: DeviceStandardFormat
    - เลือก log types ที่ต้องการส่งไป server นี้ (เลือกแยกตามหมวด เช่น Security policy / IPS / Anti-virus ฯลฯ)
-   - แต่ละ category มี SendLogs (Enable/Disable) และ sub-category ให้เลือก (เช่น IPS มี Anomaly / Signatures)
-2. ตรวจว่าส่งออกจริง — ไปที่ Logs > Event log และตรวจสอบว่า syslog server ได้รับ log จาก IP ของ firewall
+   - ติ๊กส่ง log แต่ละหมวด (Enable/Disable) และ sub-category (เช่น IPS มี Anomaly / Signatures)
+2. ตรวจว่าส่งออกจริง — ไปที่ Log viewer และตรวจสอบว่า syslog server ได้รับ log จาก IP ของ firewall
