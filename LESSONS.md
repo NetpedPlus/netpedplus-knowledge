@@ -53,3 +53,5 @@
 - PR #24: S-series storm-control action มีแค่ block | error-down (ไม่มี shutdown) / interval ค่าเริ่มต้น 5 วินาที / port-security protect-action ค่าเริ่มต้น restrict
 - PR #24: คำเตือน access hardening ต้องบอกเสมอว่าใช้เฉพาะ port ผู้ใช้ ไม่ใช่ uplink / AP และ port ที่มี IP phone + PC ต้องนับ MAC ให้พอ
 - PR #24: ลิงก์ support.huawei.com/enterprise ดึงอัตโนมัติไม่ได้ ครั้งหน้าให้หาหน้าเดียวกันใน info.support.huawei.com ก่อน
+- PR #25: FortiOS 7.x ใช้ `diagnose sys sdwan ...` / policy route ไม่ใช่ `config system policy-route` แต่เป็น `config router policy` / ดู SD-WAN rule + policy route ด้วย `diagnose firewall proute list`
+- PR #25: BGP received-routes ต้องเปิด soft-reconfiguration / BGP ที่ peer กับตัว FortiGate เป็น local-in ไม่ผ่าน firewall policy
