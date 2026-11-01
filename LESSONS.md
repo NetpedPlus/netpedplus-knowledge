@@ -50,3 +50,6 @@
 - PR #22 (หลัง merge): แก้ conflict แล้วเอาข้อความที่ Claude ลบไปแล้วกลับมา (DENY-ALL, `iprope lookup ... policy`, ลิงก์ 7.6.4) และ merge commit ที่ Claude ยังไม่ได้ตรวจ — ถ้ามี conflict / แก้เพิ่มหลัง "ผ่าน พร้อม merge" ต้องให้ Claude ตรวจใหม่ก่อน merge เสมอ ห้าม force push ทับ commit ของ Claude
 - PR #23: แหล่งบุคคลที่สาม (Reddit / blog) ต้องเขียนกำกับในหัวข้อว่า "บุคคลที่สาม" และค่าตัวเลขจากแหล่งนั้นให้เขียนว่าเป็นค่าตั้งต้นที่ต้องปรับ
 - PR #23: test ของ QRadar rule ให้เขียนตามรูปแบบจริง เช่น "when at least N events are seen with the same <A> and different <B> in N minutes" / ทดสอบ rule ย้อนหลังใช้ Historical Correlation ไม่มีปุ่ม Test
+- PR #24: S-series storm-control action มีแค่ block | error-down (ไม่มี shutdown) / interval ค่าเริ่มต้น 5 วินาที / port-security protect-action ค่าเริ่มต้น restrict
+- PR #24: คำเตือน access hardening ต้องบอกเสมอว่าใช้เฉพาะ port ผู้ใช้ ไม่ใช่ uplink / AP และ port ที่มี IP phone + PC ต้องนับ MAC ให้พอ
+- PR #24: ลิงก์ support.huawei.com/enterprise ดึงอัตโนมัติไม่ได้ ครั้งหน้าให้หาหน้าเดียวกันใน info.support.huawei.com ก่อน
