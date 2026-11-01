@@ -60,10 +60,10 @@ sources: https://docs.sophos.com/nsg/sophos-firewall/21.5/Help/en-us/webhelp/onl
   2. ตั้งค่า:
      - **Name:** ชื่อ feed (เช่น `Malware-IPs`)
      - **Action:** **Block** (log+block) หรือ **Monitor** (log เท่านั้น) — แนะนำเริ่มที่ Monitor ก่อนเพื่อตรวจ false positive
-     - **Position:** **Top** — feed ต้องอยู่ก่อน allow rule
+     - **Position:** **Top** — ลำดับตำแหน่งเทียบกับ third-party feed อื่น (ไม่เกี่ยวกับ allow rule)
      - **Indicator type:** **IPv4 address** / **Domain** / **URL** (แยก feed ต่อประเภท)
      - **URL:** กรอก URL ของ threat feed file (plain-text, indicator ต่อบรรทัด) — ต้องเป็น HTTPS โดยตรง (redirect 302 = Connection error)
-     - **Polling interval:** 15 นาที — 6 ชั่วโมง
+     - **Polling interval:** 5 นาที – 30 วัน (รุ่น XGS 87/88/107 เลือกได้เฉพาะ 24h / 7d / 30d)
   3. คลิก **Save**
 
 ที่มา: [Configure third-party threat feeds — Sophos Firewall 21.5](https://docs.sophos.com/nsg/sophos-firewall/21.5/Help/en-us/webhelp/onlinehelp/AdministratorHelp/ActiveThreatResponse/ConfigureFeeds/ThirdPartyThreatFeeds/ConfigureThirdPartyThreatFeeds/index.html), [Logs and alerts for Active threat response — Sophos Firewall 21.5](https://docs.sophos.com/nsg/sophos-firewall/21.5/Help/en-us/webhelp/onlinehelp/AdministratorHelp/ActiveThreatResponse/Requirements/ConfigureLogs/index.html)

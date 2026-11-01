@@ -88,10 +88,12 @@ show application list
 
 วิธีการ:
 - **เพิ่ม Application List:** Security Profiles → Application Control → Edit → เพิ่ม entry ที่ต้องการ block
-- **เลือก Category "Remote.Access":** รวม TeamViewer, AnyDesk, ScreenConnect, RustDesk (FortiGuard category: Remote.Access)
-- **เลือก Category "Proxy":** รวม ngrok, Cloudflare Tunnel, OpenVPN, HTTP Tunnel (FortiGuard category: Proxy)
-- **เลือก Category "Storage.Backup":** รวม MEGA, Dropbox, Google Drive, OneDrive (FortiGuard category: Storage.Backup)
-- **เลือก Category "Cloud.IT":** บางแอป cloud storage อยู่หมวดนี้
+- **ค้นชื่อแอปใน FortiGuard Application Control Database:** ไปที่ [FortiGuard App Control Database](https://www.fortiguard.com/appcontrol) → ค้นหาชื่อแอป (เช่น ngrok, Cloudflare Tunnel, MEGA, ScreenConnect) → ดู FortiGuard category จริงของแอปนั้น → ใช้ category ที่ถูกต้อง
+- **Category ที่มักใช้บล็อก Remote Access/Tunnel/Storage:**
+  - **Remote.Access:** TeamViewer, AnyDesk, ScreenConnect, RustDesk
+  - **Proxy:** ngrok, Cloudflare Tunnel, OpenVPN, HTTP Tunnel
+  - **Storage.Backup:** MEGA, Dropbox, Google Drive, OneDrive
+  - **Cloud.IT:** บางแอป cloud storage อยู่หมวดนี้
 - **ผูกกับ Policy:** Security Profiles → Application Control → เลือก profile ที่สร้าง → ผูกกับ firewall policy
 - **ตั้ง Action = Block:** สำหรับ remote access, proxy, storage
 
@@ -121,17 +123,18 @@ show firewall policy
 show firewall service custom
 ```
 อ่านผล:
-- ต้องเห็น policy ที่ block SMB/RDP ที่วางบนสุด (policy-id ต่ำ)
+- ต้องเห็น policy list
 - ต้องเห็น custom service สำหรับ port 139, 445, 3389, 5985, 5986
 
 วิธีการ:
 - **สร้าง Service Object สำหรับ SMB/RDP/WinRM:** `config firewall service custom`, `edit "SMB-RDP-URGENT"`, `set tcp-portrange 139 445 3389 5985 5986`, `next`, `end` (รวม WinRM ทั้ง 5985 TCP และ 5986 TCP HTTPS)
 - **สร้าง Policy Block ข้ามโซน (วางบนสุด):**
-  1. หา policy-id บนสุด: `show firewall policy` → ดู policy-id ต่ำสุด (เช่น 5)
-  2. ย้าย policy ปัจจุบันไปล่าง: `config firewall policy`, `edit 5`, `move 5 before 10`, `next`, `end` (ใช้เลข policy-id ที่มากกว่า)
-  3. สร้าง policy ใหม่บนสุด: `config firewall policy`, `edit 5`, `set name "BLOCK-SMB-RDP-EW"`, `set srcintf "<src-zone>"`, `set dstintf "<dst-zone>"`, `set srcaddr "all"`, `set dstaddr "all"`, `set service "SMB-RDP-URGENT"`, `set action deny`, `set logtraffic all`, `next`, `end`
-  4. หากต้องการให้อยู่บนสุดจริงๆ: ย้ายทุก policy ลงมา 1 ตำแหน่ง แล้วสร้าง policy-id 1 ใหม่
-- **ตรวจว่า policy อยู่บนสุด:** `show firewall policy` — policy ที่ block SMB/RDP ต้องเป็น policy-id ต่ำสุด
+  1. `config firewall policy`, `edit 0` → สร้างใหม่ (FortiOS จะกำหนด ID ให้โดยอัตโนมัติ)
+  2. ตั้งค่า: `set name "BLOCK-SMB-RDP-EW"`, `set srcintf "<src-zone>"`, `set dstintf "<dst-zone>"`, `set srcaddr "all"`, `set dstaddr "all"`, `set service "SMB-RDP-URGENT"`, `set action deny`, `set logtraffic all`
+  3. `next`, `end`
+  4. หา ID ของ policy บนสุด (ลำดับแรก): `show firewall policy` → ดูลำดับลำดับที่ 1 (Policy & Objects > Firewall Policy → ดู Sequence)
+  5. ย้าย policy ใหม่มาไว้ลำดับแรก: `config firewall policy`, `edit <ID ใหม่ที่ได้จากขั้นตอน 1>`, `move <ID ใหม่> before <ID ของ policy บนสุดตามลำดับ>`, `next`, `end`
+  6. ตรวจ: `show firewall policy` — policy ที่ block SMB/RDP ต้องเป็นลำดับแรก (Sequence = 1)
 
 อ้างอิง playbook: `fortigate-74-segmentation-east-west` สำหรับ zone-based policy
 
