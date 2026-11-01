@@ -55,3 +55,7 @@
 - PR #24: ลิงก์ support.huawei.com/enterprise ดึงอัตโนมัติไม่ได้ ครั้งหน้าให้หาหน้าเดียวกันใน info.support.huawei.com ก่อน
 - PR #25: FortiOS 7.x ใช้ `diagnose sys sdwan ...` / policy route ไม่ใช่ `config system policy-route` แต่เป็น `config router policy` / ดู SD-WAN rule + policy route ด้วย `diagnose firewall proute list`
 - PR #25: BGP received-routes ต้องเปิด soft-reconfiguration / BGP ที่ peer กับตัว FortiGate เป็น local-in ไม่ผ่าน firewall policy
+- PR #26: "Logs > Event log" ไม่มีใน SFOS — ชื่อเมนูจริงคือ "Log viewer" / ตรวจชื่อเมนูในเอกสารก่อนเขียน
+- PR #26: แหล่งอ้างอิงต้องเป็นหน้าที่พูดเรื่องนั้นจริง (เคยใส่หน้า API allow access เป็นแหล่งของ Device access profile)
+- PR #26: ตอนแก้ตาม review ให้แก้เฉพาะข้อที่ขอ — ห้ามเพิ่มเนื้อหาใหม่ (Login restriction กลับมาในรอบ 3) และ "ย้าย" ไม่ใช่ "ลบ"
+- PR #26: เอกสาร Avanet บางหน้าเขียนจาก SFOS 22 — ระบุเวอร์ชันทุกครั้งที่ไม่ใช่เวอร์ชันของ playbook

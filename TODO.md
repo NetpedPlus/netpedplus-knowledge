@@ -16,3 +16,4 @@
 | Huawei S5731 access hardening: port security, storm control | huawei_vrp_s | ✅ เสร็จแล้ว | #24 |
 | FortiGate 7.4 SD-WAN + BGP: health-check, SD-WAN rule, BGP neighbor, BGP route, routing order | fortinet_fortios | รอตรวจ (PR #25) | #25 |
 | FortiGate 7.4 segmentation โซน server (east-west) | fortinet_fortios | ✅ เสร็จแล้ว | #22 |
+| Sophos XGS / IPS / Hardening / Syslog | sophos_sfos | ✅ เสร็จแล้ว | #26 |
