@@ -59,7 +59,7 @@
 - PR #26: แหล่งอ้างอิงต้องเป็นหน้าที่พูดเรื่องนั้นจริง (เคยใส่หน้า API allow access เป็นแหล่งของ Device access profile)
 - PR #26: ตอนแก้ตาม review ให้แก้เฉพาะข้อที่ขอ — ห้ามเพิ่มเนื้อหาใหม่ (Login restriction กลับมาในรอบ 3) และ "ย้าย" ไม่ใช่ "ลบ"
 - PR #26: เอกสาร Avanet บางหน้าเขียนจาก SFOS 22 — ระบุเวอร์ชันทุกครั้งที่ไม่ใช่เวอร์ชันของ playbook
-|- PR #27: FortiOS 7.2+ ใช้ `diagnose user banned-ip` (quarantine ใช้ได้ถึง 7.0) — ban: `diagnose user banned-ip add src4 <IP> <expiry> admin`, list: `diagnose user banned-ip list`, delete: `diagnose user banned-ip delete src4 <IP>`, clear: `diagnose user banned-ip clear`
-|- PR #27: ลำดับ firewall policy ไม่ได้ขึ้นกับเลข ID — สร้างด้วย `config firewall policy, edit 0` แล้ว `config firewall policy, move <id> before <id>` ที่ระดับ config (ไม่อยู่ใน edit) — `edit <ID เดิม>` = แก้ policy เดิม ห้ามใช้เพื่อสร้างใหม่
-|- PR #27: ห้ามระบุว่าแอปอยู่หมวดไหนของ FortiGuard โดยไม่มีแหล่ง — ให้ชี้ไปค้นใน FortiGuard Application Control database แทน (https://www.fortiguard.com/appcontrol)
-|- PR #27: Sophos third-party threat feed — Position คือลำดับเทียบกับ feed อื่น ไม่เกี่ยวกับ firewall rule; Polling interval: 5m–30d (XGS 87/88/107 ได้เฉพาะ 24h/7d/30d)
+- PR #27: FortiOS 7.2+ ใช้ `diagnose user banned-ip` (quarantine ใช้ได้ถึง 7.0) — ban: `diagnose user banned-ip add src4 <IP> <expiry> admin`, list: `diagnose user banned-ip list`, delete: `diagnose user banned-ip delete src4 <IP>`, clear: `diagnose user banned-ip clear`
+- PR #27: ลำดับ firewall policy ไม่ได้ขึ้นกับเลข ID — สร้างด้วย `config firewall policy, edit 0` แล้ว `config firewall policy, move <id> before <id>` ที่ระดับ config (ไม่อยู่ใน edit) — `edit <ID เดิม>` = แก้ policy เดิม ห้ามใช้เพื่อสร้างใหม่
+- PR #27: ห้ามระบุว่าแอปอยู่หมวดไหนของ FortiGuard โดยไม่มีแหล่ง — ให้ชี้ไปค้นใน FortiGuard Application Control database แทน (https://www.fortiguard.com/appcontrol)
+- PR #27: Sophos third-party threat feed — Position คือลำดับเทียบกับ feed อื่น ไม่เกี่ยวกับ firewall rule; Polling interval: 5m–30d (XGS 87/88/107 ได้เฉพาะ 24h/7d/30d)
