@@ -13,4 +13,5 @@
 |- 2026-10-31 PR #14 Cisco C1300 Stack/Port-channel/VLAN merged (squash) — PR ดีที่สุดใน repo: ทุกคำสั่งมีลิงก์ CLI Guide จริงทุกหน้า, syntax C1300 จริง, families ถูก cisco_sb
 |- 2026-11-01 PR #26 Sophos XGS / IPS / Hardening / Syslog merged (squash) — IPS / Hardening / Syslog 3 topics, แก้ 4 rounds
 |- 2026-11-01 PR #27 FortiGate 7.4 + Sophos XGS Ransomware Response merged (squash) — แก้ 4 rounds (15 + 3 + 2 + 2 ข้อ)
+|- 2026-11-01 PR #28 F5 BIG-IP 17.x ประเมินผลกระทบช่องโหว่ + อัปเกรดบนคู่ HA merged (squash) — แก้ 4 rounds (5 + 2 + 2 + 2 ข้อ)
 |- 2026-10-31 check_playbook.py: ERROR อัตโนมัติ (ไม่มีคำสั่งตรวจ / บล็อกโค้ดอื่น / ตัวอย่าง output / อักษรจีน / commit ใน Huawei S) + ล้างตัวอย่าง output / commit ที่ค้างใน port-mirroring, ACL

@@ -63,3 +63,9 @@
 - PR #27: ลำดับ firewall policy ไม่ได้ขึ้นกับเลข ID — สร้างด้วย `config firewall policy, edit 0` แล้ว `config firewall policy, move <id> before <id>` ที่ระดับ config (ไม่อยู่ใน edit) — `edit <ID เดิม>` = แก้ policy เดิม ห้ามใช้เพื่อสร้างใหม่
 - PR #27: ห้ามระบุว่าแอปอยู่หมวดไหนของ FortiGuard โดยไม่มีแหล่ง — ให้ชี้ไปค้นใน FortiGuard Application Control database แทน (https://www.fortiguard.com/appcontrol)
 - PR #27: Sophos third-party threat feed — Position คือลำดับเทียบกับ feed อื่น ไม่เกี่ยวกับ firewall rule; Polling interval: 5m–30d (XGS 87/88/107 ได้เฉพาะ 24h/7d/30d)
+
+- PR #28: F5 HA upgrade — Force Offline standby → ลง → Release Offline → Force to Standby ที่ active (ห้าม Force Offline ทั้ง 2 เครื่อง / ห้าม sync ระหว่างคนละเวอร์ชัน)
+- PR #28: คำสั่ง F5 ที่ถูก — `tmsh show cm failover-status` / `install sys software image|hotfix ... volume` / `reboot volume` (ไม่มี `list / sys ha` หรือ `bootable-iso`)
+- PR #28: ห้ามใส่ตัวอย่าง output ที่แต่งขึ้น (provision ไม่ใช่ "max 2")
+- PR #28: แก้คำผิดต้องไม่เปลี่ยนความหมาย — อ่านทวนทั้งบรรทัดก่อน push
+- PR #28: ส่วนต้นไฟล์ (ก่อนหัวข้อแรก) validator ไม่ตรวจ — ตรวจอักษรจีนเองทั้งไฟล์
