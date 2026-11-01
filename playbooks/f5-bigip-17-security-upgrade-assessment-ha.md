@@ -4,7 +4,7 @@ title: F5 BIG-IP 17.x ประเมินผลกระทบช่องโ�
 families: f5_tmsh
 triggers: f5 bigip security upgrade, f5 advisory check affected, f5 assess impact before upgrade, f5 upgrade on high availability pair, f5 ha upgrade standby first, f5 ucs backup qkview, f5 rollback upgrade volume, f5 engineering hotfix EHF, f5 tmsh failover-status, f5 force to standby upgrade
 versions: BIG-IP 17.1 / 17.5
-sources: https://my.f5.com/manage/s/article/K12201527, https://my.f5.com/manage/s/article/K51812227, https://my.f5.com/manage/s/article/K84554955, https://my.f5.com/manage/s/article/K15134306, https://my.f5.com/manage/s/article/K60339442, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_provision.html, https://my.f5.com/manage/s/article/K13123, https://my.f5.com/manage/s/article/K55025573, https://techdocs.f5.com/en-us/bigip-17-5-1-6/big-ip-release-notes/big-ip-install.html, https://my.f5.com/manage/s/article/K08452454, https://my.f5.com/manage/s/article/K20137641, https://my.f5.com/manage/s/article/K13946, https://my.f5.com/manage/s/article/K4423, https://my.f5.com/manage/s/article/K12878, https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-system-essentials-11-6-0/5.html
+sources: https://my.f5.com/manage/s/article/K12201527, https://my.f5.com/manage/s/article/K51812227, https://my.f5.com/manage/s/article/K84554955, https://my.f5.com/manage/s/article/K15134306, https://my.f5.com/manage/s/article/K60339442, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_provision.html, https://my.f5.com/manage/s/article/K13123, https://my.f5.com/manage/s/article/K55025573, https://techdocs.f5.com/en-us/bigip-17-5-1-6/big-ip-release-notes/big-ip-install.html, https://my.f5.com/manage/s/article/K08452454, https://my.f5.com/manage/s/article/K20137641, https://my.f5.com/manage/s/article/K13946, https://my.f5.com/manage/s/article/K4423, https://my.f5.com/manage/s/article/K12878, https://techdocs.f5.com/en-us/bigip-17-5-1-6/big-ip-system-essentials/software-management.html
 ---
 
 # F5 BIG-IP 17.x ประเมินผลกระทบช่องโหว่ + อัปเกรดบนคู่ HA
@@ -14,7 +14,7 @@ sources: https://my.f5.com/manage/s/article/K12201527, https://my.f5.com/manage/
 
 อ้างอิง playbook อื่น:
 - `f5-bigip-17` → "ตรวจความปลอดภัยของระบบ (advisory/CVE)" สำหรับวิธีอ่าน advisory เบื้องต้น
-- `f5-bigip-17` → "อัปเกรด / volume / สำรอง" สำหรับขั้นตอน upgrade แบบ单机
+- `f5-bigip-17` → "อัปเกรด / volume / สำรอง" สำหรับขั้นตอน upgrade แบบเครื่องเดียว
 - `f5-ops-advanced` → HA setup, device trust, ConfigSync
 
 ---
@@ -32,7 +32,7 @@ sources: https://my.f5.com/manage/s/article/K12201527, https://my.f5.com/manage/
 อ่านผล:
 - **BIG-IP Version** → ตัวอย่าง: `17.5.1.3` → ต้องดูว่าอยู่ใน "Versions known to be vulnerable" ของ advisory ไหม
 - **tmsh list sys provision** → ดู module ที่เปิด: `ltm`, `asm`, `dns`, `apm` เป็นต้น
-  - ตัวอย่าง: `ltm { max 2 }` / `asm { max 1 }` → แสดงว่า provision ltm และ asm แล้ว
+  - ดูว่า module มี level เป็น nominal / minimum / dedicated (ไม่ใช่ none) → module นั้น provision แล้ว
   - Module ที่ไม่ได้ provision → อาจไม่ต้องรีบตรวจช่องโหว่นั้น แต่ควรตรวจสอบอย่างละเอียด
 - ต้องเปิด F5 Security Advisory → ดู **Affected products** และ **Affected versions**
   - ถ้ามี module ที่เรา provision อยู่ในรายการ affected → เครื่องอยู่ในข่าย
@@ -79,10 +79,8 @@ sources: https://my.f5.com/manage/s/article/K12201527, https://my.f5.com/manage/
 
 **B. Behavior Changes / ค่า Default ใหม่:**
 - [ ] อ่าน "New and Installation" → ดูค่า default ใหม่
-- [ ] อ่าน "Issues when upgrading" → ดูว่า upgrade จะ overwrite setting อะไร
-- [ ] ตัวอย่าง (17.5.1.11): เปลี่ยนการลงชื่อ Advanced WAF cookies → อาจ block traffic ระหว่าง upgrade
-  - เตรียมการ: ปิด cookie violation ก่อน upgrade → เปิดหลัง upgrade 24 ชม.
-- [ ] ตัวอย่าง (17.5.1.6): TPM status อาจแสดง "System Integrity: Invalid" หลัง upgrade → แก้ใน 17.5.1.6
+- [ ] อ่าน "Fixes and Known Issues" → ดูว่า upgrade จะ overwrite setting อะไร
+- [ ] ตัวอย่าง (17.5.1.6): K2152397-2 — BIG-IP support for f5optics packages built after October 2025 → หากใช้ F5OS tenant ต้องตรวจ firmware ของ host ก่อน
 
 **C. Feature ที่ถูกตัด/เปลี่ยน:**
 - [ ] อ่าน "New Features" → ดูฟีเจอร์ใหม่ที่ต้องตั้งค่าเพิ่ม
@@ -90,10 +88,8 @@ sources: https://my.f5.com/manage/s/article/K12201527, https://my.f5.com/manage/
 
 **D. Known Issues (สำคัญมาก):**
 - [ ] อ่าน "Known Issues" ใน release notes → เปรียบเทียบกับ config ปัจจุบัน
-- [ ] ตัวอย่าง known issues ที่พบบ่อย:
-  - Upgrade ช้ากว่าปกติเมื่อ config มี address-lists ขนาดใหญ่ (workaround: แปลง address-lists เป็น subnet)
-  - vCMP guests / F5OS tenants อาจไม่ขึ้นหลัง upgrade (workaround: ตรวจ /var partition ก่อน upgrade)
-  - UCS จาก pre-17.5.0 อาจถูก overwrite เมื่อ upgrade ไป 17.5.1+
+- [ ] ตัวอย่าง known issues ใน release notes ที่พบบ่อย:
+  - K935769-8: Upgrading / Rebooting BIG-IP with huge address-list configuration takes a long time (workaround: แปลง address-lists เป็น subnet)
 
 **E. สรุป:**
 - [ ] **อัปได้เลย** — ไม่มี known issue ที่กระทบ, upgrade path ตรง
@@ -196,13 +192,20 @@ sources: https://my.f5.com/manage/s/article/K12201527, https://my.f5.com/manage/
    - **CLI:** `tmsh install sys software image BIGIP-17.5.1.iso volume HD1.2 create-volume`
 4. **Reboot ไป volume ใหม่:**
    - **CLI:** `tmsh reboot volume HD1.2`
+
+EHF (Engineering Hotfix) — ถ้ามี hotfix เฉพาะ CVE:
+- **GUI:** **System** → **Software Management** → **Hotfix List** → Import → เลือก hotfix → **Install**
+- **CLI:** `tmsh install sys software hotfix Hotfix-BIGIP-17.5.1.iso volume HD1.3 create-volume`
+- แล้ว reboot ไป volume ใหม่: `tmsh reboot volume HD1.3`
+- แหล่ง: [K13123 Managing BIG-IP product hotfixes](https://my.f5.com/manage/s/article/K13123)
+
 5. **ตรวจหลัง reboot:**
    - **GUI:** **System** → **Platform** → ตรวจ **BIG-IP Version**
    - ตรวจ log: `tail -100 /var/log/ltm` / `tail -100 /var/log/restnoded/restnoded.log` → ดู error
 6. **สำคัญ:** ระหว่างที่สองเครื่องคนละเวอร์ชัน → **ConfigSync ไม่ทำงาน** และ **ห้าม sync / ห้ามแก้ config**
    - K20137641: "Config sync will not work if devices are in different versions"
    - K13946: "Device group members must run the same BIG-IP software version"
-   - รอจนทั้ง 2เครื่องเวอร์ชันตรงกันก่อนค่อย sync
+   - รอจนทั้ง 2 เครื่องเวอร์ชันตรงกันก่อนค่อย sync
 
 ## 4.3 ขั้น Failover: Release Offline + Force to Standby
 
@@ -210,14 +213,14 @@ sources: https://my.f5.com/manage/s/article/K12201527, https://my.f5.com/manage/
 อาการ: ต้อง release standby ที่ upgrade แล้ว และ force active ให้เป็น standby เพื่อ failover traffic
 
 ตรวจใน GUI:
-- **Device Management → Devices** → เลือก standby (ที่ยัง offline) → **Release Offline**
-- **Device Management → Devices** → เลือก active → **Force to Standby**
+- **Device Management → Devices** → ตรวจสถานะ standby → ควรแสดง **Offline**
+- **Device Management → Devices** → ตรวจสถานะ active → ควรแสดง **Online****
 
 ที่มา: [Update or upgrade HA systems (K15134306)](https://my.f5.com/manage/s/article/K15134306), [Upgrade using TMOS (K60339442)](https://my.f5.com/manage/s/article/K60339442)
 
 วิธีดำเนินการ:
 1. **Release Offline standby (ที่ upgrade แล้ว):**
-   - เข้า GUI ของเครื่องที่ยัง upgrade แล้ว (standby)
+   - เข้า GUI ของเครื่องที่ยังไม่ได้ upgrade แล้ว (standby)
    - **Device Management** → **Devices** → เลือกเครื่อง standby → **Release Offline**
    - เครื่องจะกลับมาเป็น standby และพร้อมรับ traffic
 2. **Force to Standby ที่ active:**
@@ -239,7 +242,6 @@ sources: https://my.f5.com/manage/s/article/K12201527, https://my.f5.com/manage/
 - **System → Software Management** → Import → Install (เช่นเดียวกับ 4.2)
 
 ที่มา: [Update or upgrade HA systems (K15134306)](https://my.f5.com/manage/s/article/K15134306)
-- **System → Software Management** → Import → Install (เช่นเดียวกับ 4.2)
 
 วิธีดำเนินการ:
 1. เครื่องเดิมตอนนี้กลายเป็น **Standby**
@@ -257,9 +259,8 @@ sources: https://my.f5.com/manage/s/article/K12201527, https://my.f5.com/manage/
 - **Device Management → Devices** → ตรวจ HA state
 
 ตรวจใน CLI:
-- **System → Platform** → ตรวจ version
-- **Device Management → Device Group** → ตรวจ sync status
 - **tmsh show cm failover-status** → ตรวจ HA state
+- **tmsh show sys software** → ตรวจ version ทั้ง 2 เครื่อง
 
 ที่มา: [Update or upgrade HA systems (K15134306)](https://my.f5.com/manage/s/article/K15134306), [Overview of BIG-IP system software upgrades (K84554955)](https://my.f5.com/manage/s/article/K84554955)
 
@@ -293,7 +294,7 @@ sources: https://my.f5.com/manage/s/article/K12201527, https://my.f5.com/manage/
  Checklist:
 - [ ] เวอร์ชันตรงกันทั้ง 2 เครื่อง
 - [ ] HA Active/Standby ทำงานปกติ
-- [ ] ConfigSync สync config แล้ว
+- [ ] ConfigSync sync config แล้ว
 - [ ] Pool members ขึ้น up (ตรวจทุก pool)
 - [ ] Virtual servers ทำงาน (ตรวจ VS ที่สำคัญ)
 - [ ] SSL certificates ยังถูกต้อง
@@ -308,7 +309,7 @@ sources: https://my.f5.com/manage/s/article/K12201527, https://my.f5.com/manage/
 - **Boot Locations:** GUI → **System** → **Software Management** → **Boot Locations** → ดู volume ที่มีอยู่
 - **CLI:** `tmsh show sys software` → ดู installed images และ boot location
 
-ที่มา: [Software Management (techdocs.f5.com)](https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-system-essentials-11-6-0/5.html), [Upgrade using TMOS (K60339442)](https://my.f5.com/manage/s/article/K60339442)
+ที่มา: [Software Management (techdocs.f5.com)](https://techdocs.f5.com/en-us/bigip-17-5-1-6/big-ip-system-essentials/software-management.html), [Upgrade using TMOS (K60339442)](https://my.f5.com/manage/s/article/K60339442)
 
 วิธี rollback:
 - **GUI:**
