@@ -63,12 +63,17 @@ def check(p: pathlib.Path, ids: dict) -> tuple[list, list]:
     if p.name.startswith("_"):
         warn.append("ชื่อไฟล์ขึ้นต้นด้วย _ โปรแกรมจะไม่โหลด")
     huawei_s = "huawei_vrp_s" in head.get("families", "")
-    secs = re.split(r"^## ", t[m.end():], flags=re.M)[1:]
+    parts = re.split(r"^## ", t[m.end():], flags=re.M)
+    if re.search(r"[\u4e00-\u9fff\u3040-\u30ff]", m.group(1) + parts[0]):            # หัวไฟล์ + ส่วนก่อนหัวข้อแรก (เคยหลุดใน PR #28)
+        err.append("หัวไฟล์ / ส่วนก่อนหัวข้อแรก มีอักษรจีน / ญี่ปุ่นปน — ใช้ไทย / อังกฤษเท่านั้น")
+    secs = parts[1:]
     if not secs:
         err.append("ไม่มีหัวข้อ ## เลย")
     for s in secs:
         name = s.splitlines()[0].strip()
         tag = f"[{name[:40]}]"
+        if re.match(r"(บทเรียน|lessons?)\b", name, re.I):
+            err.append(f"{tag} หัวข้อบทเรียนอยู่ใน LESSONS.md เท่านั้น ไม่ใส่ใน playbook (PR #29)")
         if " — " in name:
             err.append(f"{tag} ชื่อหัวข้อมี ' — '")
         if not re.search(r"^คำค้น:\s*\S", s, re.M):
@@ -94,8 +99,14 @@ def check(p: pathlib.Path, ids: dict) -> tuple[list, list]:
             err.append(f"{tag} มี 'ตัวอย่าง output' — ห้ามใส่ output ที่ไม่ได้คัดลอกจากเอกสาร (LESSONS)")
         if huawei_s and any(re.search(r"\bcommit\b", ln) and not re.search(r"ไม่ต้อง|ไม่มี|ไม่ใช้|ห้าม", ln) for ln in s.splitlines()):
             err.append(f"{tag} มี `commit` — Huawei S series (VRP V200) คำสั่งมีผลทันที ไม่มี commit (ใช้ save)")
-        if blk:
-            for line in blk.group(1).splitlines():
+        for bm in re.finditer(r"^คำสั่งตรวจ:\s*\n```[^\n]*\n(.*?)```", s, re.S | re.M):   # ทุกบล็อก (เดิมตรวจแค่บล็อกแรก)
+            for line in bm.group(1).splitlines():
+                st = line.strip()
+                if st.startswith(("#", "//")):
+                    err.append(f"{tag} บรรทัดในบล็อกคำสั่งตรวจไม่ใช่คำสั่ง (โปรแกรมจะส่งเข้าอุปกรณ์): {st[:60]} — ย้ายคำอธิบายไปไว้นอกบล็อก (PR #29)")
+                    continue
+                if re.search(r"[\u0E00-\u0E7F]", re.sub(r"<[^<>]*>", "", st)):           # <ชื่อ> = ตัวแทนค่าที่ผู้ใช้กรอก ไม่นับ
+                    err.append(f"{tag} บรรทัดในบล็อกคำสั่งตรวจมีภาษาไทย (ไม่ใช่คำสั่ง โปรแกรมจะส่งเข้าอุปกรณ์): {st[:60]}")
                 if WRITE.search(line):
                     err.append(f"{tag} คำสั่งตรวจไม่ใช่อ่านอย่างเดียว: {line.strip()[:60]}")
                 if SECRET.search(line):
