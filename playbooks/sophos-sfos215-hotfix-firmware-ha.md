@@ -61,15 +61,6 @@ sources: ["https://docs.sophos.com/nsg/sophos-firewall/21.5/Help/en-us/webhelp/o
 
 สามารถ rollback firmware version ของ HA pair ได้ — กระบวนการ rollback ทำเหมือนการอัพเกรด
 
-### คำสั่งตรวจ
-
-คำสั่งตรวจ:
-```
-system diagnostics show version-info
-```
-
-อ่านผล: ต้องเห็น version ที่อัพเกรดแล้วในช่อง firmware version
-
 ## 3. ตรวจว่า hotfix ลงครบ
 
 คำค้น: ตรวจ hotfix, verify hotfix, version-info
@@ -81,12 +72,9 @@ system diagnostics show version-info
 คำสั่งตรวจ:
 ```
 system diagnostic show version-info
-system hotfix show
 ```
 
-อ่านผล:
-- `system diagnostic show version-info` → ต้องเห็นช่อง Hotfix tag
-- `system hotfix show` → ต้องเห็น hotfix auto-install is enabled
+อ่านผล: ต้องเห็นค่า **Hotfix tag** ในผลลัพธ์
 
 ### 3.1 ตรวจสอบ hotfix tag
 
@@ -100,25 +88,21 @@ system hotfix show
    - **หมายเหตุ**: ค่านี้คือเกณฑ์ของ KBA-000010589 สำหรับชุดช่องโหว่ที่ระบุเท่านั้น — สำหรับ advisory อื่น ให้ดูค่า hotfix tag ที่ advisory นั้นระบุ
    - หากเห็นค่าน้อยกว่านี้ = hotfix ของ advisory นั้นยังไม่ได้ติดตั้ง
 
-### 3.2 ตรวจ hotfix ที่ติดตั้งใน web admin
-
-1. ไปที่ **Backup and firmware** > **Hotfix: Security updates**
-2. หน้านี้จะแสดง hotfix security updates ที่ติดตั้งไว้
-
-### 3.3 ตรวจ hotfix auto-install status
+### 3.2 ตรวจ hotfix auto-install status
 
 ตรวจสอบว่า hotfix automatic installation เปิดอยู่หรือไม่:
 
 1. ไปที่ **Device Console**
 2. รันคำสั่ง `system hotfix show`
 3. ค่าที่ต้องเห็น: hotfix auto-install ต้องเป็น **enabled**
-4. Default value คือ **enabled** — Sophos แนะนำให้คงค่านี้ไว้
+
+ที่มา: https://docs.sophos.com/nsg/sophos-firewall/22.0/Help/en-us/webhelp/onlinehelp/CommandLineHelp/DeviceConsole/SystemCommands/Hotfix/index.html — `system hotfix [enable | disable | show]` — `The firewall looks for hotfixes every 30 minutes. By default, it installs hotfixes automatically. We recommend that you don't change this setting. Default: enabled.`
 
 ## 4. ตรวจ HA status หลังอัพเกรด
 
 คำค้น: HA status healthy, failover verification, primary role
 
-ที่มา: https://docs.sophos.com/nsg/Sophos-firewall/21.5/Help/en-us/webhelp/onlinehelp/AdministratorHelp/BackupAndFirmware/Firmware/FirmwareFAQs/index.html — `Verify that the HA status is healthy.`
+ที่มา: https://docs.sophos.com/nsg/Sophos-firewall/21.5/Help/en-us/webhelp/onlinehelp/HighAvailablityStartupGuide/HAManage/HAFirmwareUpgrade/index.html — `Verify that the HA status is healthy.`
 
 ### คำสั่งตรวจ
 
@@ -127,7 +111,9 @@ system hotfix show
 system ha show details
 ```
 
-อ่านผล: ต้องเห็น HA status = healthy/active, configured primary device, synchronization = active
+อ่านผล: ต้องเห็นสถานะ HA ในผลลัพธ์
+
+ที่มา: https://docs.sophos.com/nsg/sophos-firewall/21.5/Help/en-us/webhelp/onlinehelp/HighAvailablityStartupGuide/HAConfiguration/HAQuickHAConfigureActivePassive/index.html — `To see the HA details on the CLI, enter the following command: system ha show details`
 
 หลังอัพเกรดเสร็จ ต้องตรวจสอบว่า:
 
