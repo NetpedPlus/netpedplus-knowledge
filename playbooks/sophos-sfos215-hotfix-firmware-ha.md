@@ -27,7 +27,9 @@ sources: ["https://docs.sophos.com/nsg/sophos-firewall/21.5/Help/en-us/webhelp/o
 system ha show details
 ```
 
-อ่านผล: ต้องเห็นสถานะ HA
+อ่านผล: ต้องเห็น HA status, primary/auxiliary role, synchronization status
+
+ที่มา: https://docs.sophos.com/nsg/sophos-firewall/21.5/Help/en-us/webhelp/onlinehelp/HighAvailablityStartupGuide/HAConfiguration/HAQuickHAConfigureActivePassive/index.html — `To see the HA details on the CLI, enter the following command: system ha show details`
 
 เมื่ออัพเกรด HA device กระบวนการมีดังนี้ (เอกสาร SFOS 21.5):
 
@@ -58,8 +60,7 @@ system diagnostic show version-info
 2. รันคำสั่ง `system diagnostic show version-info`
 3. ดูค่าในช่อง **Hotfix tag**:
 
-   - ค่าที่ต้องเห็น: **HF071525.1** หรือค่าที่สูงกว่านี้
+   - ค่าที่ต้องเห็น: **HF071525.1** หรือ tag ที่ออกหลังจากนั้น (ตาม KBA: "or a later value")
    - **หมายเหตุ**: ค่านี้คือเกณฑ์ของ KBA-000010589 สำหรับชุดช่องโหว่ที่ระบุเท่านั้น — สำหรับ advisory อื่น ให้ดูค่า hotfix tag ที่ advisory นั้นระบุ
-   - หากเห็นค่าน้อยกว่านี้ = hotfix ของ advisory นั้นยังไม่ได้ติดตั้ง
 
-> **คำเตือน**: KBA-000010589 ระบุ hotfix สำหรับชุดช่องโหว่ CVE-2025-6704, CVE-2025-7624, CVE-2025-7382, CVE-2024-13974 — ตรวจสอบว่า CVE เหล่านี้ยังเกี่ยวข้องกับ SFOS 21.5 หรือไม่ (บาง CVE อาจถูกแก้ไขมาใน SFOS 21.5 GA แล้ว)
+> **หมายเหตุ**: ตาม advisory [sophos-sa-20250721-sfos-rce](https://www.sophos.com/en-us/security-advisories/sophos-sa-20250721-sfos-rce): SFOS 21.5 GA โดน CVE-2025-6704 / 7624 / 7382 และSophos ออก hotfix สำหรับ 21.5 GA (21.5.0.171) — ตรวจว่า hotfix ลงครบด้วย KBA-000010589 (CVE-2024-13974 / 13973 ไม่กระทบ 21.5)
