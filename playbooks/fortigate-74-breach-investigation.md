@@ -4,7 +4,7 @@ title: FortiGate 7.4: ตรวจว่าตัวเครื่องถู�
 families: fortinet_fortios
 triggers: fortigate ตรวจถูกบุกรุก, fortigate intrusion investigation, fortigate admin user not known, fortigate unauthorized config change, fortigate abnormal admin login, fortigate psirt advisory investigation
 versions: FortiOS 7.4.x
-sources: https://docs.fortinet.com/document/fortios/7.4.0/administration-guide/480747/administration-logs, https://docs.fortinet.com/document/fortios/7.4.0/cli-reference/77317/log-feature-table, https://docs.fortinet.com/document/fortios/7.4.0/cli-reference/001620/config-system-admin, https://www.fortiguard.com/psirt
+sources: https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/668197/log-related-diagnose-commands, https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/334417/logs-for-the-execution-of-cli-commands, https://www.fortiguard.com/psirt
 ---
 
 # FortiGate 7.4: ตรวจว่าตัวเครื่องถูกบุกรุกหรือไม่
@@ -16,7 +16,7 @@ sources: https://docs.fortinet.com/document/fortios/7.4.0/administration-guide/4
 
 ## 1. ตรวจหา admin user ที่ไม่รู้จัก
 
-คำค้น: fortigate admin user not known, fortigate list admin accounts, fortigate show system admin
+คำค้น: fortigate admin user not known, fortigate list admin accounts
 อาการ: ต้องตรวจว่ามี admin account ที่ไม่รู้จักหรือไม่
 
 คำสั่งตรวจ:
@@ -26,50 +26,54 @@ get system admin
 อ่านผล:
 - ดูว่าทุก admin account เป็นบัญชีที่รู้จักหรือไม่ (ชื่อ, serial ของ token ถ้ามี)
 - หากมี account ที่ไม่รู้จัก = ต้องสอบสวนต่อ
-- บัญชีฉุกเฉิน (break-glass) ที่ไม่เปิด MFA ต้องมี trusthost จำกัด และเก็บรหัสไว้ใน vault
-ที่มา: [config system admin — FortiOS 7.4 CLI Reference](https://docs.fortinet.com/document/fortios/7.4.0/cli-reference/001620/config-system-admin)
+ที่มา: [system — FortiGate 7.4.0 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.0/cli-reference/25848/system)
 วิธีแก้:
-- หากตรวจพบ admin account ที่ไม่รู้จัก ให้ลบทันที: `config system admin`, `delete "<admin_name>"`, `end`
-- หากบัญชีนั้นจำเป็น แต่ลืมลงทะเบียน ให้เพิ่มข้อมูล: `edit "<admin_name>"`, `set two-factor fortitoken`, `set fortitoken <serial>`, `end`
-- บัญชี break-glass ต้องมี trusthost จำกัดเสมอ
+- หากตรวจพบ admin account ที่ไม่รู้จัก ให้สำรอง config ก่อน: `execute backup full /config.bak`
+- แล้วลบ: `config system admin`, `delete "<admin_name>"`, `end`
+- ระบุ account ที่ลบและสอบสวนว่ามาจากที่ไหน
 
 ---
 
 ## 2. ตรวจการเปลี่ยน config ที่ผิดปกติ
 
-คำค้น: fortigate config change log, fortigate abnormal config change, fortigate log admin action
+คำค้น: fortigate config change log, fortigate abnormal config change
 อาการ: ต้องตรวจว่ามี config change ที่ผิดปกติหรือไม่
 
 คำสั่งตรวจ:
 ```
-diagnose log console logfilter table log_event logtype config 2>/dev/null || log show
+execute log filter device disk
+execute log filter category event
+execute log filter field action config
+execute log display
 ```
 อ่านผล:
-- ดูว่ามี config change ที่ไม่เป็นที่รู้จักหรือไม่ (เปลี่ยนชื่อ, เพิ่ม rule, เปิด service)
+- ดูว่ามี config change ที่ไม่เป็นที่รู้จักหรือไม่ (เปลี่ยน rule, เพิ่ม service, เปิด feature)
 - หากมี config change จาก admin account ที่ไม่รู้จัก = เป็นสัญญาณการถูกบุกรุก
-ที่มา: [Log Feature Table — FortiOS 7.4 Administration Guide](https://docs.fortinet.com/document/fortios/7.4.0/administration-guide/480747/administration-logs)
+ที่มา: [Log-related diagnostic commands — FortiGate 7.4.0 Administration Guide](https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/668197/log-related-diagnose-commands)
 วิธีแก้:
-- หากตรวจพบ config change ที่ผิดปกติ ให้กู้คืนจาก backup: `execute restore full <ucs_file>`, `end`
+- หากตรวจพบ config change ที่ผิดปกติ ให้กู้คืนจาก backup ที่สำรองไว้
 - ระบุ admin account ที่ทำการ change และสอบสวนบัญชีนั้น
-- หากเป็น admin account ที่ถูกบุกรุก ให้เปลี่ยนรหัสผ่านทันที
 
 ---
 
 ## 3. ตรวจการ login admin ที่ผิดปกติ
 
-คำค้น: fortigate abnormal admin login, fortigate login history investigation, fortigate admin login log
+คำค้น: fortigate abnormal admin login, fortigate login history investigation
 อาการ: ต้องตรวจว่าการ login admin เป็นไปอย่างปกติหรือไม่
 
 คำสั่งตรวจ:
 ```
-log display logtype event logsource admin sourceip 2>/dev/null || log show
+execute log filter device disk
+execute log filter category event
+execute log filter field action login
+execute log display
 ```
 อ่านผล:
 - ดูว่ามีการ login จาก IP ที่ไม่เป็นที่รู้จักหรือไม่
 - หากมีการ login จาก IP ที่ไม่เป็นที่รู้จัก = เป็นสัญญาณการถูกบุกรุก
-ที่มา: [Log Feature Table — FortiOS 7.4 Administration Guide](https://docs.fortinet.com/document/fortios/7.4.0/administration-guide/480747/administration-logs)
+ที่มา: [Log-related diagnostic commands — FortiGate 7.4.0 Administration Guide](https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/668197/log-related-diagnose-commands)
 วิธีแก้:
-- หากตรวจพบ login จาก IP ที่ผิดปกติ ให้บล็อก IP นั้น: `config firewall address`, `edit "BLOCKED-IP"`, `set subnet <IP> 255.255.255.255`, `next`, `end`
+- หากตรวจพบ login จาก IP ที่ผิดปกติ ให้บล็อก IP: `config firewall address`, `edit "BLOCKED-IP"`, `set subnet <IP> 255.255.255.255`, `next`, `end`
 - ตรวจสอบ admin account ที่ใช้ login และเปลี่ยนรหัสผ่านทันที
 
 ---
@@ -86,9 +90,9 @@ get system status
 อ่านผล:
 - ดูว่า FortiGate กำลังใช้เวอร์ชันที่มีช่องโหว่หรือไม่
 - ตรวจสอบว่ามีการติดตั้ง hotfix หรือ upgrade แล้วหรือไม่
-ที่มา: [Fortinet PSIRT](https://www.fortiguard.com/psirt)
+ที่มา: [system status — FortiGate 7.4.0 CLI Reference](https://docs.fortinet.com/document/fortigate/7.4.0/cli-reference/714660/system-status)
 วิธีแก้:
-- หากตรวจพบช่องโหว่ ให้ upgrade เป็นเวอร์ชันล่าสุด: `execute firmware-download latest`, `execute firmware-reboot`
+- หากตรวจพบช่องโหว่ ให้ดู upgrade path จาก PSIRT advisory
 - หากมีการ exploit แล้ว ให้กู้คืนจาก backup
 
 ---
