@@ -27,7 +27,7 @@ sources: ["https://docs.sophos.com/nsg/sophos-firewall/21.5/Help/en-us/webhelp/o
 system ha show details
 ```
 
-อ่านผล: ต้องเห็น HA status, primary/auxiliary role, synchronization status
+อ่านผล: ดูรายละเอียด HA ของคู่เครื่อง (เทียบกับหน้า GUI ก่อนและหลังอัปเกรด)
 
 ที่มา: https://docs.sophos.com/nsg/sophos-firewall/21.5/Help/en-us/webhelp/onlinehelp/HighAvailablityStartupGuide/HAConfiguration/HAQuickHAConfigureActivePassive/index.html — `To see the HA details on the CLI, enter the following command: system ha show details`
 
@@ -63,4 +63,4 @@ system diagnostic show version-info
    - ค่าที่ต้องเห็น: **HF071525.1** หรือ tag ที่ออกหลังจากนั้น (ตาม KBA: "or a later value")
    - **หมายเหตุ**: ค่านี้คือเกณฑ์ของ KBA-000010589 สำหรับชุดช่องโหว่ที่ระบุเท่านั้น — สำหรับ advisory อื่น ให้ดูค่า hotfix tag ที่ advisory นั้นระบุ
 
-> **หมายเหตุ**: ตาม advisory [sophos-sa-20250721-sfos-rce](https://www.sophos.com/en-us/security-advisories/sophos-sa-20250721-sfos-rce): SFOS 21.5 GA โดน CVE-2025-6704 / 7624 / 7382 และSophos ออก hotfix สำหรับ 21.5 GA (21.5.0.171) — ตรวจว่า hotfix ลงครบด้วย KBA-000010589 (CVE-2024-13974 / 13973 ไม่กระทบ 21.5)
+> **หมายเหตุ**: ตาม advisory [sophos-sa-20250721-sfos-rce](https://www.sophos.com/en-us/security-advisories/sophos-sa-20250721-sfos-rce): SFOS 21.5 GA โดน CVE-2025-6704 / 7624 / 7382 และ Sophos ออก hotfix สำหรับ 21.5 GA (21.5.0.171) — ตรวจว่า hotfix ลงครบด้วย KBA-000010589 (CVE-2024-13974 / 13973 ไม่กระทบ 21.5)
