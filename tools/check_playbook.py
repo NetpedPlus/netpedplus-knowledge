@@ -105,6 +105,8 @@ def check(p: pathlib.Path, ids: dict) -> tuple[list, list]:
                 if st.startswith(("#", "//")):
                     err.append(f"{tag} บรรทัดในบล็อกคำสั่งตรวจไม่ใช่คำสั่ง (โปรแกรมจะส่งเข้าอุปกรณ์): {st[:60]} — ย้ายคำอธิบายไปไว้นอกบล็อก (PR #29)")
                     continue
+                if "linux" not in head.get("families", "") and re.search(r"\|\||&&|2>/dev/null|>\s*/dev/null|;\s*\S", re.sub(r"<[^<>]*>", "", st)):   # อุปกรณ์เครือข่ายไม่ใช่ shell (PR #31)
+                    err.append(f"{tag} บล็อกคำสั่งตรวจมีไวยากรณ์ shell (|| && 2>/dev/null ;) ซึ่ง CLI อุปกรณ์ไม่รองรับ: {st[:60]} — 1 บรรทัด = 1 คำสั่ง (PR #31)")
                 if re.search(r"[\u0E00-\u0E7F]", re.sub(r"<[^<>]*>", "", st)):           # <ชื่อ> = ตัวแทนค่าที่ผู้ใช้กรอก ไม่นับ
                     err.append(f"{tag} บรรทัดในบล็อกคำสั่งตรวจมีภาษาไทย (ไม่ใช่คำสั่ง โปรแกรมจะส่งเข้าอุปกรณ์): {st[:60]}")
                 if WRITE.search(line):
