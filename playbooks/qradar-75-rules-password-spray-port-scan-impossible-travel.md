@@ -18,10 +18,8 @@ sources: https://www.ibm.com/docs/en/SS42VS_7.5/pdf/b_qradar_users_guide.pdf, ht
 
 คำค้น: qradar custom rule, qradar rule creation wizard, qradar building block, qradar CRE
 อาการ: ต้องเข้าใจโครงสร้างการสร้าง rule ใน QRadar
-คำสั่งตรวจ:
-```
-ตรวจใน GUI: Offenses tab > Rules > New Event Rule / New Flow Rule / New Common Rule / New Offense Rule
-```
+ตรวจใน GUI:
+- Offenses tab > Rules > New Event Rule / New Flow Rule / New Common Rule / New Offense Rule
 อ่านผล:
 - QRadar มี rule 4 ประเภท: Event Rule (ตรวจสอบ event จาก log source), Flow Rule (ตรวจสอบ flow data), Common Rule (ตรวจสอบทั้ง event และ flow), Offense Rule (ตรวจสอบ parameter ของ offense)
 - Building Block (BB) เป็น collection ของ test ที่ไม่มี action — ใช้รวมกลุ่ม IP addresses, privileged user names, หรือ event collections เพื่อ reuse ใน rule ต่างๆ
@@ -40,11 +38,9 @@ sources: https://www.ibm.com/docs/en/SS42VS_7.5/pdf/b_qradar_users_guide.pdf, ht
 
 คำค้น: qradar password spray, qradar authentication failure, qradar threshold rule, qradar reference set building block
 อาการ: ต้องตรวจจับ password spray — attacker ซ้อม login หลาย username จาก IP เดียวกัน
-คำสั่งตรวจ:
-```
-ตรวจใน GUI: Offenses tab > Rules > Building Blocks > BB:CategoryDefinition: Authentication Failures
-ตรวจใน GUI: Offenses tab > Rules > Building Blocks > BB:CategoryDefinition: Authentication Success
-```
+ตรวจใน GUI:
+- Offenses tab > Rules > Building Blocks > BB:CategoryDefinition: Authentication Failures
+- Offenses tab > Rules > Building Blocks > BB:CategoryDefinition: Authentication Success
 อ่านผล:
 - BB:CategoryDefinition: Authentication Failures คือ building block ที่รวม event category ของ authentication failures ทั้งหมด
 - BB:CategoryDefinition: Authentication Success คือ building block ที่รวม event category ของ authentication successes ทั้งหมด
@@ -62,11 +58,9 @@ sources: https://www.ibm.com/docs/en/SS42VS_7.5/pdf/b_qradar_users_guide.pdf, ht
 
 คำค้น: qradar port scan, qradar superflow, qradar recon, qradar flow rule type C, qradar recon building block
 อาการ: ต้องตรวจจับ port scan — attacker scan หลาย port หรือหลาย host จาก IP เดียวกัน
-คำสั่งตรวจ:
-```
-ตรวจใน GUI: Offenses tab > Rules > Building Blocks > BB:Recon Detected
-ตรวจใน GUI: Offenses tab > Rules > Building Blocks > BB:HostDefinition
-```
+ตรวจใน GUI:
+- Offenses tab > Rules > Building Blocks > BB:Recon Detected
+- Offenses tab > Rules > Building Blocks > BB:HostDefinition
 อ่านผล:
 - QRadar มี rule / building block กลุ่ม Recon มาให้แล้ว (ค้นด้วยคำว่า Recon ในรายการ rule) ชื่อและค่าเกณฑ์ให้ดูจากเครื่องจริง เพราะต่างกันตามเวอร์ชันและ content pack
 - Type C Superflows คือ port scan detection — aggregate ของ non-ICMP flows ที่มี source IP เดียวกัน, destination IP เดียวกัน แต่หลาย ports
@@ -86,10 +80,8 @@ sources: https://www.ibm.com/docs/en/SS42VS_7.5/pdf/b_qradar_users_guide.pdf, ht
 
 คำค้น: qradar impossible travel, qradar reference table, qradar AQL, qradar GEO function, qradar risk-based authentication
 อาการ: ต้องตรวจจับ impossible travel — user login จาก IP ที่มี location ห่างกันเกินไปในเวลาสั้นๆ (ไม่เดินทางทัน)
-คำสั่งตรวจ:
-```
-ตรวจใน GUI: Admin tab > Reference Data Management (ดูว่ามี reference table user-ip-date และมีข้อมูลเพิ่มขึ้นหลังมีคน login)
-```
+ตรวจใน GUI:
+- Admin tab > Reference Data Management (ดูว่ามี reference table user-ip-date และมีข้อมูลเพิ่มขึ้นหลังมีคน login)
 อ่านผล:
 - QRadar ไม่มี built-in impossible travel rule — ต้องสร้าง custom rule โดยใช้ reference table + AQL query
 - AQL มีฟังก์ชัน GEO::DISTANCE(sourceip, ip_address) สำหรับคำนวณระยะทางระหว่าง IP addresses
@@ -109,11 +101,9 @@ sources: https://www.ibm.com/docs/en/SS42VS_7.5/pdf/b_qradar_users_guide.pdf, ht
 
 คำค้น: qradar rule testing, qradar false positive tuning, qradar rule threshold, qradar building block edit
 อาการ: ต้องตรวจว่า rule ทำงานถูกต้อง และ tune false positive
-คำสั่งตรวจ:
-```
-ตรวจใน GUI: Log Activity tab > Actions > Historical Correlation (สร้าง profile เลือก rule ที่จะทดสอบกับ event ย้อนหลัง)
-ตรวจใน GUI: Log Activity tab > เลือก event > ปุ่ม False Positive
-```
+ตรวจใน GUI:
+- Log Activity tab > Actions > Historical Correlation (สร้าง profile เลือก rule ที่จะทดสอบกับ event ย้อนหลัง)
+- Log Activity tab > เลือก event > ปุ่ม False Positive
 อ่านผล:
 - Historical correlation รัน rule กับข้อมูลย้อนหลังตามช่วงเวลาที่เลือก ได้ offense แยกจากของจริง ใช้ดูว่า rule จับเกินหรือขาด
 - ปุ่ม False Positive ใน Log Activity / Network Activity สร้างการ tune ให้ event / flow แบบนั้นไม่ทำให้เกิด offense อีก
@@ -132,10 +122,8 @@ sources: https://www.ibm.com/docs/en/SS42VS_7.5/pdf/b_qradar_users_guide.pdf, ht
 
 คำค้น: qradar rule pitfalls, qradar reference data, qradar AQL functions, qradar geo distance
 อาการ: ต้องระวังข้อผิดพลาดทั่วไปเมื่อสร้าง QRadar rules
-คำสั่งตรวจ:
-```
-ตรวจใน GUI: Log Activity tab > Advanced Search (รัน AQL ที่จะใส่ใน rule ก่อน ดูว่าได้ผลตามคาด)
-```
+ตรวจใน GUI:
+- Log Activity tab > Advanced Search (รัน AQL ที่จะใส่ใน rule ก่อน ดูว่าได้ผลตามคาด)
 อ่านผล:
 - AQL ที่ error หรือไม่คืนผลใน Advanced Search ก็จะใช้ใน rule ไม่ได้เช่นกัน
 ที่มา: [AQL Data Retrieval Functions (IBM)](https://www.ibm.com/docs/hr/qradar-on-cloud?topic=language-aql-data-retrieval-functions), [QRadar Tuning Guide](https://www.ibm.com/docs/en/SS42VS_7.5/pdf/b_qradar_tuning_guide.pdf)

@@ -78,10 +78,8 @@ show etherchannel summary
 
 คำค้น: esxi, vmware, nic teaming, lacp, vds, vswitch, link aggregation, virtual distributed switch
 อาการ: ต้องเลือกรูปแบบ NIC teaming สำหรับ server VMware ESXi
-คำสั่งตรวจ:
-```
-ตรวจใน GUI: vCenter > Hosts and Clusters > เลือก host > Configure > Networking > ตรวจสอบ LAG และ uplink
-```
+ตรวจใน GUI:
+- vCenter > Hosts and Clusters > เลือก host > Configure > Networking > ตรวจสอบ LAG และ uplink
 อ่านผล:
 - VDS LACP: มี LAG set ไว้, uplink assign ไป LAG, physical ToR ทำ LACP port-channel คู่กัน
 - Legacy Teaming: ใช้ vSS, Load balancing = Route based on originating virtual port, uplink Active/Active หรือ Active/Standby
