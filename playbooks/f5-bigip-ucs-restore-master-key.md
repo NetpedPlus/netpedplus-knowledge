@@ -3,8 +3,8 @@ id: f5-bigip-ucs-restore-master-key
 title: F5 BIG-IP 17.5.x — UCS Restore และ Master Key
 families: f5_tmsh
 triggers: f5 bigip ucs restore, f5 bigip ucs load, f5 bigip master key decrypt failure, f5 bigip rma hardware, f5 bigip ucs no-license, f5 bigip ucs backup best practices, f5 f5mku master key
-versions: BIG-IP 17.5.x (17.5.1.8–17.5.1.11)
-sources: https://techdocs.f5.com/en-us/bigip-16-0-0/big-ip-secure-vault-administration/working-with-ucs-archives.html,https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-secure-vault-administration/working-with-ucs-archives/best-practices-ucs-installation.html
+versions: BIG-IP 17.5.x
+sources: https://techdocs.f5.com/en-us/bigip-13-1-0/big-ip-secure-vault-administration/working-with-ucs-archives.html
 ---
 
 # F5 BIG-IP 17.5.x — UCS Restore และ Master Key
@@ -43,7 +43,7 @@ show sys license
 3. หรือ copy master key จากเครื่องเดิม: `f5mku -r <key_value>`
 4. RMA hardware: อ้าง K82540512 (เปิดไม่ได้)
 
-ที่มา: [Working with UCS Archives (16.0)](https://techdocs.f5.com/en-us/bigip-16-0-0/big-ip-secure-vault-administration/working-with-ucs-archives.html)
+ที่มา: [Working with UCS Archives (13.1.0)](https://techdocs.f5.com/en-us/bigip-13-1-0/big-ip-secure-vault-administration/working-with-ucs-archives.html)
 
 อ้างอิง:
 - "Because the original device license was created using device-specific information and specific license registration key(s), any attempt to restore the UCS archive without specifying the no-license flag places the device in the unlicensed state, causing the restore operation to fail."
@@ -82,7 +82,7 @@ show cm sync-status
 9. `tmsh show cm sync-status`
 10. ตรวจสอบว่า connected
 
-ที่มา: [Working with UCS Archives (16.0)](https://techdocs.f5.com/en-us/bigip-16-0-0/big-ip-secure-vault-administration/working-with-ucs-archives.html)
+ที่มา: [Working with UCS Archives (13.1.0)](https://techdocs.f5.com/en-us/bigip-13-1-0/big-ip-secure-vault-administration/working-with-ucs-archives.html)
 
 อ้างอิง:
 - "After you perform this task, the BIG-IP system configuration is successfully loaded on the new system, and the new system has the same master key as the existing system."
@@ -106,7 +106,7 @@ show cm sync-status
 ระวัง:
 - วิธีแก้ bigip.conf เป็น plain text (วิธีแก้ 3) ทำให้รหัสผ่านอยู่ในไฟล์แบบอ่านออกได้ — ใช้เมื่อไม่มีทางอื่น
 
-ที่มา: [Working with UCS Archives (16.0)](https://techdocs.f5.com/en-us/bigip-16-0-0/big-ip-secure-vault-administration/working-with-ucs-archives.html)
+ที่มา: [Working with UCS Archives (13.1.0)](https://techdocs.f5.com/en-us/bigip-13-1-0/big-ip-secure-vault-administration/working-with-ucs-archives.html)
 
 อ้างอิง:
 - "0107102b:3: Master Key decrypt failure - decrypt failure - final"
