@@ -41,20 +41,22 @@ show sys license
 
 ---
 
-## 2. Install image: จาก CLI
+## 2. Install image: จาก CLI หรือ GUI
 
-คำค้น: f5 install sys software image cli, f5 tmsh install software image volume, f5 install bigip image cli
+คำค้น: f5 install sys software image cli, f5 tmsh install software image volume, f5 install bigip image gui, f5 software management web browser
 
-อาการ: ต้องติดตั้ง BIG-IP software image จาก command line ผ่าน CLI
+อาการ: ต้องติดตั้ง BIG-IP software image จาก command line ผ่าน CLI หรือจาก GUI
 
 วิธีดำเนินการ:
-1. ติดตั้ง image: "Install to existing volume, migrate source configuration to destination"
+1. ติดตั้ง image จาก CLI: "Install to existing volume, migrate source configuration to destination"
    - CLI: `tmsh install sys software image [image name] volume [volume name]`
+2. ติดตั้ง image จาก GUI: "Use the Software Management screens in a web browser."
 
 ที่มา: [big-ip-install.html (17.5.1.11)](https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-install.html)
 
 อ้างอิง:
 - "Install to existing volume, migrate source configuration to destination" → `tmsh install sys software image [image name] volume [volume name]` — big-ip-install.html (17.5.1.11, Installing the software)
+- "Use the Software Management screens in a web browser." — big-ip-install.html (17.5.1.11, Installing the software)
 
 คำสั่งตรวจ:
 ```
