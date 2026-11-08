@@ -21,7 +21,7 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/w
 ## 1 ตรวจสอบ False Positive ASM บล็อกผู้ใช้จริง
 
 คำค้น: f5 asm false positive violation rating, f5 asm event logs requests
-อาการ: ผู้ใช้ถูก block, ผู้ใช้ถูกบล็อก, violation log เต็ม — เกิดจาก signature matching ผิด หรือ policy configuration ไม่ครอบคลุม legitimate traffic
+อาการ: ผู้ใช้ถูกบล็อก, violation log เต็ม — เกิดจาก signature matching ผิด หรือ policy configuration ไม่ครอบคลุม legitimate traffic
 
 ตรวจใน GUI:
 - Security > Event Logs > Application > Requests — ดู request list
