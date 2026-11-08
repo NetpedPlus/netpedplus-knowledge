@@ -57,10 +57,8 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-
 4. **สำคัญ:** เปิด modified domain cookie violation กลับหลังจากผ่านไปอย่างน้อย 24 ชั่วโมง
 
 **วิธีดำเนินการหลัง upgrade:**
-1. เปิด modified domain cookie violation กลับหลังจากผ่านไปอย่างน้อย 24 ชั่วโมง
-2. ตรวจสอบว่า "Modified domain violation" ถูกปิดอยู่หรือไม่ (ใน Security Policy)
-3. หากไม่ได้เปิด wildcard cookie ให้เพิ่ม allowed cookie ชื่อ `TS*`
-4. ให้ทุก client ปิด/เปิด browser ใหม่
+1. ให้ทุก client ปิด/เปิด browser ใหม่
+2. **สำคัญ:** เปิด modified domain cookie violation กลับหลังจากผ่านไปอย่างน้อย 24 ชั่วโมง
 
 ที่มา: [BIG-IP 17.5.1.11 Upgrading - Advanced WAF Cookie Security](https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-upgrade.html#advanced-waf-cookie-security)
 
@@ -72,10 +70,10 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-
 อาการ: หลัง upgrade ต้องตั้ง resource provisioning level เป็น Nominal แล้วรอ 5 นาทีก่อนตั้งค่าอื่น ๆ มิฉะนั้นระบบจะ override การตั้งค่าทั้งหมด
 
 ตรวจใน GUI:
-- **Configuration utility** -> ดูข้อความหลัง reboot -> ต้องเห็น "ASM started successfully"
+- (ไม่มี — ข้อความนี้ขึ้นใน log ไม่ใช่ใน GUI)
 
 ตรวจใน CLI:
-- (ไม่มีคำสั่ง tmsh สำหรับตรวจ ASM status) -> ใช้ GUI แทน
+- (ไม่มีคำสั่ง tmsh สำหรับตรวจ ASM status) -> ใช้คำสั่ง bash แทน: `cat /var/log/asm` -> ต้องมีบรรทัด: `ASM started successfully.`
 
 **ข้อควรระวัง (คัดจากหน้า Upgrading ของ F5):**
 > "After upgrading or installing a new version, before you can use the Advanced WAF, you must set the Advanced WAF resource provisioning level to Nominal if it is not already set to Nominal."
