@@ -73,3 +73,41 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/c
 - "You can warn or block against email attachments containing a suspected virus."
 - "| **Kaspersky** | /av/reqmod |"
 - "| **Kaspersky** | X-Virus-ID |"
+## 3 เปิด Inspect File Uploads สำหรับ SOAP
+
+คำค้น: f5 bigip inspect file uploads http requests soap attachments xml profile, f5 bigicap antivirus protection enabled disabled list
+อาการ: ไฟล์ที่ถูก upload ไม่ถูก scan โดย Kaspersky, Virus Detected ไม่ trigger — เกิดจาก "Inspect file uploads within HTTP requests" ไม่ enable หรือ XML profile ไม่ enable สำหรับ SOAP
+
+ตรวจใน GUI:
+- Security > Application Security > Integrated Services > Anti-Virus Protection — ตรวจสอบ checkbox "Inspect file uploads within HTTP requests"
+- ตรวจสอบ XML Profiles ใน Antivirus Protection Enabled list
+
+วิธีแก้:
+- Enable "Inspect file uploads within HTTP requests" checkbox
+- สำหรับ SOAP: move XML profiles จาก Disabled list ไป Enabled list
+- Apply Policy หลังแก้ไข
+
+ที่มา: [Configuring General ASM System Options (17.5)](https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/configuring-general-asm-system-options.html)
+
+อ้างอิง:
+- "To have the external ICAP server inspect file uploads for viruses before releasing the content to the web server, select the Inspect file uploads within HTTP requests check box."
+- "To perform anti-virus scanning on SOAP attachments, if the security policy includes one or more XML profiles, in the XML Profiles setting, move the profiles from the Antivirus Protection Disabled list to the Antivirus Protection Enabled list."
+
+---
+
+## 4 ICAP Server Down Guarantee Enforcement
+
+คำค้น: f5 bigip icap server down guarantee enforcement antivirus, f5 bigicap virus checking slow down
+อาการ: Kaspersky server down — ICAP server unreachable
+
+ตรวจใน GUI:
+- Security > Application Security > Integrated Services > Anti-Virus Protection — ดู "Guarantee Enforcement" setting
+
+วิธีแก้:
+- ตรวจสอบ setting "Guarantee Enforcement" ใน Anti-Virus Protection screen
+
+ที่มา: [Configuring General ASM System Options (17.5)](https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/configuring-general-asm-system-options.html)
+
+อ้างอิง:
+- "If you want to perform virus checking even if it may slow down the web application, select the Guarantee Enforcement check box."
+
