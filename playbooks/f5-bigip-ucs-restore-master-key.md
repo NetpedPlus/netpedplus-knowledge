@@ -24,12 +24,18 @@ sources: https://techdocs.f5.com/en-us/bigip-16-0-0/big-ip-secure-vault-administ
 คำค้น: f5 bigip restore ucs no-license, f5 bigip ucs hardware platform mismatch
 อาการ: restore ล้มเหลว, unlicensed state, master key ไม่ตรง — เกิดจาก device license ผิด hardware, master key ไม่ตรง, หรือ hardware platform ไม่เข้ากัน
 
-ตรวจใน GUI:
-- System > License — ดู license status หลัง restore
-- (bash) `f5mku -K` — ตรวจสอบ master key ปัจจุบัน (ต้องทำบนเครื่องใหม่)
+คำสั่งตรวจ:
+```
+show sys license
+```
+อ่านผล:
+- ดู license status หลัง restore
+
+วิธีแก้ (ทำด้วยตนเอง):
+- (bash) `f5mku -K` — ตรวจสอบ master key ปัจจุบันด้วยตนเอง **ห้ามใส่ในบล็อกคำสั่งตรวจ**
 
 ระวัง:
-- ค่า master key จาก f5mku -K เป็นความลับ — ห้ามวางในแชต / ticket / log / เอกสาร anyone ที่มีค่านี้ + ไฟล์ UCS จะถอดรหัสผ่านทั้งหมดในเครื่องได้
+- ค่า master key จาก f5mku -K เป็นความลับ — ห้ามวางในแชต / ticket / log / เอกสาร ใครมีค่านี้ + ไฟล์ UCS จะถอดรหัสผ่านทั้งหมดในเครื่องได้
 
 วิธีแก้:
 1. ใช้ `tmsh load sys ucs <file>.ucs no-license` (ต้องมี flag no-license — ถ้าไม่มีจะเข้า unlicensed state และ restore ล้มเหลว)
@@ -39,6 +45,9 @@ sources: https://techdocs.f5.com/en-us/bigip-16-0-0/big-ip-secure-vault-administ
 
 ที่มา: [Working with UCS Archives (16.0)](https://techdocs.f5.com/en-us/bigip-16-0-0/big-ip-secure-vault-administration/working-with-ucs-archives.html)
 
+อ้างอิง:
+- "Because the original device license was created using device-specific information and specific license registration key(s), any attempt to restore the UCS archive without specifying the no-license flag places the device in the unlicensed state, causing the restore operation to fail."
+
 
 ---
 
@@ -47,12 +56,18 @@ sources: https://techdocs.f5.com/en-us/bigip-16-0-0/big-ip-secure-vault-administ
 คำค้น: f5 bigip restore ucs ha sync, f5 bigip device group sync leader config-sync
 อาการ: restore แล้ว peer device ไม่ sync, config ไม่ไป — เกิดจาก UCS restore บน primary device แต่ไม่ sync ไป secondary, master key ไม่ตรง
 
-ตรวจใน GUI:
-- `show cm sync-status` — ดู sync status หลัง restore (ตรวจว่า connected หรือ disconnected)
-- (bash) `f5mku -K` — ตรวจสอบ master key ปัจจุบัน (ต้องทำบนเครื่องเดิมเพื่อเปรียบเทียบกับเครื่องใหม่)
+คำสั่งตรวจ:
+```
+show cm sync-status
+```
+อ่านผล:
+- ดู sync status หลัง restore (ตรวจว่า connected หรือ disconnected)
+
+วิธีแก้ (ทำด้วยตนเอง):
+- (bash) `f5mku -K` — ตรวจสอบ master key ด้วยตนเอง **ห้ามใส่ในบล็อกคำสั่งตรวจ**
 
 ระวัง:
-- ค่า master key จาก f5mku -K เป็นความลับ — ห้ามวางในแชต / ticket / log / เอกสาร anyone ที่มีค่านี้ + ไฟล์ UCS จะถอดรหัสผ่านทั้งหมดในเครื่องได้
+- ค่า master key จาก f5mku -K เป็นความลับ — ห้ามวางในแชต / ticket / log / เอกสาร ใครมีค่านี้ + ไฟล์ UCS จะถอดรหัสผ่านทั้งหมดในเครื่องได้
 
 วิธีแก้:
 **ตาม UCS 16.0 Solution 2:**
@@ -81,7 +96,7 @@ sources: https://techdocs.f5.com/en-us/bigip-16-0-0/big-ip-secure-vault-administ
 อาการ: restore แล้วเกิด error `Master Key decrypt failure`, config load ล้มเหลว — เกิดจาก master key ไม่ตรงระหว่าง source และ target
 
 ตรวจใน GUI:
-- (bash) `f5mku -K` — ตรวจสอบ master key ปัจจุบัน
+— ไม่มีคำสั่งตรวจ (f5mku -K เป็นความลับ ห้ามใส่ในบล็อกคำสั่งตรวจ)
 
 วิธีแก้:
 1. ถ้ามี master key เดิม: `f5mku -r <key_value>`
