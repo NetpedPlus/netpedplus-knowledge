@@ -69,8 +69,11 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-
 คำค้น: f5 asm provisioning wait 5 minutes, f5 asm not ready, f5 asm started successfully
 อาการ: หลัง upgrade ต้องตั้ง resource provisioning level เป็น Nominal แล้วรอ 5 นาทีก่อนตั้งค่าอื่น ๆ มิฉะนั้นระบบจะ override การตั้งค่าทั้งหมด
 
-ตรวจใน GUI:
-- ดูข้อความที่ Configuration utility หลัง reboot -> ต้องเห็น "ASM started successfully"
+คำสั่งตรวจ:
+```
+show sys provision
+```
+อ่านผล: บรรทัด asm ต้องเป็น level nominal ก่อนเริ่มนับ 5 นาที — ข้อความ "ASM started successfully" ดูใน log /var/log/asm (ขั้นที่ 3 ด้านล่าง)
 
 **ข้อควรระวัง (คัดจากหน้า Upgrading ของ F5):**
 > "After upgrading or installing a new version, before you can use the Advanced WAF, you must set the Advanced WAF resource provisioning level to Nominal if it is not already set to Nominal."
@@ -83,7 +86,7 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-
 3. ตรวจว่า ASM พร้อมใช้งานแล้ว:
    - ตรวจ log ที่ `/var/log/asm` -> ต้องมีบรรทัด: `ASM started successfully.`
 
-ที่มา: [BIG-IP 17.5.1.11 Upgrading - About changing the resource provisioning level of the Advanced WAF](https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-upgrade.html#about-changing-the-resource-provisioning-level-of-the-advanced-waf)
+ที่มา: [sys provision — TMSH Reference](https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_provision.html), [BIG-IP 17.5.1.11 Upgrading - About changing the resource provisioning level of the Advanced WAF](https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-upgrade.html#about-changing-the-resource-provisioning-level-of-the-advanced-waf)
 
 ---
 
