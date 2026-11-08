@@ -48,7 +48,7 @@ show sys license
 อาการ: ต้องติดตั้ง BIG-IP software image จาก command line ผ่าน CLI
 
 วิธีดำเนินการ:
-1. ติดตั้ง image บน volume ใหม่:
+1. ติดตั้ง image: "Install to existing volume, migrate source configuration to destination"
    - CLI: `tmsh install sys software image [image name] volume [volume name]`
 
 ที่มา: [big-ip-install.html (17.5.1.11)](https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-install.html)
@@ -71,23 +71,7 @@ show sys software status
 
 ---
 
-## 3. Install image: จาก GUI
-
-คำค้น: f5 install bigip image gui, f5 software management web browser, f5 install image gui
-
-อาการ: ต้องติดตั้ง BIG-IP software image ผ่าน GUI (เว็บเบราว์เซอร์)
-
-ตรวจใน GUI:
-- หน้า Software Management screens (big-ip-install.html 17.5.1.11)
-
-ที่มา: [big-ip-install.html (17.5.1.11)](https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-install.html)
-
-อ้างอิง:
-- "Use the Software Management screens in a web browser." -- big-ip-install.html (17.5.1.11, Installing the software)
-
----
-
-## 4. Monitor install status
+## 3. Monitor install status
 
 คำค้น: f5 monitor install progress, f5 watch tmsh show sys software, f5 install status monitoring, f5 tmsh show sys software every two seconds
 
@@ -114,15 +98,15 @@ show sys software status
 
 ---
 
-## 5. อัปเกรด HA: อัปเกรด standby unit ก่อน
+## 4. อัปเกรด HA: อัปเกรด standby unit ก่อน
 
 คำค้น: f5 ha upgrade standby first, f5 upgrade standby before active, f5 log on to standby unit first
 
 อาการ: ต้องอัปเกรด BIG-IP บน HA pair โดยอัปเกรด standby unit ก่อน
 
 วิธีดำเนินการ:
-1. อัปเกรด image บน standby unit (ขั้นตอนที่ 2 หรือ 3)
-2. Monitor install status บน standby unit (ขั้นตอนที่ 4)
+1. อัปเกรด image บน standby unit (ขั้นตอนที่ 2)
+2. Monitor install status บน standby unit (ขั้นตอนที่ 3)
 
 ที่มา: [big-ip-install.html (17.5.1.11)](https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-install.html)
 
@@ -145,11 +129,11 @@ show cm failover-status
 
 ---
 
-## 6. Post-installation: ตรวจว่าระบบ reboot ไป volume ใหม่แล้ว
+## 5. Post-installation: ตรวจว่าระบบ reboot ไป location ใหม่แล้ว
 
 คำค้น: f5 post upgrade check reboot, f5 system rebooted new location, f5 post installation tasks, f5 ensure rebooted to new installation
 
-อาการ: ต้องตรวจว่าหลัง reboot ระบบ boot ไป volume ใหม่ (ที่ติดตั้ง image ใหม่) แล้ว
+อาการ: ต้องตรวจว่าหลัง reboot ระบบ boot ไป installation location ใหม่ (ที่ติดตั้ง image ใหม่) แล้ว
 
 คำสั่งตรวจ:
 ```
@@ -169,11 +153,11 @@ show sys software status
 
 ---
 
-## 8. ตรวจหลัง upgrade ทั้งคู่
+## 6. ตรวจหลัง upgrade ทั้งคู่
 
 คำค้น: f5 post upgrade verification, f5 check after upgrade ha, f5 post upgrade check list
 
-อาการ: หลัง upgrade ทั้ง 2 เครื่องต้องตรวจว่าทุกอย่างทำงานปกติ
+อาการ: ตรวจสถานะ configuration synchronization หลัง upgrade ทั้ง 2 เครื่อง
 
 คำสั่งตรวจ:
 ```
