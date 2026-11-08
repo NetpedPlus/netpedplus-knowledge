@@ -4,7 +4,7 @@ title: F5 BIG-IP 17.5.x — ข้อควรระวังตอนอัป�
 families: f5_tmsh
 triggers: f5 advanced waf upgrade precautions, f5 asm cookie violation upgrade, f5 datasync-global-dg, f5 asm provisioning wait 5 minutes, f5 advanced waf upgrade
 versions: BIG-IP 17.5.x (17.5.1.8–17.5.1.11)
-sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-upgrade.html, https://my.f5.com/manage/s/article/K13845
+sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-upgrade.html
 ---
 
 # F5 BIG-IP 17.5.x — ข้อควรระวังตอนอัปเกรด Advanced WAF
@@ -24,16 +24,14 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-
 อาการ: ต้องตรวจว่า BIG-IP มี Advanced WAF (ASM) provision อยู่หรือไม่ ก่อนเริ่มอัปเกรด
 
 ตรวจใน GUI:
-- **System -> Platform** -> ดูเวอร์ชัน
-- **Network -> Security -> Advanced WAF** -> ตรวจ ASM settings
+- ดูเวอร์ชันของ BIG-IP
 
 ตรวจใน CLI:
 - `tmsh list sys provision` -> ตรวจ module ที่ provision
 - `tmsh list cm device-group` -> ตรวจ device group ที่มี
-- `tmsh list sysasm` -> ตรวจ ASM status
 
 อ่านผล:
-- **ถ้า `asm: none`** -> ไม่ได้อัปเดต Advanced WAF ไม่ต้องทำข้อ 2-4
+- **ถ้า `asm: none`** -> ไม่ได้ provision Advanced WAF ไม่ต้องทำข้อ 2-4
 - **ถ้า `asm: nominal` หรือมากกว่า** -> ต้องทำข้อ 2-4 ทั้งหมด
 
 ที่มา: [BIG-IP System: Provisioning - TMSH Reference](https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_provision.html), [BIG-IP 17.5.1.11 Upgrading](https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-upgrade.html)
@@ -56,12 +54,13 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-
 1. ปิด modified domain cookie violation
 2. หากไม่มี wildcard cookie ให้เพิ่ม Advanced WAF allowed cookie ชื่อ `TS*`
 3. ให้ทุก client ปิด/เปิด browser ใหม่หลัง upgrade
+4. **สำคัญ:** เปิด modified domain cookie violation กลับหลังจากผ่านไปอย่างน้อย 24 ชั่วโมง
 
-ตรวจใน GUI หลัง upgrade:
-- **Policy Building -> Security Policies -> เลือก policy -> Cookie Protection**
-- ตรวจสอบว่า "Modified domain cookie violation" ถูกปิดอยู่หรือไม่
-- หากไม่ได้เปิด wildcard cookie ให้เพิ่ม allowed cookie ชื่อ `TS*`
-- ให้ทุก client ปิด/เปิด browser ใหม่
+**วิธีดำเนินการหลัง upgrade:**
+1. เปิด modified domain cookie violation กลับหลังจากผ่านไปอย่างน้อย 24 ชั่วโมง
+2. ตรวจสอบว่า "Modified domain violation" ถูกปิดอยู่หรือไม่ (ใน Security Policy)
+3. หากไม่ได้เปิด wildcard cookie ให้เพิ่ม allowed cookie ชื่อ `TS*`
+4. ให้ทุก client ปิด/เปิด browser ใหม่
 
 ที่มา: [BIG-IP 17.5.1.11 Upgrading - Advanced WAF Cookie Security](https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-upgrade.html#advanced-waf-cookie-security)
 
@@ -76,8 +75,7 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-
 - **Configuration utility** -> ดูข้อความหลัง reboot -> ต้องเห็น "ASM started successfully"
 
 ตรวจใน CLI:
-- `tmsh list sysasm` -> ตรวจ ASM status
-- `cat /var/log/asm` -> ตรวจ log ASM startup
+- (ไม่มีคำสั่ง tmsh สำหรับตรวจ ASM status) -> ใช้ GUI แทน
 
 **ข้อควรระวัง (คัดจากหน้า Upgrading ของ F5):**
 > "After upgrading or installing a new version, before you can use the Advanced WAF, you must set the Advanced WAF resource provisioning level to Nominal if it is not already set to Nominal."
@@ -101,12 +99,10 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-
 อาการ: Advanced WAF จะสร้าง device group `datasync-global-dg` อัตโนมัติ - ห้ามลบเด็ดขาด เพราะใช้ sync client-side scripts และ cryptographic keys ทั่วทั้ง trust-domain
 
 ตรวจใน GUI:
-- **Network -> Security -> Advanced WAF -> Script Packages**
 - ตรวจสอบว่า Scripts Package ถูก sync ไปยังทุก device ใน trust-domain หรือยัง
 
 ตรวจใน CLI:
 - `tmsh list cm device-group` -> ตรวจว่ามี `datasync-global-dg` ในรายการ
-- `tmsh list cm script-package` -> ตรวจ Scripts Package (read-only)
 
 **ข้อควรระวัง (คัดจากหน้า Upgrading ของ F5):**
 > "When Advanced WAF is provisioned, the **datasync-global-dg** device-group is automatically created (even if there are no device-groups on the unit)"
