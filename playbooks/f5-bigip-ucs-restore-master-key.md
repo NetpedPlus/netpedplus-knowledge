@@ -4,7 +4,7 @@ title: F5 BIG-IP 17.5.x — UCS Restore และ Master Key
 families: f5_tmsh
 triggers: f5 bigip ucs restore, f5 bigip ucs load, f5 bigip master key decrypt failure, f5 bigip rma hardware, f5 bigip ucs no-license, f5 bigip ucs backup best practices, f5 f5mku master key
 versions: BIG-IP 17.5.x (17.5.1.8–17.5.1.11)
-sources: https://techdocs.f5.com/en-us/bigip-16-0-0/big-ip-secure-vault-administration/working-with-ucs-archives.html,https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-secure-vault-administration/working-with-ucs-archives/best-practices-ucs-installation.html
+sources: https://techdocs.f5.com/en-us/bigip-16-0-0/big-ip-secure-vault-administration/working-with-ucs-archives.html,https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-secure-vault-administration/working-with-ucs-archives/best-practices-ucs-installation.html,https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_license.html,https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/cm/cm_sync-status.html
 ---
 
 # F5 BIG-IP 17.5.x — UCS Restore และ Master Key
@@ -47,6 +47,7 @@ show sys license
 
 อ้างอิง:
 - "Because the original device license was created using device-specific information and specific license registration key(s), any attempt to restore the UCS archive without specifying the no-license flag places the device in the unlicensed state, causing the restore operation to fail."
+- "Display detailed licensing and version information for the system, including the registration key, licensing dates," — tmsh reference v17.0.0 (sys_license.html, DESCRIPTION)
 
 
 ---
@@ -86,6 +87,7 @@ show cm sync-status
 
 อ้างอิง:
 - "After you perform this task, the BIG-IP system configuration is successfully loaded on the new system, and the new system has the same master key as the existing system."
+- "sync-status - Displays the configuration synchronization status of the local device." — tmsh reference v17.0.0 (cm_sync-status.html, NAME section)
 - "Confirm that the two systems are in sync by typing this command: tmsh show cm sync-status."
 
 ---
