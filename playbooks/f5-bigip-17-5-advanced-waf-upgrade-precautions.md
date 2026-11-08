@@ -4,7 +4,7 @@ title: F5 BIG-IP 17.5.x — ข้อควรระวังตอนอัป�
 families: f5_tmsh
 triggers: f5 advanced waf upgrade precautions, f5 asm cookie violation upgrade, f5 datasync-global-dg, f5 asm provisioning wait 5 minutes, f5 advanced waf upgrade
 versions: BIG-IP 17.5.x (17.5.1.8–17.5.1.11)
-sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-upgrade.html
+sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-upgrade.html,https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_provision.html,https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/cm/cm_device-group.html
 ---
 
 # F5 BIG-IP 17.5.x — ข้อควรระวังตอนอัปเกรด Advanced WAF
@@ -35,6 +35,7 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-
 - **ถ้า `asm: nominal` หรือมากกว่า** -> ต้องทำข้อ 2-4 ทั้งหมด
 
 ที่มา: [BIG-IP System: Provisioning - TMSH Reference](https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_provision.html), [BIG-IP 17.5.1.11 Upgrading](https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-upgrade.html)
+- "Displays the current provisioning of the system." — tmsh reference v17.0.0 (sys_provision.html, EXAMPLES — list provision)
 
 ---
 
@@ -119,3 +120,4 @@ show sys provision
 - ต้อง sync ด้วยตนเอง (manual sync) -> เลือก device หลักที่จะเก็บ master scripts/keys
 
 ที่มา: [BIG-IP 17.5.1.11 Upgrading - About working with device groups](https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-ip-upgrade.html#about-working-with-device-groups)
+- "device-group - Configures device groups." — tmsh reference v17.0.0 (cm_device-group.html, NAME section — list device-group)
