@@ -21,13 +21,13 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/w
 ## 1 ตรวจสอบ False Positive ASM บล็อกผู้ใช้จริง
 
 คำค้น: f5 asm false positive violation rating, f5 asm event logs requests
-อาการ: ผู้ใช้ถูก block, ได้รับ error 403, violation log เต็ม — เกิดจาก signature matching ผิด หรือ policy configuration ไม่ครอบคลุม legitimate traffic
+อาการ: ผู้ใช้ถูก block, ผู้ใช้ถูกบล็อก, violation log เต็ม — เกิดจาก signature matching ผิด หรือ policy configuration ไม่ครอบคลุม legitimate traffic
 
 ตรวจใน GUI:
 - Security > Event Logs > Application > Requests — ดู request list
 
 ตรวจสอบ logging:
-- /var/log/asm ปิดเป็นค่าเริ่มต้น (เอกสารระบุ: "Logging to this file is off by default") — ต้องเปิด logging profile ก่อนจึงจะเห็น log ไฟล์
+- /var/log/asm ปิดเป็นค่าเริ่มต้น (เอกสารระบุ: "Logging to this file is off by default") — ต้องเปิดก่อน — ดูวิธีเปิดใน [Logging Application Security Events (17.5)](https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/logging-application-security-events.html)
 
 อ่านผล:
 - ดู violation rating 1–5 ใน request list
@@ -65,7 +65,6 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/w
 วิธีแก้:
 - ดู request list แล้วจัดการ violation
 - สำหรับ false positives → คลิก Learn → Accept suggestions
-- ปรับ violation action จาก Block เป็น Alarm ถ้าต้องการแค่ monitor
 - Apply policy หลังแก้ไข
 
 ที่มา: [Working with Violations (17.5)](https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/working-with-violations.html)
@@ -77,7 +76,7 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/w
 
 ---
 
-## 3 เปลี่ยน Staging เป็น Blocking
+## 3 Enforcement mode (Transparent / Blocking) และ Enforcement Readiness Period (staging)
 
 คำค้น: f5 asm staging blocking enforcement readiness period, f5 asm enforce mode transparent blocking
 อาการ: Entity / signature ยังไม่ enforce, อยู่ใน staging mode — traffic ไม่ถูก block แม้มี violation
