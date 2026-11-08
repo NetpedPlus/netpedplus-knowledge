@@ -4,7 +4,7 @@ title: F5 BIG-IP 17.x AWAF - Credential Stuffing, Behavioral L7 DoS, Threat Camp
 families: f5_tmsh
 triggers: f5 credential stuffing, f5 brute force, f5 behavioral dos, f5 l7 dos, f5 threat campaign, f5 awaf credential stuffing, f5 bados, f5 leaked credential check, login URL brute force, credential stuffing dictionary, distributed brute force, behavioral detection, server latency
 versions: BIG-IP 17.1 / 17.5 (AWAF / ASM 17.x)
-sources: https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/mitigating-brute-force-attacks.html, https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/preventing-dos-attacks-on-applications.html, https://techdocs.f5.com/en-us/bigip-17-1-0/big-ip-system-dos-protection-and-protocol-firewall-implementations/detecting-and-preventing-dos-attacks.html, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/asm/asm_policy.html, https://clouddocs.f5.com/cli/tmsh-reference/v15/modules/security/security_dos_profile.html, https://techdocs.f5.com/en-us/bigip-16-1-0/big-ip-lcc-guide/registering-lcc-with-bigip-cloud-services.html
+sources: https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/mitigating-brute-force-attacks.html, https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/preventing-dos-attacks-on-applications.html, https://techdocs.f5.com/en-us/bigip-17-1-0/big-ip-system-dos-protection-and-protocol-firewall-implementations/detecting-and-preventing-dos-attacks.html, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/asm/asm_policy.html, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/security/security_dos_profile.html, https://techdocs.f5.com/en-us/bigip-16-1-0/big-ip-lcc-guide/registering-lcc-with-bigip-cloud-services.html
 ---
 
 # F5 BIG-IP 17.x AWAF - Credential Stuffing, Behavioral L7 DoS, Threat Campaigns
@@ -29,6 +29,7 @@ list ltm virtual <vs_name> profiles policies
 - `list asm policy`: ดู `active` และ `enforcement-mode` (blocking / transparent)
 - `list ltm virtual`: ในส่วน `policies` ต้องเห็น LTM policy ที่ผูก WAF policy (ชื่อมักขึ้นต้น `asm_auto_l7_policy__`) และในส่วน `profiles` ต้องเห็น DoS profile ถ้าใช้ L7 DoS
 ที่มา: [tmsh reference: asm policy](https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/asm/asm_policy.html)
+- "Displays the properties of all application security policies." — tmsh reference v17.0.0 (asm_policy.html, EXAMPLES — list policy)
 วิธีแก้:
 - ผูก policy / DoS profile ใน GUI: Local Traffic > Virtual Servers > เลือก VS > แท็บ Security > Policies
 - ระวัง: policy ที่ยังเป็น Transparent จะแค่ alarm / log ไม่ block ให้ดู log จนมั่นใจก่อนเปลี่ยนเป็น Blocking
@@ -80,6 +81,7 @@ list ltm virtual <vs_name> profiles
 - `list security dos profile`: ต้องมีส่วน `application` ในโปรไฟล์ (ไม่มี = ยังไม่ได้เปิด Application Security ใน DoS profile)
 - `list ltm virtual`: DoS profile ต้องอยู่ใน `profiles` ของ virtual server ที่ต้องการป้องกัน
 ที่มา: [Preventing DoS Attacks on Applications (BIG-IP ASM 17.5)](https://techdocs.f5.com/en-us/bigip-17-5-0/big-ip-asm-implementations/preventing-dos-attacks-on-applications.html)
+- "Displays the properties of all DoS profiles." — tmsh reference v17.0.0 (security_dos_profile.html, EXAMPLES — list security dos profile)
 วิธีแก้:
 - GUI: Security > DoS Protection > Protection Profiles > เลือก profile > เปิด Application Security > Behavioral & Stress-based Detection
 - เปิด Bad actors behavior detection และ Request signatures detection แล้วเลือก Protection Level (Conservative / Balanced / Aggressive) เริ่มที่ Conservative
