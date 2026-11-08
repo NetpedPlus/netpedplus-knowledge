@@ -96,7 +96,7 @@ show cm sync-status
 อาการ: restore แล้วเกิด error `Master Key decrypt failure`, config load ล้มเหลว — เกิดจาก master key ไม่ตรงระหว่าง source และ target
 
 ตรวจใน GUI:
-— ไม่มีคำสั่งตรวจ (f5mku -K เป็นความลับ ห้ามใส่ในบล็อกคำสั่งตรวจ)
+— ดูข้อความ error 0107102b / 01071769 ตอน load config (ตามหน้า UCS 16.0)
 
 วิธีแก้:
 1. ถ้ามี master key เดิม: `f5mku -r <key_value>`
