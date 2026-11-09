@@ -42,6 +42,11 @@ list ucs
 
 อาการ: สำรอง running configuration ของระบบเป็น UCS archive
 
+คำสั่งตรวจ:
+```
+list ucs
+```
+
 วิธีแก้: `save sys ucs <ucs name>`
 
 อ่านผล: บันทึก running configuration ของระบบเป็นไฟล์ `<ucs name>.ucs` ในไดเรกทอรี `/var/local/ucs/`
@@ -64,6 +69,11 @@ list ucs
 
 อาการ: ต้องการเข้ารหัส UCS archive ด้วย passphrase ก่อนเก็บ
 
+คำสั่งตรวจ:
+```
+list ucs
+```
+
 วิธีแก้: `save sys ucs <ucs name> passphrase <passphrase>`
 
 อ่านผล: บันทึก running configuration ของระบบเป็นไฟล์ UCS ที่เข้ารหัสด้วย passphrase ที่ระบุ
@@ -83,6 +93,13 @@ list ucs
 คำค้น: f5 bigip passphrase secure location, f5 ucs master key passphrase record
 
 อาการ: ต้องการทราบขั้นตอนการเก็บ passphrase อย่างปลอดภัย
+
+คำสั่งตรวจ:
+```
+list ucs
+```
+
+ที่มา: [working-with-ucs-archives.html (techdocs 13.1.0)](https://techdocs.f5.com/en-us/bigip-13-1-0/big-ip-secure-vault-administration/working-with-ucs-archives.html)
 
 หมายเหตุ — เก็บ passphrase ในที่ปลอดภัย:
 - F5 แนะนำให้จดบันทึก passphrase ของ configuration objects ไว้ใน secure location บนเครื่องอื่นที่ไม่ใช่ BIG-IP: "After you encrypt configuration object passwords or passphrases on any BIG-IP system, another system can only decrypt them (during a `tmsh load config` operation) by using the same master key that you used to encrypt them. F5 recommends that you retain a record of each configuration object password or passphrase in a secure location on a system other than the BIG-IP system that uses the password or passphrase." — [working-with-ucs-archives.html (techdocs 13.1.0)](https://techdocs.f5.com/en-us/bigip-13-1-0/big-ip-secure-vault-administration/working-with-ucs-archives.html) (หัวข้อ "Store passwords and passphrases securely")
