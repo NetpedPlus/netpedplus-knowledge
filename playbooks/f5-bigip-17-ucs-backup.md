@@ -40,14 +40,14 @@ list ucs
 
 คำค้น: f5 save sys ucs, f5 bigip ucs backup save
 
-อาการ: สำรอง running configuration ของระบบเป็น UCS archive
+อาการ: สำรอง running configuration ของระบบเป็น UCS archive (ไม่เข้ารหัส)
 
 คำสั่งตรวจ:
 ```
 list ucs
 ```
 
-วิธีแก้: `save sys ucs <ucs name>`
+วิธีแก้: `save sys ucs <ucs name>` — บันทึก running configuration เป็นไฟล์ UCS
 
 อ่านผล: บันทึก running configuration ของระบบเป็นไฟล์ `<ucs name>.ucs` ในไดเรกทอรี `/var/local/ucs/`
 
@@ -57,7 +57,6 @@ list ucs
 - "ucs - Loads or saves a UCS (.ucs) file." — tmsh reference v17.0.0 (sys_ucs.html, NAME section)
 - "You can use the ucs component to save the running configuration of the system into a UCS file." — tmsh reference v17.0.0 (sys_ucs.html, DESCRIPTION section)
 - "save ucs myucs — Saves the running configuration of the system into the file myucs.ucs." — tmsh reference v17.0.0 (sys_ucs.html, EXAMPLES section)
-- "save ucs [file name] — options: no-private-key, passphrase" — tmsh reference v17.0.0 (sys_ucs.html, SYNTAX section)
 
 หมายเหตุ: รูปที่เขียนในหน้าคือ `save ucs [file name]` (ตัด module sys) คำสั่ง tmsh เต็มคือ `save sys ucs [file name]`
 
@@ -74,7 +73,7 @@ list ucs
 list ucs
 ```
 
-วิธีแก้: `save sys ucs <ucs name> passphrase <passphrase>`
+วิธีแก้: `save sys ucs <ucs name> passphrase <passphrase>` — บันทึก running configuration เป็นไฟล์ UCS ที่เข้ารหัสด้วย passphrase
 
 อ่านผล: บันทึก running configuration ของระบบเป็นไฟล์ UCS ที่เข้ารหัสด้วย passphrase ที่ระบุ
 
@@ -82,24 +81,12 @@ list ucs
 
 อ้างอิง:
 - "passphrase - Specifies the passphrase that is necessary to load the specified UCS file." — tmsh reference v17.0.0 (sys_ucs.html, OPTIONS section)
-- "save ucs [file name] — options: no-private-key, passphrase" — tmsh reference v17.0.0 (sys_ucs.html, SYNTAX section)
 
-หมายเหตุ: F5 แนะนำให้เข้ารหัส UCS archive เพื่อความปลอดภัย: "The preferred way to store UCS archives securely (encrypts the entire UCS file): `tmsh save sys ucs <ucs name> passphrase <passphrase>`." — [working-with-ucs-archives.html (techdocs 13.1.0)](https://techdocs.f5.com/en-us/bigip-13-1-0/big-ip-secure-vault-administration/working-with-ucs-archives.html) (หัวข้อ "Store UCS archives securely")
+หมายเหตุ:
+- F5 แนะนำให้เข้ารหัส UCS archive เพื่อความปลอดภัย: "The preferred way to store UCS archives securely (encrypts the entire UCS file): `tmsh save sys ucs <ucs name> passphrase <passphrase>`." — [working-with-ucs-archives.html (techdocs 13.1.0)](https://techdocs.f5.com/en-us/bigip-13-1-0/big-ip-secure-vault-administration/working-with-ucs-archives.html) (หัวข้อ "Store UCS archives securely")
+- SYNTAX: `save ucs [file name] — options: no-private-key, passphrase` — tmsh reference v17.0.0 (sys_ucs.html, SYNTAX section) — โครงสร้างย่อจาก SYNTAX (ไม่ใช่ประโยคต้นฉบับ)
 
 ---
-
-## 4. เก็บ passphrase ไว้ในที่ปลอดภัย
-
-คำค้น: f5 bigip passphrase secure location, f5 ucs master key passphrase record
-
-อาการ: ต้องการทราบขั้นตอนการเก็บ passphrase อย่างปลอดภัย
-
-คำสั่งตรวจ:
-```
-list ucs
-```
-
-ที่มา: [working-with-ucs-archives.html (techdocs 13.1.0)](https://techdocs.f5.com/en-us/bigip-13-1-0/big-ip-secure-vault-administration/working-with-ucs-archives.html)
 
 หมายเหตุ — เก็บ passphrase ในที่ปลอดภัย:
 - F5 แนะนำให้จดบันทึก passphrase ของ configuration objects ไว้ใน secure location บนเครื่องอื่นที่ไม่ใช่ BIG-IP: "After you encrypt configuration object passwords or passphrases on any BIG-IP system, another system can only decrypt them (during a `tmsh load config` operation) by using the same master key that you used to encrypt them. F5 recommends that you retain a record of each configuration object password or passphrase in a secure location on a system other than the BIG-IP system that uses the password or passphrase." — [working-with-ucs-archives.html (techdocs 13.1.0)](https://techdocs.f5.com/en-us/bigip-13-1-0/big-ip-secure-vault-administration/working-with-ucs-archives.html) (หัวข้อ "Store passwords and passphrases securely")
