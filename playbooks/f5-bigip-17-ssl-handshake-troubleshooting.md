@@ -1,40 +1,23 @@
 ---
 id: f5-bigip-17-ssl-handshake-troubleshooting
-title: "BIG-IP 17.x — SSL Handshake Failure Troubleshooting"
-product: BIG-IP LTM
-versions: 17.5.x
-vendor: F5 Networks
+title: F5 BIG-IP 17.x — SSL Handshake Fail
 families: f5_tmsh
+triggers: f5 ssl handshake fail, f5 handshake failure, f5 no shared ciphers
+versions: BIG-IP 17.5.x
 sources: https://my.f5.com/manage/s/article/K15292, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_profile_client-ssl.html, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_log.html
-triggers: ssl handshake fail, no shared ciphers, ssl connection error
-author: iNatdiiz (NetPED+ Knowledge Team)
-reviewer: pending
-status: draft
-date_created: 2026-11-09
-date_reviewed: null
-references:
-  - K15292 (Troubleshooting SSL/TLS handshake failures)
-  - https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_profile_client-ssl.html
-  - https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_log.html
-tags:
-  - SSL
-  - TLS
-  - handshake
-  - cipher
-  - client-ssl profile
-  - log
-  - ltm
 ---
+
+# F5 BIG-IP 17.x — SSL Handshake Fail
 
 ## ตรวจ cipher ใน Client SSL profile และสาเหตุช่วงเจรจา
 
-คำค้น: f5 SSL handshake fail, f5 no shared ciphers, f5 cipher configuration, f5 client-ssl profile, f5 list ltm profile client-ssl, f5 show sys log ltm
+คำค้น: f5 SSL handshake fail, f5 no shared ciphers, f5 cipher configuration, f5 client-ssl profile, f5 list ltm profile client-ssl
 
 ที่มา: https://my.f5.com/manage/s/article/K15292 (Negotiation stage), https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_profile_client-ssl.html, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_log.html
 
-"During the SSL/TLS handshake, if the client and server are unable to negotiate a protocol version or cipher, the handshake will fail." — K15292, Negotiation stage section
+"If the client and server do not agree on the complete list of options, the handshake will fail, often with very little diagnostic data." — K15292, Negotiation stage
 
-"If the server does not support any of the ciphers in the client's cipher list, the connection will be terminated." — K15292, Negotiation stage section
+"If the server does not support the ciphers from the client's list, the connection is terminated." — K15292, Negotiation stage
 
 "Client-side profiles allow the traffic management system to handle authentication and encryption tasks for any SSL connection coming into a traffic management system from a client system." — ltm_profile_client-ssl.html, DESCRIPTION section
 
