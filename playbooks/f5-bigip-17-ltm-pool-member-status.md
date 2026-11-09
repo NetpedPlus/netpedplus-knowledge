@@ -29,7 +29,7 @@ list ltm pool
 - `show ltm pool` — Displays statistics and status for all Local Traffic Manager pools in the system configuration.
 - `show ltm node` — Displays statistics and status for all nodes in the system configuration.
 - `list ltm node all-properties` — Displays all of the properties of all of the nodes.
-- `list ltm pool` — Displays properties of the pool named my_pool.
+- `list ltm pool` — แสดง properties ของ pool (รูป `list pool my_pool` ในหน้า: "Displays properties of the pool named my_pool.")
 
 ที่มา: [ltm_pool.html (tmsh ref v17.0.0)](https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_pool.html), [ltm_node.html (tmsh ref v17.0.0)](https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_node.html)
 
