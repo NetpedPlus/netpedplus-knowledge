@@ -15,3 +15,13 @@
 |- 2026-11-01 PR #27 FortiGate 7.4 + Sophos XGS Ransomware Response merged (squash) — แก้ 4 rounds (15 + 3 + 2 + 2 ข้อ)
 |- 2026-11-01 PR #28 F5 BIG-IP 17.x ประเมินผลกระทบช่องโหว่ + อัปเกรดบนคู่ HA merged (squash) — แก้ 4 rounds (5 + 2 + 2 + 2 ข้อ)
 |- 2026-10-31 check_playbook.py: ERROR อัตโนมัติ (ไม่มีคำสั่งตรวจ / บล็อกโค้ดอื่น / ตัวอย่าง output / อักษรจีน / commit ใน Huawei S) + ล้างตัวอย่าง output / commit ที่ค้างใน port-mirroring, ACL
+- 2026-11-05 PR #45 pre-upgrade-check-ha merged (squash) — ตรวจ pre-upgrade บน HA pair (show sys license, show run sys config, tmsh verify)
+- 2026-11-05 PR #47 ha-upgrade-procedure merged (squash) — ขั้นตอนอัปเกรด BIG-IP HA จาก 17.1.1 → 17.5.1.1
+- 2026-11-05 PR #48 ucs-restore-master-key merged (squash) — UCS restore สำหรับ BIG-IP 16.0 → 13.1.0 (show sys license, show sys software ucs)
+- 2026-11-05 PR #49 ha-upgrade-procedure merge แล้ว (squash) — แก้ความขัดแย้งจาก PR #47
+- 2026-11-05 PR #50 ha-config-sync merged (squash) — ตรวจ/config sync, show/run sys failover
+- 2026-11-05 PR #51 ha-failover merged (squash) — แสดง/บังคับ failover บน HA pair
+- 2026-11-05 PR #52 อัปเดตหมายเหตุ HA merged (squash) — แก้คำว่า "กำลังดำเนินการ" → "ดำเนินการแล้ว"
+- 2026-11-05 PR #53 ucs-backup merged (squash) — สำรอง UCS archive (list/save sys ucs), passphrase recommendation
+- 2026-11-05 PR #54 ltm-pool-member-status merged (squash) — ตรวจ pool/node status, user-down/user-up/user-disabled
+- 2026-11-10 PR #55 ย้าย security-upgrade-assessment-ha ไป archive/ merged (squash) — ไฟล์อ้างอิง my.f5.com ที่ตรวจไม่ได้
