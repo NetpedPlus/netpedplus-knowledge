@@ -71,7 +71,7 @@ show cm sync-status
 - ค่า master key จาก f5mku -K เป็นความลับ — ห้ามวางในแชต / ticket / log / เอกสาร ใครมีค่านี้ + ไฟล์ UCS จะถอดรหัสผ่านทั้งหมดในเครื่องได้
 
 วิธีแก้:
-**ตาม UCS 16.0 Solution 2:**
+**ตาม UCS 13.1.0 Solution 2:**
 1. บนเครื่องเดิม: `f5mku -K` เพื่อดู master key
 2. บนเครื่องใหม่: `f5mku -r <key_value>` เพื่อใส่ key เดิม
 3. `f5mku -K` ตรวจว่า master key ตรงกัน
@@ -98,7 +98,7 @@ show cm sync-status
 อาการ: restore แล้วเกิด error `Master Key decrypt failure`, config load ล้มเหลว — เกิดจาก master key ไม่ตรงระหว่าง source และ target
 
 ตรวจใน GUI:
-— ดูข้อความ error 0107102b / 01071769 ตอน load config (ตามหน้า UCS 16.0)
+— ดูข้อความ error 0107102b / 01071769 ตอน load config (ตามหน้า UCS 13.1.0)
 
 วิธีแก้:
 1. ถ้ามี master key เดิม: `f5mku -r <key_value>`
