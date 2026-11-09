@@ -4,7 +4,7 @@ title: F5 BIG-IP 17.x — ตรวจและแก้ Monitor ไม่ผ่
 families: f5_tmsh
 triggers: f5 monitor false positive, f5 pool member down but up, f5 http monitor receive string, f5 monitor logging, f5 https legacy tls
 versions: BIG-IP 17.5.x
-sources: https://my.f5.com/manage/s/article/K12531, https://my.f5.com/manage/s/article/K000158134, https://my.f5.com/manage/s/article/K22435108, https://my.f5.com/manage/s/article/K28103688
+sources: https://my.f5.com/manage/s/article/K12531, https://my.f5.com/manage/s/article/K000158134, https://my.f5.com/manage/s/article/K22435108, https://my.f5.com/manage/s/article/K28103688, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_pool.html, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_node.html, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_monitor_http.html
 ---
 
 # F5 BIG-IP 17.x — ตรวจและแก้ Monitor ไม่ผ่าน (False Positive)
@@ -22,17 +22,15 @@ show ltm node
 list ltm monitor http
 ```
 
-อ่านผล — GUI status table:
-
-"Network map — Summary of pools, pool members, and nodes — Local Traffic > Network Map"
-
-"Pools — Current status of pool/members — Local Traffic > Pools > Statistics"
-
-"Pool members — Current status of pool/members — Local Traffic > Pools > Statistics"
-
-"Nodes — Current status of nodes — Local Traffic > Nodes > Statistics"
+อ่านผล — GUI status table (แถวของตารางใน K12531, "Identifying a failing health monitor > Configuration utility"):
+Network map — Summary of pools, pool members, and nodes — Local Traffic > Network Map
+Pools — Current status of pool/members — Local Traffic > Pools > Statistics
+Pool members — Current status of pool/members — Local Traffic > Pools > Statistics
+Nodes — Current status of nodes — Local Traffic > Nodes > Statistics |
 
 อ่านผล — /var/log/ltm:
+
+"The BIG-IP system logs messages related to health monitors to the /var/log/ltm file." — K12531, Logs section
 
 "monitor status down"
 
@@ -42,19 +40,21 @@ list ltm monitor http
 
 "F5 recommends that in most cases the timeout value should be equal to three times the interval value, plus one. For example, the default timeout/interval ratio is 5/16 (three times 5 plus one equals 16). This setting prevents the monitor from marking the node as down before sending the last check."
 
-ที่มา: https://my.f5.com/manage/s/article/K12531 (Identifying a failing health monitor, Logs, Verifying monitor settings)
+อ่านผล — Active connections:
+
+"Existing active connections that were already established with that pool member before it was marked offline will continue to function normally. The system will allow these active connections to complete their transactions or sessions without interruption." — K28103688, Description section
+
+ที่มา: https://my.f5.com/manage/s/article/K12531 (Identifying a failing health monitor, Logs, Verifying monitor settings), https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_pool.html, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_node.html, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_monitor_http.html
 
 อ้างอิง:
 
-- "A monitor is a BIG-IP feature that verifies connections to pool members or nodes. A health monitor is designed to report the status of a pool, pool member, or node on an ongoing basis, at a set interval." — K12531, Issue section
 
 - "Displays statistics and status for all Local Traffic Manager pools in the system configuration." — tmsh reference v17.0.0 (ltm_pool.html, EXAMPLES section)
 
 - "Displays statistics and status for all nodes in the system configuration." — tmsh reference v17.0.0 (ltm_node.html, EXAMPLES section)
 
-- "Displays the properties of all of the HTTP monitors." — tmsh reference v17.0.0 (ltm_monitor_http.html, EXAMPLES section)
+- list http — "Displays the properties of all of the HTTP monitors." — tmsh reference v17.0.0 (ltm_monitor_http.html, EXAMPLES section)
 
-- "F5 recommends that in most cases the timeout value should be equal to three times the interval value, plus one. For example, the default timeout/interval ratio is 5/16 (three times 5 plus one equals 16). This setting prevents the monitor from marking the node as down before sending the last check." — K12531, Verifying monitor settings section
 
 หมายเหตุ: รูปที่เขียนในหน้าคือ `show pool`, `show node` (ตัด module ltm) คำสั่ง tmsh เต็มคือ `show ltm pool`, `show ltm node`
 
@@ -104,6 +104,7 @@ list ltm monitor http
 - "A TCP monitor is a connectivity check that occurs before any data is exchanged. The HTTP/HTTPS monitor is a check for the ability to exchange data after the connectivity has been established." — K000158134, Recommended Actions section
 
 - "Without a Receive String the BIG-IP has no way to know what a proper Layer 7 response is and thus will assume that any Layer 7 response is valid and mark the pool member as available." — K000158134, Recommended Actions section
+
 
 ---
 
@@ -160,30 +161,7 @@ Impact of procedure:
 
 ---
 
-## 4. Active Connections เมื่อ pool member ถูก monitor mark down
-
-คำค้น: f5 active connections pool member down, f5 monitor offline active connections
-
-อาการ: ต้องการทราบผลต่อ active connections เมื่อ pool member ถูก monitor mark down
-
-คำสั่งตรวจ:
-```
-show ltm pool
-```
-
-อ่านผล — Active connections:
-
-"Existing active connections that were already established with that pool member before it was marked offline will continue to function normally. The system will allow these active connections to complete their transactions or sessions without interruption."
-
-ที่มา: https://my.f5.com/manage/s/article/K28103688
-
-อ้างอิง:
-
-- "Existing active connections that were already established with that pool member before it was marked offline will continue to function normally. The system will allow these active connections to complete their transactions or sessions without interruption." — K28103688, Description section
-
----
-
-## 5. HTTPS Legacy TLS Fallback
+## 4. HTTPS Legacy TLS Fallback
 
 คำค้น: f5 https monitor tls fallback, f5 monitor legacy mode, f5 monitor tls v1
 
@@ -210,7 +188,11 @@ show ltm pool
 
 - "After the handshake fails for some reason, the monitor falls back to TLS v1.1 or TLS v1 by triggering the legacy mode." — K22435108, Symptoms section
 
-- "The server does not send an SSL alert message, the server just sent a Reset packet instead after the client hello. By design, the system expects a TLS layer response to versions with the wrong request. But there is no SSL alert from the server, so it just can stay in fallback mode using TLS1.0." — K22435108, Cause section
+- "However, the server does not send an SSL alert message, the server just sent a Reset packet instead after the client hello." — K22435108, Cause section
+
+- "By design, the system expects a TLS layer response to versions with the wrong request." — K22435108, Cause section
+
+- "But there is no SSL alert from the server, so it just can stay in fallback mode using TLS1.0." — K22435108, Cause section
 
 - "As a workaround to restore the state of the member, remove it, and add it back to the pool." — K22435108, Recommended Actions section
 
@@ -220,5 +202,5 @@ show ltm pool
 
 - สาเหตุ network latency — KME 4.2 อ้างแต่ไม่มีที่มาใน 4 บทความ
 - การเปลี่ยน monitor type — KME 4.2 อ้างแต่ไม่มีที่มาใน 4 บทความ
-- ขั้นตอน tcpdump เต็ม — ใช้เฉพาะที่ quote ได้ (K12531 มีขั้นตอนและ Impact แต่ไม่มีคำสั่งตัวอย่างในบล็อก)
+- ขั้นตอน tcpdump — ไม่ได้นำมาใส่: ขั้นตอน tcpdump ใน K12531 (หัวข้อ Using tcpdump to capture the monitor traffic) เป็นคำสั่ง bash ที่ต้องใช้ placeholder
 - อาการ/สาเหตุ monitor ไม่ผ่านอื่นนอกเหนือจากที่ 4 บทความระบุ
