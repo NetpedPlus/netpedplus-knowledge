@@ -127,7 +127,11 @@ show cm failover-status
 
 > **หมายเหตุ**:
 > - "Log on to the standby unit, and only upgrade the active unit after the standby upgrade is satisfactory." -- big-ip-install.html (17.5.1.11, Installation checklist)
-> - **ขั้นอัปเกรดเครื่องที่สอง/failover/Force to Standby/Traffic Groups: ไม่พบที่มา (ไม่มีหน้า 17.5)**
+> - ขั้นอัปเกรด HA:
+>   - อัปเกรดเครื่องที่สอง: ไม่พบที่มา (ไม่มีหน้า 17.5)
+>   - Failover: คำสั่ง `run sys failover standby` มีที่มาใน f5-bigip-17-ha-failover (sys_failover.html, tmsh ref v17.0.0) แต่ยังไม่พบที่มาว่าต้องสั่งเมื่อใดในขั้นตอนอัปเกรด 17.5
+>   - Force to Standby: ไม่พบเมนู GUI "Force to Standby" ในหน้าที่ตรวจแล้ว (sys_failover.html tmsh ref v17.0.0) ยังไม่ได้ตรวจหน้าอื่น
+>   - Traffic Groups: ไม่พบที่มา (ไม่มีหน้า 17.5)
 
 ---
 

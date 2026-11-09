@@ -75,6 +75,6 @@ list cm device
 ---
 
 หมายเหตุ:
-- KME 3.2 Failover เอง: ไม่พบที่มาที่อธิบายขั้นตอนแก้ปัญหา (ตรวจแล้ว: cm_failover-status.html tmsh ref v17.0.0 — ยังไม่ได้เปิดตรวจหน้าอื่น)
+- KME 3.2 Failover เอง: ตรวจแล้ว cm_failover-status.html tmsh ref v17.0.0 — คำสั่ง show sys failover, run sys failover standby มีที่มาใน f5-bigip-17-ha-failover แต่ไม่พบที่มาที่อธิบายขั้นตอนแก้ปัญหา failover เอง
 - KME 3.3 Device Trust เสีย: ไม่พบที่มาที่อธิบายขั้นตอนแก้ปัญหา (ยังไม่ได้เปิดตรวจหน้า troubleshooting device trust)
-- KME 3.4 Primary ล้ม / Traffic Groups: ไม่พบที่มาที่อธิบายขั้นตอนแก้ปัญหา (ตรวจแล้ว: cm_traffic-group.html tmsh ref v17.0.0 — DESCRIPTION: "You can use the traffic-group component to specify the failover behavior for devices in a failover device group." มีเนื้อหาเกี่ยวกับ failover แต่เป็นคำสั่งตั้งค่า ไม่ใช่ขั้นตอนแก้ปัญหา)
+- KME 3.4 Primary ล้ม / Traffic Groups: ตรวจแล้ว cm_traffic-group.html tmsh ref v17.0.0 (DESCRIPTION: "You can use the traffic-group component to specify the failover behavior for devices in a failover device group.") คำสั่ง show/run sys failover มีที่มาใน f5-bigip-17-ha-failover แต่ไม่พบที่มาที่อธิบายขั้นตอนแก้ปัญหา Traffic Groups
