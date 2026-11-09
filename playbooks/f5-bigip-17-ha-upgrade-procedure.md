@@ -152,6 +152,7 @@ show sys software status
 
 หมายเหตุ:
 - "Ensure the system rebooted to the new installation location." -- big-ip-install.html (17.5.1.11, Post-installation tasks)
+- ไม่พบขั้นตอน rollback ใน big-ip-install.html (17.5.1.11) (ค้นแล้ว: rollback, revert, previous version ไม่พบ) — ยังไม่ได้ตรวจหน้าอื่น
 
 ---
 
