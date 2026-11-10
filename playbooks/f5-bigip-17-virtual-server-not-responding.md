@@ -47,11 +47,12 @@ show ltm virtual
 
 "A Reject virtual server rejects any traffic destined for the virtual server IP address." — K55185917, virtual server type table > Reject
 
+"Displays statistics and status for the virtual named myV4." — ltm_virtual.html, EXAMPLES section
+
 tmsh reference `ltm_virtual.html` EXAMPLES section แสดงตัวอย่าง: `show virtual myV4 all-properties` (คำสั่งเต็ม: `show ltm virtual myV4 all-properties`)
 
 คำสั่งตรวจ:
 ```
-list ltm virtual all-properties
 show ltm virtual all-properties
 ```
 
@@ -59,4 +60,4 @@ show ltm virtual all-properties
 ความหมายของสถานะ availability (Offline กับ Unavailable) — ตรวจแล้วไม่พบคำจำกัดความ
 วิธีแก้เมื่อ virtual server ไม่ตอบ — ตรวจแล้วไม่พบขั้นตอนการแก้ไข
 การตรวจ pool member และ monitor — อ้างถึง playbook f5-bigip-17-ltm-monitor-troubleshooting
-ขั้นตอนใน GUI
+ขั้นตอนใน GUI — ตรวจแล้วไม่พบแหล่งที่มา
