@@ -35,3 +35,4 @@
 - 2026-11-10 PR #68 f5-bigip-17-publish-app-behind-waf-cutover merged (squash) — SNAT (K7820), Automap (K7336), XFF (K4816), iRule class match (K20510467, K42075438); หัวข้อ ASM Q5-Q7 และหลักการออกแบบ Q1/Q3/Q4/Q8 ไม่ใช่ประโยค F5 (Nut อนุมัติให้ใส่)
 - 2026-11-10 PR #70 f5-bigip-ucs-restore-master-key — ลบ f5mku -K ออกจากวิธีแก้ (คำสั่งแสดง master key) แทนด้วยให้ผู้ดูแลทำเองที่ console ห้ามผ่าน NetPED+/AI
 - 2026-11-10 PR #71 f5-bigip-17-publish-app-behind-waf-cutover — เพิ่มคำค้น/triggers ASM และแยกหัวข้อหลักการออกแบบเป็น 3 หัวข้อ (SNAT/asymmetric, XFF + firewall SNAT, ทดสอบก่อน cutover) ให้ AI ใน NetPED+ เลือกหัวข้อตรงคำถาม
+- 2026-11-10 PR #72 GUIDE.md — เพิ่มวิธีเขียนคำค้น / ชื่อหัวข้อ / ตัวเลข-เมนู / ไม่พบที่มา / หัวข้อที่ไม่ใช่ประโยคผู้ผลิต ให้เข้ากับตัวค้นและตัวตรวจคำตอบใหม่ของ NetPED+ (Nut อนุมัติ)
