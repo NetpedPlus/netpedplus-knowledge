@@ -2,7 +2,7 @@
 id: f5-bigip-17-publish-app-behind-waf-cutover
 title: F5 BIG-IP 17.x — เผยแพร่แอปหลัง F5 (SNAT, XFF, จำกัด IP) ก่อน cutover
 families: f5_tmsh
-triggers: f5 snat, snat automap, x-forwarded-for, xff, asymmetric routing, one-armed, class match, data group, iRule จำกัด IP, cutover, publish app, waf, firewall snat
+triggers: f5 snat, snat automap, x-forwarded-for, xff, asymmetric routing, one-armed, class match, data group, iRule จำกัด IP, cutover, publish app, waf, firewall snat, asm, wildcard, file type, อัปโหลด
 versions: BIG-IP 17.5.x
 sources: https://my.f5.com/manage/s/article/K7820, https://my.f5.com/manage/s/article/K7336, https://my.f5.com/manage/s/article/K4816, https://my.f5.com/manage/s/article/K40243113, https://my.f5.com/manage/s/article/K20510467, https://my.f5.com/manage/s/article/K42075438
 ---
@@ -99,7 +99,7 @@ show ltm snat
 
 ## ASM: wildcard URL, ลำดับ wildcard และขนาด request (ความรู้ของ Claude ไม่ใช่ประโยคของ F5)
 
-คำค้น: f5 asm wildcard url http https, f5 asm differentiate http https, f5 asm wildcards order, f5 asm upload ไฟล์ใหญ่, f5 asm request length exceeds defined buffer size, f5 asm file type length
+คำค้น: f5 asm wildcard url http https, f5 asm differentiate http https, f5 asm wildcards order, wildcards order, realms, f5 asm upload ไฟล์ใหญ่, อัปโหลด, อัปโหลดไฟล์, ขนาดไฟล์, f5 asm request length exceeds defined buffer size, f5 asm file type length, file type
 
 ที่มา: ความรู้ของ Claude และคำตอบที่ Nut กำหนด ไม่พบคู่มือ ASM หรือ K-article ของ 17.5.x ที่เปิดอ่านได้ ต้องตรวจกับหน้าจอจริงก่อนใช้
 
@@ -112,18 +112,42 @@ show ltm snat
 
 ---
 
-## หลักการออกแบบจากประสบการณ์ของ Nut (ไม่ใช่ประโยคของ F5)
+## ไม่ทำ SNAT แล้ว backend ตอบกลับไม่ผ่าน F5 (ประสบการณ์ของ Nut ไม่ใช่ประโยคของ F5)
 
-คำค้น: f5 snat asymmetric ไม่ผ่าน f5, f5 xff ปลอม, f5 firewall snat irule admin fail-open, f5 ทดสอบ vs ก่อน cutover
+คำค้น: f5 ไม่ทำ snat, ไม่ทำ snat, คนละ vlan, f5 asymmetric, backend ตอบกลับ gateway, server ตอบกลับไม่ผ่าน f5
 
-ที่มา: ประสบการณ์ของ Nut ไม่ใช่เอกสารของ F5 และยังไม่มีลิงก์ของ vendor รองรับ
+ที่มา: ประสบการณ์ของ Nut ไม่ใช่เอกสารของ F5 (ข้อเท็จจริงฐานเรื่อง SNAT ดูหัวข้อ SNAT ด้านบนที่อ้าง K7820)
 
-ข้อความในหัวข้อนี้ไม่ได้มาจากประโยคของ F5 และ Nut ต้องยืนยันก่อนใช้งานจริง
+- ถ้า VS กับ backend อยู่คนละ VLAN ที่ F5 มี self IP ทั้งคู่ และไม่ทำ SNAT backend จะตอบกลับผ่าน gateway ของตัวเอง ไม่ผ่าน F5 ทำให้ routing ไม่สมมาตร (asymmetric) และ connection ใช้ไม่ได้
+- แก้ได้ 2 ทาง: ทำ SNAT (Automap หรือ SNAT pool) หรือให้ gateway ของ backend ชี้กลับมาที่ floating self IP ของ F5
 
-- ถ้า VS กับ backend อยู่คนละ VLAN ที่ F5 มี self IP ทั้งคู่ และไม่ทำ SNAT backend จะตอบกลับผ่าน gateway ของตัวเอง ไม่ผ่าน F5 ทำให้ routing ไม่สมมาตรและ connection ใช้ไม่ได้
-- Insert X-Forwarded-For ใน HTTP profile ไม่ลบ X-Forwarded-For ที่ client ส่งมา จึงถูกปลอมได้ iRule ที่ remove แล้ว insert ปลอดภัยกว่า
-- ถ้า firewall ด้านหน้าทำ SNAT ขาเข้า และใช้ iRule จำกัด admin ตาม IP ผู้ใช้ internet ทุกคนจะถูกมองเป็น IP ภายใน ทำให้ admin เปิดออก internet (fail-open) วิธีแก้คือปิด NAT ใน policy ของ VIP ห้ามแก้ด้วยการใส่ IP หลัง SNAT ลงใน data group
-- ทดสอบ VS ก่อน cutover ด้วย curl --resolve host:443:VIP หรือไฟล์ hosts และเพื่อจำลองว่ามาจากภายนอก ให้เอา subnet ของเครื่องทดสอบออกจาก data group ชั่วคราว ไม่มีเมนู "Test with different IP address"
+ตรวจใน GUI: ไม่มี หัวข้อนี้เป็นหลักการออกแบบ ไม่ใช่ขั้นตอนตรวจ
+
+---
+
+## X-Forwarded-For กับ iRule และ firewall ทำ SNAT ขาเข้า (ประสบการณ์ของ Nut ไม่ใช่ประโยคของ F5)
+
+คำค้น: f5 xff ปลอม, xff spoof, irule remove insert x-forwarded-for, firewall snat, firewall ทำ snat, irule จำกัด admin, admin fail-open, fail-open, ip หลัง snat
+
+ที่มา: ประสบการณ์ของ Nut ไม่ใช่เอกสารของ F5 (พฤติกรรม Insert X-Forwarded-For ดูหัวข้อด้านบนที่อ้าง K4816)
+
+- Insert X-Forwarded-For ใน HTTP profile ไม่ลบ X-Forwarded-For ที่ client ส่งมา (ต่อท้ายค่าเดิม) จึงถูกปลอมได้ iRule ที่ remove แล้ว insert ปลอดภัยกว่า
+- ถ้า firewall ด้านหน้าทำ SNAT ขาเข้า แล้วใช้ iRule จำกัด admin ตาม IP ผู้ใช้ internet ทุกคนจะถูกมองเป็น IP ภายในเดียวกัน ทำให้หน้า admin เปิดออก internet (fail-open)
+- วิธีแก้คือปิด NAT ใน policy ของ VIP บน firewall ให้ F5 เห็น IP จริง ห้ามแก้ด้วยการใส่ IP หลัง SNAT ลงใน data group
+
+ตรวจใน GUI: ไม่มี หัวข้อนี้เป็นหลักการออกแบบ ไม่ใช่ขั้นตอนตรวจ
+
+---
+
+## ทดสอบ virtual server ก่อน cutover (ประสบการณ์ของ Nut ไม่ใช่ประโยคของ F5)
+
+คำค้น: ทดสอบ virtual server, ทดสอบ vs, ก่อน cutover, cutover, curl resolve, hosts file, ยังไม่เปลี่ยน dns, test with different ip
+
+ที่มา: ประสบการณ์ของ Nut ไม่ใช่เอกสารของ F5
+
+- ทดสอบ VS ก่อนเปลี่ยน DNS ด้วย curl --resolve host:443:VIP หรือแก้ไฟล์ hosts ของเครื่องทดสอบ
+- ถ้าต้องจำลองว่ามาจากภายนอก ให้เอา subnet ของเครื่องทดสอบออกจาก data group ชั่วคราว แล้วใส่คืนหลังทดสอบ
+- ไม่มีเมนู "Test with different IP address" ใน F5
 
 ตรวจใน GUI: ไม่มี หัวข้อนี้เป็นหลักการออกแบบ ไม่ใช่ขั้นตอนตรวจ
 
