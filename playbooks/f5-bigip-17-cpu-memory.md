@@ -41,6 +41,10 @@ sources: https://my.f5.com/manage/s/article/K000152888, https://my.f5.com/manage
 
 หมายเหตุ: แถว TMM Memory ในตารางต้นฉบับมีช่วงซ้อนกัน — Normal < 85 กับ Medium 80-95 (ช่วง 80-85 ซ้อนกัน)
 
+"cpu - Displays statistics about the Traffic Management Microkernel (TMM) service, specifically, CPU cycles." — sys_cpu.html, NAME section
+"You can use the cpu component to display the CPU cycles for the system." — sys_cpu.html, DESCRIPTION section
+"show cpu" — sys_cpu.html, DISPLAY section — หมายเหตุละ module: tmsh reference เขียนรูป "show cpu" โดยละ module คำสั่งเต็มที่ใช้ตรวจคือ show sys cpu
+
 คำสั่งตรวจ:
 ```
 show sys cpu
@@ -55,9 +59,9 @@ show sys memory
 
 อาการ: ตรวจ TMM CPU usage แบบละเอียด
 
-"Per the following procedure should not have a negative impact on your system." — K15468, "Use the Configuration utility to view TMM CPU usage"
+"Performing the following procedure should not have a negative impact on your system." — K15468, "Use the Configuration utility to view TMM CPU usage"
 
-ที่มา: K15468 (https://my.f5.com/manage/s/article/K15468), tmsh reference v17.0.0 (sys_tmm-info.html)
+ที่มา: K15468 (https://my.f5.com/manage/s/article/K15468), tmsh reference (latest) (sys_tmm-info.html)
 
 เมนู GUI: "Go to Statistics (in versions prior to 11.1.0, select Overview) > Performance Reports." — K15468, "Use the Configuration utility to view TMM CPU usage"
 "Select the System menu or the All menu." — K15468, "Use the Configuration utility to view TMM CPU usage"
@@ -66,7 +70,7 @@ show sys memory
 "The Traffic Management Microkernel (TMM) processes all load-balanced traffic on the BIG-IP system." — K15468, Topic
 "CPU resources are explicitly provisioned in the BIG-IP configuration." — K15468, CPU usage on single CPU, single core systems
 
-"sys tmm-info - Displays information about the Traffic Management Microkernel (tmm) daemon." — sys_tmm-info.html, NAME section
+"tmm-info - Displays information about the Traffic Management Microkernel (tmm) daemon." — sys_tmm-info.html, NAME section
 "You can use the tmm-info component to display information about the tmm daemon." — sys_tmm-info.html, DESCRIPTION section
 "show tmm-info" — sys_tmm-info.html, DISPLAY section — หมายเหตุละ module: tmsh reference เขียนรูป "show tmm-info" โดยละ module คำสั่งเต็มที่ใช้ตรวจคือ show sys tmm-info
 
@@ -85,7 +89,7 @@ show sys tmm-info
 
 อาการ: ตรวจ TMM memory, Other memory, Swap usage
 
-ที่มา: K16419 (https://my.f5.com/manage/s/article/K16419), K000151935 (https://my.f5.com/manage/s/article/K000151935), tmsh reference v17.0.0 (sys_memory.html)
+ที่มา: K16419 (https://my.f5.com/manage/s/article/K16419), K000151935 (https://my.f5.com/manage/s/article/K000151935), tmsh reference (latest) (sys_memory.html)
 
 "TMM runs as a real-time user process within the Linux host operating system." — K16419, Description
 "The BIG-IP system statically assigns memory resources to TMM and potentially to other module-related processes, depending on module provisioning." — K16419, Description
@@ -116,4 +120,3 @@ show sys memory
 
 ไม่พบที่มา
 - ตรวจ K000152888, K15468, K16419, K000151935 แล้วไม่พบ: ขั้นตอนแก้ไข/จัดการเมื่อ CPU หรือ Memory เกินเกณฑ์ Critical
-- ตรวจ K000152888 แล้วไม่พบ: ค่า Normal/Medium/Critical สำหรับ CPU ของ TMM (เฉพาะ Total CPU ที่มี)
