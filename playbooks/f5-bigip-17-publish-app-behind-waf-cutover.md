@@ -97,6 +97,21 @@ show ltm snat
 
 ---
 
+## ASM: wildcard URL, ลำดับ wildcard และขนาด request (ความรู้ของ Claude ไม่ใช่ประโยคของ F5)
+
+คำค้น: f5 asm wildcard url http https, f5 asm differentiate http https, f5 asm wildcards order, f5 asm upload ไฟล์ใหญ่, f5 asm request length exceeds defined buffer size, f5 asm file type length
+
+ที่มา: ความรู้ของ Claude และคำตอบที่ Nut กำหนด ไม่พบคู่มือ ASM หรือ K-article ของ 17.5.x ที่เปิดอ่านได้ ต้องตรวจกับหน้าจอจริงก่อนใช้
+
+- ถ้าเปิด Differentiate between HTTP and HTTPS URLs ไว้ URL ใน security policy จะแยกตาม protocol wildcard [HTTP] /realms/* จะไม่ match request ที่มาทาง HTTPS ต้องสร้าง [HTTPS] /realms/* เพิ่ม
+- ASM เทียบ wildcard URL ตามลำดับใน Wildcards Order ถ้า * อยู่เหนือ /realms/* ทุก request จะตก * ก่อน ทำให้ /realms/* ไม่มีผล ต้องเลื่อน wildcard ที่เจาะจงกว่าขึ้นไปไว้ด้านบน
+- อัปโหลดไฟล์ใหญ่ (เช่น 10-20 MB) ให้ตั้งความยาวของ File type ที่เกี่ยวข้อง (เช่น *) เป็น Any และตั้ง violation "Request length exceeds defined buffer size" เป็น Learn และ Alarm แต่ไม่ Block
+- ห้ามตอบค่าเกณฑ์เป็นตัวเลข KB หรือ MB ว่าเป็นค่า default ของ ASM เพราะไม่มีที่มา
+
+ตรวจใน GUI: ตรวจในหน้า security policy ของ ASM ส่วน URLs และ File Types ชื่อเมนูไม่มีที่มาจาก F5
+
+---
+
 ## หลักการออกแบบจากประสบการณ์ของ Nut (ไม่ใช่ประโยคของ F5)
 
 คำค้น: f5 snat asymmetric ไม่ผ่าน f5, f5 xff ปลอม, f5 firewall snat irule admin fail-open, f5 ทดสอบ vs ก่อน cutover
@@ -115,7 +130,5 @@ show ltm snat
 ---
 
 ไม่พบที่มา
-- ASM: wildcard URL แบบ [HTTP] เทียบ [HTTPS] (Differentiate between HTTP and HTTPS URLs) ไม่พบคู่มือ 17.5.x ที่เปิดอ่านได้
-- ASM: ลำดับ Wildcards Order ของ URL ไม่พบที่มา
-- ASM: File type, URL length, Request length และ violation "Request length exceeds defined buffer size" ไม่พบที่มา ห้ามตอบเป็นตัวเลข KB หรือ MB
+- ASM (wildcard URL, Wildcards Order, File type, ขนาด request): ไม่พบประโยคของ F5 สำหรับ 17.5.x หัวข้อ ASM ด้านบนเป็นความรู้ของ Claude
 - วิธีทดสอบ VS ก่อน cutover ไม่พบใน K-article ที่อ่าน
