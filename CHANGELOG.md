@@ -25,3 +25,6 @@
 - 2026-11-09 PR #53 f5-bigip-17-ucs-backup merged (squash) — list ucs, save sys ucs (ไม่เข้ารหัส/เข้ารหัส), คำแนะนำเก็บ passphrase
 - 2026-11-09 PR #54 f5-bigip-17-ltm-pool-member-status merged (squash) — show/list ltm pool และ node, state user-down/user-up, session user-disabled
 - 2026-11-09 PR #55 merged (squash) — ย้าย f5-bigip-17-security-upgrade-assessment-ha ไป archive/ (ที่มา my.f5.com ตรวจไม่ได้)
+- 2026-11-09 PR #57 f5-bigip-17-ltm-monitor-troubleshooting merged (squash) — Monitor false positive: show ltm pool/node, list ltm monitor http, Send/Receive String, Monitor Logging, HTTPS legacy TLS (K12531, K000158134, K22435108, K28103688)
+- 2026-11-09 PR #58 f5-bigip-17-ssl-handshake-troubleshooting merged (squash) — SSL handshake fail: list/show ltm profile client-ssl, show sys log ltm, log 01260014/01260026/01260009 (K15292)
+- 2026-11-10 PR #59 f5-bigip-17-virtual-server-not-responding merged (squash) — Virtual server ไม่ตอบ: show/list ltm virtual, State/VLAN/Source Address/Connection Rate Limit/Immediate Action/Reject (K93017176, K55185917)
