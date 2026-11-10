@@ -13,19 +13,18 @@ sources: https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/cm/cm_trust-
 
 ## ตรวจ trust domain ของ Device Trust
 
-คำค้น: f5 bigip device trust troubleshooting, f5 show cm trust-domain status, f5 list cm device-group
+คำค้น: f5 device trust, f5 trust domain, f5 show running-config cm trust-domain, f5 device trust status
 
 ที่มา: tmsh reference v17.0.0 (https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/cm/cm_trust-domain.html)
 
-อาการ: ตรวจสถานะของ Device Trust domain
+"You can use the trust-domain component to manage the behavior of objects during fail over." — cm_trust-domain.html, DESCRIPTION section
 
-คำพูด: "You can use the trust-domain component to manage the behavior of objects during fail over." — cm_trust-domain.html, DESCRIPTION section
+"show running-config trust-domain" — cm_trust-domain.html, DISPLAY section
+"show running-config trust-domain [ [ [name] | [glob] | [regex] ] ... ]" — cm_trust-domain.html, DISPLAY section
 
-tmsh reference เขียนรูป "show running-config trust-domain" และ "show running-config trust-domain [ [ [name] | [glob] | [regex] ] ... ]"
+"Displays the status of the trust domain." — cm_trust-domain.html, OPTIONS section, status
 
-status: "Displays the status of the trust domain."
-
-trust-group: "Displays the device group associated with the trust domain."
+"Displays the device group associated with the trust domain." — cm_trust-domain.html, OPTIONS section, trust-group
 
 หมายเหตุละ module: tmsh reference เขียนรูป "show running-config trust-domain" โดยละ module คำสั่งเต็มที่ใช้ตรวจคือ show running-config cm trust-domain status และ show running-config cm trust-domain trust-group
 
