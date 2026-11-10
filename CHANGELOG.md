@@ -31,3 +31,4 @@
 - 2026-11-10 PR #61 f5-bigip-17-ssl-certificate-expiry merged (squash) — ใบรับรองหมดอายุ: GUI path และ check-cert (K14318), keymgmtd auto-renewal show sys crypto cert-order-manager, HA sync หลัง renew show cm sync-status
 - 2026-11-10 PR #63 f5-bigip-17-device-trust merged (squash) — Device Trust: show running-config cm trust-domain status/trust-group (ไม่พบที่มาของ status, อาการ, วันหมดอายุใบรับรอง)
 - 2026-11-10 PR #64 f5-bigip-17-cpu-memory merged (squash) — CPU/Memory: ตารางเกณฑ์ K000152888, show sys cpu/tmm-info/memory (K15468, K16419, K000151935)
+- 2026-11-10 PR #66 f5-bigip-17-disk-space, f5-bigip-17-log-files, f5-bigip-17-snmp merged (squash) — Disk (diskmonitor 011d0004/011d005, list sys disk), Log (K16197 ตารางไฟล์ log, show sys log, list sys syslog, list sys log-config filter), SNMP (ข้อความ snmpd ใน ltm log, ไม่มีคำสั่งแสดงค่า SNMP) เขียนโดย Claude เพราะ Hermes context เต็ม
