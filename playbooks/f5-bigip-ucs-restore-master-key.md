@@ -31,11 +31,9 @@ show sys license
 อ่านผล:
 - ดู license status หลัง restore
 
-วิธีแก้ (ทำด้วยตนเอง):
-- (bash) `f5mku -K` — ตรวจสอบ master key ปัจจุบันด้วยตนเอง **ห้ามใส่ในบล็อกคำสั่งตรวจ**
-
 ระวัง:
-- ค่า master key จาก f5mku -K เป็นความลับ — ห้ามวางในแชต / ticket / log / เอกสาร ใครมีค่านี้ + ไฟล์ UCS จะถอดรหัสผ่านทั้งหมดในเครื่องได้
+- คำสั่งที่แสดงค่า master key เป็นความลับ ห้ามรันผ่าน NetPED+ และห้ามให้ AI รันหรือขอค่า ให้ผู้ดูแลทำเองที่ console ของเครื่อง
+- ค่า master key เป็นความลับ — ห้ามวางในแชต / ticket / log / เอกสาร ใครมีค่านี้ + ไฟล์ UCS จะถอดรหัสผ่านทั้งหมดในเครื่องได้
 
 วิธีแก้:
 1. ใช้ `tmsh load sys ucs <file>.ucs no-license` (ต้องมี flag no-license — ถ้าไม่มีจะเข้า unlicensed state และ restore ล้มเหลว)
@@ -64,17 +62,15 @@ show cm sync-status
 อ่านผล:
 - ดู sync status หลัง restore (ตรวจว่า connected หรือ disconnected)
 
-วิธีแก้ (ทำด้วยตนเอง):
-- (bash) `f5mku -K` — ตรวจสอบ master key ด้วยตนเอง **ห้ามใส่ในบล็อกคำสั่งตรวจ**
-
 ระวัง:
-- ค่า master key จาก f5mku -K เป็นความลับ — ห้ามวางในแชต / ticket / log / เอกสาร ใครมีค่านี้ + ไฟล์ UCS จะถอดรหัสผ่านทั้งหมดในเครื่องได้
+- คำสั่งที่แสดงค่า master key เป็นความลับ ห้ามรันผ่าน NetPED+ และห้ามให้ AI รันหรือขอค่า ให้ผู้ดูแลทำเองที่ console ของเครื่อง
+- ค่า master key เป็นความลับ — ห้ามวางในแชต / ticket / log / เอกสาร ใครมีค่านี้ + ไฟล์ UCS จะถอดรหัสผ่านทั้งหมดในเครื่องได้
 
 วิธีแก้:
 **ตาม UCS 13.1.0 Solution 2:**
-1. บนเครื่องเดิม: `f5mku -K` เพื่อดู master key
-2. บนเครื่องใหม่: `f5mku -r <key_value>` เพื่อใส่ key เดิม
-3. `f5mku -K` ตรวจว่า master key ตรงกัน
+1. บนเครื่องเดิม: ผู้ดูแลอ่านค่า master key เองที่ console (ห้ามผ่าน NetPED+ / AI / แชต)
+2. บนเครื่องใหม่: `f5mku -r <key_value>` เพื่อใส่ key เดิม (พิมพ์เองที่ console)
+3. ผู้ดูแลเทียบว่า master key ตรงกันเองที่ console
 4. `tmsh load sys ucs <file>.ucs no-license`
 5. `tmsh save sys config` บนเครื่องใหม่
 6. `tmsh load sys config` บนเครื่องใหม่
