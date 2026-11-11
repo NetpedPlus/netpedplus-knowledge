@@ -11,7 +11,7 @@ sources: https://my.f5.com/manage/s/article/K15292, https://clouddocs.f5.com/cli
 
 ## ตรวจ cipher ใน Client SSL profile และสาเหตุช่วงเจรจา
 
-คำค้น: f5 SSL handshake fail, f5 no shared ciphers, f5 cipher configuration, f5 client-ssl profile, f5 list ltm profile client-ssl
+คำค้น: f5 SSL handshake fail, f5 no shared ciphers, f5 cipher configuration, f5 client-ssl profile, f5 list ltm profile client-ssl, handshake ไม่ผ่าน, ssl ไม่ผ่าน, cipher ไม่ตรง, เปิด https ไม่ได้
 
 ที่มา: https://my.f5.com/manage/s/article/K15292 (Negotiation stage), https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_profile_client-ssl.html, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_log.html
 
@@ -37,7 +37,7 @@ show ltm profile client-ssl
 
 ## Log ของ SSL handshake failure
 
-คำค้น: f5 SSL handshake fail, f5 log, f5 01260026, f5 01260014, f5 01260009, f5 show sys log ltm
+คำค้น: f5 SSL handshake fail, f5 log, f5 01260026, f5 01260014, f5 01260009, f5 show sys log ltm, log handshake, ssl ดู log ที่ไหน
 
 ที่มา: https://my.f5.com/manage/s/article/K15292 (Reviewing log messages related to SSL handshake failures, Enabling SSL debug logging), https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_log.html
 

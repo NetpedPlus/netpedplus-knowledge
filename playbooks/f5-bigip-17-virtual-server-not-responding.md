@@ -11,7 +11,7 @@ sources: https://my.f5.com/manage/s/article/K93017176, https://my.f5.com/manage/
 
 ## ตรวจสถานะและการตั้งค่า virtual server
 
-คำค้น: f5 virtual server status, f5 show ltm virtual, f5 list ltm virtual, f5 State, f5 VLAN Disabled on, f5 Source Address, f5 Connection Rate Limit
+คำค้น: f5 virtual server status, f5 show ltm virtual, f5 list ltm virtual, f5 State, f5 VLAN Disabled on, f5 Source Address, f5 Connection Rate Limit, virtual server ไม่ตอบ, vs ไม่ตอบ, ไม่ตอบ, เข้าเว็บไม่ได้, เข้า vip ไม่ได้, vs ไม่ทำงาน
 
 ที่มา: https://my.f5.com/manage/s/article/K93017176 (General Properties, Configuration), https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_virtual.html
 
@@ -37,7 +37,7 @@ show ltm virtual
 
 ## การตอบสนองเมื่อ virtual server offline และชนิด Reject
 
-คำค้น: f5 virtual server offline, f5 virtual server unavailable, f5 service down immediate action, f5 reject virtual server, f5 show ltm virtual all-properties
+คำค้น: f5 virtual server offline, f5 virtual server unavailable, f5 service down immediate action, f5 reject virtual server, f5 show ltm virtual all-properties, vs offline, vs ล่ม, pool ล่มหมด, ตอบ reset, ถูก reset
 
 ที่มา: https://my.f5.com/manage/s/article/K93017176 (Configuration), https://my.f5.com/manage/s/article/K55185917, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/ltm/ltm_virtual.html
 
