@@ -36,3 +36,4 @@
 - 2026-11-10 PR #70 f5-bigip-ucs-restore-master-key — ลบ f5mku -K ออกจากวิธีแก้ (คำสั่งแสดง master key) แทนด้วยให้ผู้ดูแลทำเองที่ console ห้ามผ่าน NetPED+/AI
 - 2026-11-10 PR #71 f5-bigip-17-publish-app-behind-waf-cutover — เพิ่มคำค้น/triggers ASM และแยกหัวข้อหลักการออกแบบเป็น 3 หัวข้อ (SNAT/asymmetric, XFF + firewall SNAT, ทดสอบก่อน cutover) ให้ AI ใน NetPED+ เลือกหัวข้อตรงคำถาม
 - 2026-11-10 PR #72 GUIDE.md — เพิ่มวิธีเขียนคำค้น / ชื่อหัวข้อ / ตัวเลข-เมนู / ไม่พบที่มา / หัวข้อที่ไม่ใช่ประโยคผู้ผลิต ให้เข้ากับตัวค้นและตัวตรวจคำตอบใหม่ของ NetPED+ (Nut อนุมัติ)
+- 2026-11-11 PR #73 f5-bigip-17-cpu-memory — หัวข้อ 1 เปลี่ยนชื่อเป็น 'เกณฑ์ TMM CPU, Total CPU, TMM Memory และ Swap' + คำค้น (กี่เปอร์เซ็นต์, critical, เกณฑ์) ทดสอบบน Mac: AI ไม่ได้หัวข้อตารางเกณฑ์จึงตอบไม่ได้
