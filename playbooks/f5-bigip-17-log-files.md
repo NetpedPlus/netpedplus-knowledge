@@ -11,9 +11,9 @@ sources: https://my.f5.com/manage/s/article/K16197, https://my.f5.com/manage/s/a
 
 ---
 
-## ไฟล์ log ชนิดต่างๆ และการดูด้วย tmsh
+## ดู log ltm ย้อนหลังด้วย tmsh และไฟล์ log ชนิดต่างๆ
 
-คำค้น: f5 log files var log ltm, f5 show sys log ltm, f5 show log range, f5 log audit tmm
+คำค้น: f5 log files var log ltm, f5 show sys log ltm, f5 show log range, f5 log audit tmm, ย้อนหลัง, log ย้อนหลัง, ดู log, ดู log ltm, กี่วัน, ไฟล์ log, log อยู่ที่ไหน
 
 ที่มา: K16197 (https://my.f5.com/manage/s/article/K16197) Applies to BIG-IP LTM มี 17.5.1, 17.5.0, 17.5.X และ tmsh reference (latest) (https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_log.html)
 
@@ -46,7 +46,7 @@ show sys log ltm lines 10000
 
 ## ตรวจ remote syslog เมื่อ log ไม่ถึงเซิร์ฟเวอร์ปลายทาง
 
-คำค้น: f5 remote syslog ไม่ได้ log, f5 list sys syslog, f5 syslog-ng local-ip, f5 log ไม่ส่ง
+คำค้น: f5 remote syslog ไม่ได้ log, f5 list sys syslog, f5 syslog-ng local-ip, f5 log ไม่ส่ง, ส่ง log, ส่ง log ไม่ถึง, ไม่ถึง, syslog server, remote syslog, log ไม่เข้า siem
 
 ที่มา: K86480148 (https://my.f5.com/manage/s/article/K86480148), K000159713 (https://my.f5.com/manage/s/article/K000159713), K000162023 (https://my.f5.com/manage/s/article/K000162023) Applies to BIG-IP LTM ทั้ง 3 มี 17.5.1, 17.5.0, 17.5.X
 

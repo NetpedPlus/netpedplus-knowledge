@@ -55,7 +55,7 @@ show sys memory
 
 ## 2. ตรวจ TMM CPU usage
 
-คำค้น: f5 tmm cpu usage, f5 show sys tmm-info, f5 bigip tmm cpu statistics
+คำค้น: f5 tmm cpu usage, f5 show sys tmm-info, f5 bigip tmm cpu statistics, ดู cpu, cpu สูง, ดู tmm cpu, กราฟ cpu
 
 อาการ: ตรวจ TMM CPU usage แบบละเอียด
 
@@ -85,7 +85,7 @@ show sys tmm-info
 
 ## 3. ตรวจ Memory usage
 
-คำค้น: f5 show sys memory, f5 tmm memory usage, f5 bigip memory statistics, f5 bigip memory utilization
+คำค้น: f5 show sys memory, f5 tmm memory usage, f5 bigip memory statistics, f5 bigip memory utilization, tmm memory swap, swap ลงดิสก์, swap ได้ไหม, ลงดิสก์, หน่วยความจำ, memory เต็ม, memory สูง
 
 อาการ: ตรวจ TMM memory, Other memory, Swap usage
 
