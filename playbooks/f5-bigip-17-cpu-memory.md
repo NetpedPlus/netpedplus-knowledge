@@ -11,9 +11,9 @@ sources: https://my.f5.com/manage/s/article/K000152888, https://my.f5.com/manage
 
 ---
 
-## 1. ตรวจเกณฑ์ CPU และ Memory (threshold)
+## 1. เกณฑ์ TMM CPU, Total CPU, TMM Memory และ Swap (normal medium critical)
 
-คำค้น: f5 cpu memory threshold, f5 tmm memory utilization, f5 swap usage percentage, f5 bigip resource utilization normal medium critical
+คำค้น: f5 cpu memory threshold, f5 tmm memory utilization, f5 swap usage percentage, f5 bigip resource utilization normal medium critical, tmm cpu critical, cpu critical, cpu สูงแค่ไหน, กี่เปอร์เซ็นต์, เปอร์เซ็นต์, เกณฑ์ cpu, เกณฑ์ memory, เกณฑ์ swap, threshold
 
 อาการ: ตรวจทรัพยากร CPU และ Memory ว่าเกินเกณฑ์ Normal / Medium / Critical หรือไม่
 
