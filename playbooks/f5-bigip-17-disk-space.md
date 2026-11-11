@@ -13,7 +13,7 @@ sources: https://my.f5.com/manage/s/article/K14403, https://my.f5.com/manage/s/a
 
 ## ข้อความ diskmonitor และการตรวจ
 
-คำค้น: f5 diskmonitor, f5 011d0004, f5 disk partition has only free, f5 var เต็ม, f5 disk space
+คำค้น: f5 diskmonitor, f5 011d0004, f5 disk partition has only free, f5 var เต็ม, f5 disk space, ดิสก์เต็ม, พื้นที่ดิสก์, partition เต็ม
 
 ที่มา: K14403 (https://my.f5.com/manage/s/article/K14403), K8865 (https://my.f5.com/manage/s/article/K8865), K60799644 (https://my.f5.com/manage/s/article/K60799644) (Applies to BIG-IP LTM มี 17.5.1, 17.5.0, 17.5.X ทั้ง 3 บทความ)
 
@@ -46,7 +46,7 @@ show sys log ltm
 
 ## พื้นที่ว่างก่อนอัปเกรดและสาเหตุที่พบบ่อย
 
-คำค้น: f5 free disk space upgrade, f5 list sys disk all-properties, f5 vg-free, f5 old ucs old software images
+คำค้น: f5 free disk space upgrade, f5 list sys disk all-properties, f5 vg-free, f5 old ucs old software images, อัปเกรด, ก่อนอัปเกรด, พื้นที่ว่าง, ต้องมีพื้นที่ว่าง, พื้นที่ดิสก์, ดิสก์เต็ม, ucs เก่า
 
 ที่มา: K000148391 (https://my.f5.com/manage/s/article/K000148391), K000158919 (https://my.f5.com/manage/s/article/K000158919) (Applies to BIG-IP LTM มี 17.5.1, 17.5.0, 17.5.X ทั้ง 2 บทความ)
 
