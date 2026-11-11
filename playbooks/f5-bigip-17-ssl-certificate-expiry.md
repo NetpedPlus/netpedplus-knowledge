@@ -11,7 +11,7 @@ sources: https://my.f5.com/manage/s/article/K14318 (Monitoring SSL certificate e
 
 ## ตรวจวันหมดอายุของใบรับรอง SSL ใน GUI และ check-cert
 
-คำค้น: f5 certificate expiration, f5 ssl certificate list, f5 check-cert, f5 certificate expired
+คำค้น: f5 certificate expiration, f5 ssl certificate list, f5 check-cert, f5 certificate expired, ใบรับรองหมดอายุ, cert หมดอายุ, วันหมดอายุ, เช็ค cert
 
 ที่มา: https://my.f5.com/manage/s/article/K14318 (Monitoring the expiration of SSL certificates using the Configuration utility and Monitoring the expiration of SSL certificates using tmsh), https://my.f5.com/manage/s/article/K000161643, https://my.f5.com/manage/s/article/K000159955, https://my.f5.com/manage/s/article/K15462 (View properties of an SSL certificate), https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_crypto_check-cert.html
 
@@ -38,7 +38,7 @@ list sys crypto cert <cert name> — K15462, View properties of an SSL certifica
 
 ## ใบรับรองต่ออายุอัตโนมัติด้วย keymgmtd
 
-คำค้น: f5 certificate auto-renewal, f5 keymgmtd, f5 cert-order-manager, f5 certificate mismatch key
+คำค้น: f5 certificate auto-renewal, f5 keymgmtd, f5 cert-order-manager, f5 certificate mismatch key, ต่ออายุอัตโนมัติ, ต่ออายุ cert
 
 ที่มา: https://my.f5.com/manage/s/article/K000161643 (Overview of BIG-IP certificate renewal with keymgmtd)
 
@@ -57,7 +57,7 @@ show sys crypto cert-order-manager
 
 ## หลังต่ออายุแล้วยังขึ้นหมดอายุเป็นพัก ๆ (HA ไม่ sync)
 
-คำค้น: f5 certificate appears expired after renewal, f5 HA sync certificate, f5 changes pending, f5 show cm sync-status
+คำค้น: f5 certificate appears expired after renewal, f5 HA sync certificate, f5 changes pending, f5 show cm sync-status, ต่ออายุแล้วยังหมดอายุ, cert ไม่ sync
 
 ที่มา: https://my.f5.com/manage/s/article/K000159955 (SSL certificate intermittently appears expired after renewal on a BIG-IP virtual server)
 

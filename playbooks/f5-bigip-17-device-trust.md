@@ -13,7 +13,7 @@ sources: https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/cm/cm_trust-
 
 ## ตรวจ trust domain ของ Device Trust
 
-คำค้น: f5 device trust, f5 trust domain, f5 show running-config cm trust-domain, f5 device trust status
+คำค้น: f5 device trust, f5 trust domain, f5 show running-config cm trust-domain, f5 device trust status, device trust มีปัญหา, trust พัง, trust หลุด, device trust ไม่ขึ้น, ตรวจ trust, คู่ ha ไม่เห็นกัน
 
 ที่มา: tmsh reference v17.0.0 (https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/cm/cm_trust-domain.html)
 
