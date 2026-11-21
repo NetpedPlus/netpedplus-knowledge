@@ -2,7 +2,7 @@
 id: f5-bigip-17-disk-space
 title: F5 BIG-IP 17.x — ตรวจพื้นที่ดิสก์ (diskmonitor)
 families: f5_tmsh
-triggers: disk space, diskmonitor, 011d0004, 011d005, 011d004, พื้นที่ดิสก์เต็ม, var เต็ม, volume group
+triggers: diskmonitor, 011d0004, 011d005, 011d004, var เต็ม, volume group
 versions: BIG-IP 17.5.x
 sources: https://my.f5.com/manage/s/article/K14403, https://my.f5.com/manage/s/article/K8865, https://my.f5.com/manage/s/article/K60799644, https://my.f5.com/manage/s/article/K000148391, https://my.f5.com/manage/s/article/K000158919
 ---

@@ -2,7 +2,7 @@
 id: f5-bigip-17-device-trust
 title: F5 BIG-IP 17.x — ตรวจ Device Trust
 families: f5_tmsh
-triggers: device trust, trust domain, cm trust-domain, device trust ไม่ทำงาน, HA trust
+triggers: cm trust-domain, device trust ไม่ทำงาน, HA trust
 versions: BIG-IP 17.5.x
 sources: https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/cm/cm_trust-domain.html
 ---

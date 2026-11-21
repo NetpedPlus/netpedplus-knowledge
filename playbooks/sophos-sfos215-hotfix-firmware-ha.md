@@ -4,7 +4,7 @@ id: "sophos-sfos215-hotfix-firmware-ha"
 versions: SFOS 21.5
 vendor: Sophos
 families: sophos_sfos
-triggers: [sophos, sfos, xgs, hotfix, firmware, ha, upgrade, maintenance]
+triggers: [sophos, sfos, xgs]
 sources: ["https://docs.sophos.com/nsg/sophos-firewall/21.5/Help/en-us/webhelp/onlinehelp/HighAvailablityStartupGuide/HAManage/HAFirmwareUpgrade/index.html", "https://support.sophos.com/support/s/article/KBA-000010589", "https://docs.sophos.com/nsg/Sophos-firewall/21.5/Help/en-us/webhelp/onlinehelp/AdministratorHelp/BackupAndFirmware/Firmware/FirmwareFAQs/index.html", "https://docs.sophos.com/nsg/sophos-firewall/21.5/Help/en-us/webhelp/onlinehelp/HighAvailablityStartupGuide/HAConfiguration/HAQuickHAConfigureActivePassive/index.html"]
 ---
 

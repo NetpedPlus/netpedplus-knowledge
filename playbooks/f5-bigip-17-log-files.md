@@ -2,7 +2,7 @@
 id: f5-bigip-17-log-files
 title: F5 BIG-IP 17.x — ดู log และตรวจ remote syslog
 families: f5_tmsh
-triggers: f5 log, var log ltm, show sys log, remote syslog, syslog-ng, log filter, ไม่เห็น log, ส่ง log ไม่ไป
+triggers: f5 log, var log ltm, show sys log, syslog-ng
 versions: BIG-IP 17.5.x
 sources: https://my.f5.com/manage/s/article/K16197, https://my.f5.com/manage/s/article/K86480148, https://my.f5.com/manage/s/article/K000152709, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_log.html
 ---

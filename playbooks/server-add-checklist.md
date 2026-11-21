@@ -2,7 +2,7 @@
 id: server-add-checklist
 title: Checklist เพิ่ม server ใหม่ (ToR → FortiGate → F5)
 families:
-triggers: add server, เพิ่ม server, onboard server, new node, server provision, เพิ่ม node
+triggers: เพิ่ม server, onboard server, server provision, เพิ่ม node
 versions: FortiOS 7.4.x, BIG-IP 17.1 / 17.5, Huawei VRP V200R019 – V200R025, H3C Comware 7, Cisco IOS-XE 17.x
 sources: https://support.huawei.com/enterprise/en/doc/EDOC1100463967/4c4b03b5/creating-and-configuring-an-eth-trunk-interface, https://www.h3c.com/en/d_202511/2685240_294551_0.htm, https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst9300/software/release/17-7/configuration_guide/lyr2/b_177_lyr2_9300_cg/configuring_etherchannels.html, https://docs.fortinet.com/document/fortigate/7.4.2/cli-reference/227620/config-firewall-address, https://docs.fortinet.com/document/fortigate/7.4.4/cli-reference/333889629/config-firewall-policy, https://techdocs.f5.com/en-us/bigip-17-0-0/big-ip-local-traffic-manager-implementations/implementing-health-and-performance-monitoring.html, https://techdocs.f5.com/en-us/bigip-21-1-0/big-ip-local-traffic-management-basics/about-nodes.html, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-networking-8-0/configuring-lacp-on-a-vsphere-distrubuted-switch-in-the-vsphere-web-client.html
 ---

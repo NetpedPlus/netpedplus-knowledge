@@ -2,7 +2,7 @@
 id: huawei-s5731-access-hardening-port-security-storm-control
 title: Huawei S5731 — Port Security + Storm Control (access hardening)
 families: huawei_vrp_s
-triggers: s5731, port security, port-security, storm control, storm-control, broadcast storm, unknown multicast, unknown unicast, mac limit, mac-security, sticky mac, restrict action, mac flooding, access hardening, access port security
+triggers: s5731, port-security, storm-control, unknown multicast, unknown unicast, mac limit, mac-security, sticky mac, restrict action, mac flooding, access hardening, access port security
 vendor: Huawei
 versions: S5731-H, S5731-S, S5731S-H, S5731S-S (V200R0xx)
 sources: S Series Switches Security Hardening Guide V200 (EDOC1100038362 — Port Security); S300/S500/S2700/S5700/S6700 V200R024C00 Command Reference (EDOC1100410645 — storm-control)

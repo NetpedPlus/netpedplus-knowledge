@@ -2,7 +2,7 @@
 id: huawei-ac-radio-roaming
 title: Huawei Wireless AC — radio (RRM channel) และ roaming (802.11k/v/r/smart-roam)
 families: huawei_ac
-triggers: radio, channel, power, bandwidth, roaming, 802.11k, 802.11v, 802.11r, smart-roam, fast-roam, airengine, radio-profile, rrm-profile, vap-profile, ap-group
+triggers: 802.11k, 802.11v, 802.11r, smart-roam, fast-roam, airengine, radio-profile, rrm-profile, vap-profile, ap-group
 vendor: Huawei
 versions: WLAN AC V200R019C00, V200R021C00, V200R025C00 (AC6005, AC6508, AC6605, AC6805, AC6800V, AirEngine 9700)
 sources: WLAN AC V200R019C00 Command Reference — RRM, display rrm-profile, display station roam-track; Configuring Intra-AC Roaming — 802.11r Fast Roaming
