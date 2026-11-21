@@ -2,7 +2,7 @@
 id: f5-bigip-17-ssl-certificate-expiry
 title: F5 BIG-IP 17.x — ตรวจวันหมดอายุใบรับรอง SSL
 families: f5_tmsh
-triggers: certificate expired, ใบรับรองหมดอายุ, ssl certificate expiration, cert expiry, check-cert
+triggers: ssl certificate expiration, check-cert
 versions: BIG-IP 17.5.x
 sources: https://my.f5.com/manage/s/article/K14318 (Monitoring SSL certificate expiration on the BIG-IP system), https://my.f5.com/manage/s/article/K000161643 (Overview of BIG-IP certificate renewal with keymgmtd), https://my.f5.com/manage/s/article/K000159955 (SSL certificate intermittently appears expired after renewal), https://my.f5.com/manage/s/article/K15462 (Managing SSL certificates for BIG-IP systems using tmsh)
 ---

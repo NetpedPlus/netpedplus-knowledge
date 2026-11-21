@@ -20,6 +20,11 @@ SECRET = re.compile(r"(password|passwd|secret|community|pre-shared|psk)\s+(?!<)\
 NEGATE = re.compile(r"ไม่มีจริง|ไม่ใช่|ห้าม|ไม่เกี่ยว|≠|แทน|ผิด")
 
 
+# คำค้นทั่วไปที่ทุกยี่ห้อมี: NetPED+ ไม่ใช้คำเหล่านี้ใน triggers เลือกเล่ม และขึ้นเตือน "คำค้นกว้างเกินไป" (ต้องตรงกับ GENERIC_TRIGGERS / _VENDOR_SHORT ใน core/playbook.py ของโปรแกรม)
+GENERIC_TRIGGERS = {'upgrade', 'ส่ง log ไม่ไป', 'ใบรับรองหมดอายุ', 'add server', 'bandwidth', 'css', 'in-service software upgrade', 'cert expiry', 'certificate expired', 'snmp trap', 'mpu', 'power', 'พื้นที่ดิสก์เต็ม', 'trust domain', 'waf', 'maintenance', 'xff', 'ไม่เห็น log', 'log filter', 'cluster', 'cutover', 'broadcast storm', 'ha', 'issu', 'disk space', 'new node', 'channel', 'hotfix', 'radio', 'firmware', 'storm control', 'port security', 'roaming', 'switchover', 'remote syslog', 'anomaly detection', 'quarantine', 'device trust'}
+VENDOR_SHORT = {'ad', 'f5', 'hp', 'pa'}
+
+
 def load_bad() -> list:
     """tools/known_bad.tsv: ระดับ / families / regex / ที่ถูก — คำสั่งที่เคยแต่งขึ้นใน PR ก่อนๆ"""
     rules = []
@@ -51,6 +56,10 @@ def check(p: pathlib.Path, ids: dict) -> tuple[list, list]:
             err.append(f"หัวไฟล์ไม่มี {k}")
     if not head.get("triggers"):
         err.append("หัวไฟล์ไม่มี triggers (เคสที่พิมพ์ถามโดยไม่ผูกอุปกรณ์จะไม่ได้ playbook นี้)")
+    broad = [x.strip() for x in head.get("triggers", "").strip("[]").split(",")
+             if x.strip() and (x.strip().lower() in GENERIC_TRIGGERS or (len(x.strip()) <= 2 and x.strip().lower() not in VENDOR_SHORT))]
+    if broad:
+        warn.append(f"triggers กว้างเกินไป (ทุกยี่ห้อมี โปรแกรมไม่ใช้เลือกเล่มและขึ้นเตือน): {', '.join(broad)} — ใช้ชื่อยี่ห้อ / รุ่น / คำสั่ง / ข้อความ error เฉพาะแทน")
     pid = head.get("id", "")
     if pid in BUILTIN:
         err.append(f"id '{pid}' ซ้ำกับ playbook ที่มากับโปรแกรม")

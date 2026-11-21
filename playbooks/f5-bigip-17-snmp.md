@@ -2,7 +2,7 @@
 id: f5-bigip-17-snmp
 title: F5 BIG-IP 17.x — SNMP trap, snmpd และข้อความที่เกี่ยวข้อง
 families: f5_tmsh
-triggers: f5 snmp, snmp trap, snmpd, snmpd.log, daemon_heartbeat snmpd, sys-location, control character
+triggers: f5 snmp, snmpd, snmpd.log, daemon_heartbeat snmpd, sys-location, control character
 versions: BIG-IP 17.5.x
 sources: https://my.f5.com/manage/s/article/K11127, https://my.f5.com/manage/s/article/K12778420, https://my.f5.com/manage/s/article/K34432004, https://my.f5.com/manage/s/article/K000164072, https://clouddocs.f5.com/cli/tmsh-reference/latest/modules/sys/sys_snmp.html
 ---

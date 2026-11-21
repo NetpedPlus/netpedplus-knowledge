@@ -2,7 +2,7 @@
 id: fortigate-74-dos-reputation
 title: FortiGate 7.4 DoS Policy, IP Reputation, Geo-block
 families: fortinet_fortios
-triggers: fortigate dos policy, anomaly detection, tcp_syn_flood, udp_flood, icmp_flood, ip reputation, isdb, fortiguard, geo-block, country block, quarantine, dos-protect, ip reputation filter, geography address
+triggers: fortigate dos policy, tcp_syn_flood, udp_flood, icmp_flood, ip reputation, isdb, fortiguard, geo-block, country block, dos-protect, ip reputation filter, geography address
 versions: FortiOS 7.4.x
 sources: https://docs.fortinet.com/document/fortigate/7.4.1/cli-reference/305620/config-firewall-dos-policy, https://docs.fortinet.com/document/fortigate/7.4.4/cli-reference/333889629/config-firewall-policy, https://docs.fortinet.com/document/fortigate/7.4.2/cli-reference/227620/config-firewall-address, https://docs.fortinet.com/document/fortigate/7.4.3/administration-guide/771644/dos-policy, https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/68937/ip-reputation-filtering, https://docs.fortinet.com/document/fortigate/7.4.0/cli-reference/95620/config-system-fortiguard
 ---

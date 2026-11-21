@@ -2,7 +2,7 @@
 id: f5-bigip-17-publish-app-behind-waf-cutover
 title: F5 BIG-IP 17.x — เผยแพร่แอปหลัง F5 (SNAT, XFF, จำกัด IP) ก่อน cutover
 families: f5_tmsh
-triggers: f5 snat, snat automap, x-forwarded-for, xff, asymmetric routing, one-armed, class match, data group, iRule จำกัด IP, cutover, publish app, waf, firewall snat, asm, wildcard, file type, อัปโหลด
+triggers: f5 snat, snat automap, x-forwarded-for, asymmetric routing, one-armed, class match, data group, iRule จำกัด IP, publish app, firewall snat, asm, wildcard, file type, อัปโหลด
 versions: BIG-IP 17.5.x
 sources: https://my.f5.com/manage/s/article/K7820, https://my.f5.com/manage/s/article/K7336, https://my.f5.com/manage/s/article/K4816, https://my.f5.com/manage/s/article/K40243113, https://my.f5.com/manage/s/article/K20510467, https://my.f5.com/manage/s/article/K42075438
 ---

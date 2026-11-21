@@ -2,7 +2,7 @@
 id: huawei-s12700e-css-mpu
 title: Huawei S12700E — MPU switchover และ CSS Fast Upgrade / ISSU
 families: huawei_vrp_s
-triggers: s12700, s12700e, css, cluster, mpu, switchover, slave switchover, mpu failure, mpu fault, css fast upgrade, css issu, in-service software upgrade, issu, display switchover state, ha
+triggers: s12700, s12700e, slave switchover, mpu failure, mpu fault, css fast upgrade, css issu, display switchover state
 vendor: Huawei
 versions: S12700, S12700E (V200R021C00, V200R023C00, V200R024C00)
 sources: S12700/S12700E V200R023C00 Config Guide — Master/Standby Switchover, 1+N MPU Backup; V200R021C00/V200R024C10 Command Reference — CSS ISSU/Fast Upgrade commands
