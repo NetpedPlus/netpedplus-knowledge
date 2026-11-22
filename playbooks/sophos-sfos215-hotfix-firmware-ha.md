@@ -68,7 +68,7 @@ system diagnostic show version-info
 ## ช่องโหว่ kernel TCP CVE-2026-98432 กับ SFOS 21.5 (hotfix HF110626.1)
 
 คำค้น: cve-2026-98432, hf110626.1, kernel tcp, ช่องโหว่ kernel, hotfix kernel, sophos hotfix list, ไม่มี hotfix, อัปเกรด sfos 22
-อาการ: Sophos ประกาศ advisory sophos-sa-20261102-linux-kernel-tcp (ระดับ High) ต้องรู้ว่าเครื่อง SFOS 21.5 ได้ hotfix หรือไม่
+อาการ: advisory sophos-sa-20261102-linux-kernel-tcp (High) ต้องรู้ว่า SFOS 21.5 ได้ hotfix หรือไม่ (advisory ระบุ Workaround: No)
 คำสั่งตรวจ:
 ```
 system diagnostic show version-info
@@ -77,7 +77,6 @@ system diagnostic show version-info
 - ดูเวอร์ชัน SFOS ของเครื่อง advisory ระบุว่า hotfix ออกให้เฉพาะ "v23.0 GA, v23.0 EAP1 and v22.0 MR3" (6 พ.ย. 2026) และ "v22.0 GA, v22.0 MR1 and v22.0 MR2" (19 พ.ย. 2026)
 - ถ้าเป็น SFOS 21.5: advisory เขียนว่า "If your firewall is running a different version, we recommend upgrading to a supported version (v22.0 or v23.0) to receive the hotfix."
 - advisory: "Sophos is not aware of any public reports of this vulnerability being exploited in the wild at this time."
-- workaround ปิด MPTCP ในหน้า advisory ใช้กับระบบ Linux อื่น "does not apply to the Sophos products listed above"
 วิธีแก้:
 - อัปเกรดเป็น v22.0 หรือ v23.0 ตามหัวข้อ "ลำดับการอัปเกรดบนคู่ HA" แล้วตรวจ hotfix ที่ Device Console (เมนู 4) ด้วย `system hotfix list` ต้องเห็น HF110626.1 สถานะ Installed (ใน HA คำสั่งนี้ใช้ได้เฉพาะเครื่อง primary)
 - ถ้ายังไม่เปิดติดตั้ง hotfix อัตโนมัติ วางเองที่ Device Console: `system hotfix enable`
