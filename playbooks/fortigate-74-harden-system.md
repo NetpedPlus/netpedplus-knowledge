@@ -130,3 +130,21 @@ diagnose autoupdate versions
 วิธีแก้:
 - ไปที่ GUI: **Security Fabric > Security Rating** เพื่อดูคะแนนและคำแนะนำ
 - ตรวจสอบ PSIRT advisory ที่ [Fortinet Support](https://support.fortinet.com)
+
+## 7. PSIRT พฤศจิกายน 2026: FG-IR-26-270 kernel และ FG-IR-26-269 sshd (FortiOS 7.4.0 ถึง 7.4.12)
+
+คำค้น: fg-ir-26-270, fg-ir-26-269, cve-2026-126256, cve-2026-126255, psirt พฤศจิกายน, ช่องโหว่ fortigate, ต้องอัปเกรด, 7.4.13, gpc os login, virtual patch
+อาการ: FortiGuard ประกาศ 2 advisory (10 พ.ย. 2026) ระดับ High ที่กระทบ FortiOS 7.4 ต้องรู้ว่าเครื่องอยู่ในข่ายหรือไม่
+คำสั่งตรวจ:
+```
+get system status
+```
+อ่านผล:
+- ดูบรรทัด version ถ้าอยู่ในช่วง "7.4.0 through 7.4.12" = อยู่ในข่ายทั้ง 2 advisory ทางแก้ของทั้งคู่คือ "Upgrade to 7.4.13 or above"
+- FG-IR-26-270 "Out-of-bounds read in kernel" (CVE-2026-126256) ไม่ต้องยืนยันตัวตน มี virtual patch "FG-VD-62355.0day." ใน FMWP db update 26.100
+- FG-IR-26-269 sshd (CVE-2026-126255): "The product is impacted only if GPC OS Login is enabled."
+- ทั้ง 2 advisory ไม่มีหัวข้อ Workaround
+วิธีแก้:
+- วางแผนอัปเกรดเป็น 7.4.13 ขึ้นไป (7.4.13 เป็นรุ่นล่าสุดของสาย 7.4 ในหน้าเอกสาร Fortinet ณ 22 พ.ย. 2026)
+ระวัง: การอัปเกรด firmware ทำให้เครื่อง reboot ต้องทำในช่วง maintenance และวางแผนคู่ HA ตาม Upgrade Path ของ Fortinet
+ที่มา: FortiGuard PSIRT FG-IR-26-270 https://www.fortiguard.com/psirt/FG-IR-26-270 และ FG-IR-26-269 https://fortiguard.fortinet.com/psirt/FG-IR-26-269 และ FortiOS 7.4 document library https://docs.fortinet.com/product/fortigate/7.4

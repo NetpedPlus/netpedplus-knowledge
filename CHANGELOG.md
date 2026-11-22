@@ -39,3 +39,4 @@
 - 2026-11-11 PR #73 f5-bigip-17-cpu-memory — หัวข้อ 1 เปลี่ยนชื่อเป็น 'เกณฑ์ TMM CPU, Total CPU, TMM Memory และ Swap' + คำค้น (กี่เปอร์เซ็นต์, critical, เกณฑ์) ทดสอบบน Mac: AI ไม่ได้หัวข้อตารางเกณฑ์จึงตอบไม่ได้
 - 2026-11-11 PR #74 cpu-memory, disk-space, log-files — เพิ่มคำค้นภาษาไทย (swap ลงดิสก์, อัปเกรด/พื้นที่ว่าง, log ย้อนหลัง, ส่ง log ไม่ถึง) + ชื่อหัวข้อ log; ทดสอบบน Mac 4 ข้อได้หัวข้อผิดเพราะคำค้นมีแต่อังกฤษ
 - 2026-11-11 PR #75 device-trust, virtual-server-not-responding, ssl-certificate-expiry, ssl-handshake — เพิ่มคำค้นภาษาไทย (ถามในแชตแบบไม่เลือกอุปกรณ์ได้หัวข้อจาก repo เป็นอันดับ 1)
+- 2026-11-22 อัปเดตรายสัปดาห์ (pb/weekly-20261122) — Sophos CVE-2026-98432 hotfix HF110626.1 (21.5 ต้องอัปเกรด v22/v23), FortiGate PSIRT FG-IR-26-270/269 (7.4.0–7.4.12 อัปเกรด 7.4.13), แก้ versions ssl-inspection 7.4.14 → 7.4.13, แก้อ้างอิง playbook ที่ย้ายไป archive ใน advanced-waf-upgrade-precautions

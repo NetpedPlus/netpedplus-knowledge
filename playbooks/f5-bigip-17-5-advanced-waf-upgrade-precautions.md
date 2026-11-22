@@ -13,7 +13,8 @@ sources: https://techdocs.f5.com/en-us/bigip-17-5-1-11/big-ip-release-notes/big-
 อาการ: เมื่ออัปเกรด BIG-IP ที่มี Advanced WAF (ASM) provision อยู่ อาจเกิดปัญหาจาก cookie, provisioning state และ device group หากไม่ปฏิบัติตามขั้นตอนที่ F5 กำหนด
 
 อ้างอิง playbook อื่น:
-- `f5-bigip-17-security-upgrade-assessment-ha` -> ขั้นตอนอัปเกรด HA ทั่วไป, สำรอง UCS, rollback
+- `f5-bigip-17-ha-upgrade-procedure` -> ขั้นตอนอัปเกรด HA ทั่วไป
+- `f5-bigip-17-ucs-backup` -> สำรอง UCS
 - `f5-ops-advanced` -> HA setup, device trust, ConfigSync
 
 ---

@@ -4,7 +4,7 @@ title: FortiGate 7.4 SSL Deep Inspection Certificate Exemption
 families: fortinet_fortios
 triggers: fortigate, fortios, deep inspection, ssl inspection, ssl-ssh-profile, certificate-inspection, ssl exempt
 vendor: Fortinet
-versions: FortiOS 7.4.0 — 7.4.14
+versions: FortiOS 7.4.0 — 7.4.13
 sources: https://docs.fortinet.com/document/fortigate/7.4.2/administration-guide/929997/ssl-ssh-inspection
 ---
 # FortiGate 7.4 SSL Deep Inspection Certificate Exemption
