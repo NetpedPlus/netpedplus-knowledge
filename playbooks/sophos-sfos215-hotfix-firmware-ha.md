@@ -67,7 +67,7 @@ system diagnostic show version-info
 
 ## ช่องโหว่ kernel TCP CVE-2026-98432 กับ SFOS 21.5 (hotfix HF110626.1)
 
-คำค้น: cve-2026-98432, hf110626.1, kernel tcp, ช่องโหว่ kernel, hotfix kernel, sophos hotfix list, ไม่มี hotfix, อัปเกรด sfos 22
+คำค้น: cve-2026-98432, hf110626.1, kernel tcp, ช่องโหว่ kernel, hotfix list, อัปเกรด sfos 22
 อาการ: advisory sophos-sa-20261102-linux-kernel-tcp (High) ต้องรู้ว่า SFOS 21.5 ได้ hotfix หรือไม่ (advisory ระบุ Workaround: No)
 คำสั่งตรวจ:
 ```
@@ -80,6 +80,6 @@ system diagnostic show version-info
 วิธีแก้:
 - อัปเกรดเป็น v22.0 หรือ v23.0 ตามหัวข้อ "ลำดับการอัปเกรดบนคู่ HA" แล้วตรวจ hotfix ที่ Device Console (เมนู 4) ด้วย `system hotfix list` ต้องเห็น HF110626.1 สถานะ Installed (ใน HA คำสั่งนี้ใช้ได้เฉพาะเครื่อง primary)
 - ถ้ายังไม่เปิดติดตั้ง hotfix อัตโนมัติ วางเองที่ Device Console: `system hotfix enable`
-- hotfix ผูกกับเวอร์ชันที่ลง: อัปเกรดจาก 22.0 MR3 เป็น 23.0 GA แล้วต้องลง hotfix ใหม่
+- hotfix ผูกกับเวอร์ชันที่ลง อัปเกรดเวอร์ชันแล้วต้องลงใหม่
 ระวัง: ต้อง restart firewall เพื่อติดตั้ง hotfix ("interrupts traffic, so schedule it during a maintenance window") บนคู่ HA ให้ restart เครื่อง auxiliary ก่อน แล้วค่อย primary
 ที่มา: Sophos Advisory: Linux Kernel TCP Vulnerability (CVE-2026-98432) https://www.sophos.com/en-us/security-advisories/sophos-sa-20261102-linux-kernel-tcp และ Sophos Firewall: Hotfix for CVE-2026-98432 kernel vulnerability https://community.sophos.com/sophos-xg-firewall/b/blog/posts/sophos-firewall-hotfix-for-cve-2026-98432-kernel-vulnerability

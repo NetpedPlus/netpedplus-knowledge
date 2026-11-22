@@ -81,3 +81,21 @@ execute log device vdom list <Device Name>
 4. CLI: `execute log device vdom list <Device Name>` — ตรวจ VDOM ของ device
 5. CLI: `execute log device vdom add <Device Name> <ADOM> <VDOM>` — เพิ่ม VDOM เข้า ADOM
 ที่มา: FortiAnalyzer 7.4 Creating ADOMs https://docs.fortinet.com/document/fortianalyzer/7.4.2/administration-guide/667061/creating-adoms + CLI Reference https://docs.fortinet.com/document/fortianalyzer/7.4.0/cli-reference/425935/log#log5
+
+## PSIRT พฤศจิกายน 2026: FG-IR-26-251, FG-IR-26-236, FG-IR-26-229 (FortiAnalyzer 7.4.0 ถึง 7.4.11)
+คำค้น: fg-ir-26-251, fg-ir-26-236, fg-ir-26-229, cve-2026-126236, cve-2026-126184, psirt fortianalyzer, ช่องโหว่ fortianalyzer, faz 7.4.12, rpc-permit, json api, fortilogd
+อาการ: 3 advisory ระดับ High (10 พ.ย. 2026) กระทบ FortiAnalyzer 7.4
+คำสั่งตรวจ:
+```
+get system status
+```
+อ่านผล:
+- ดูบรรทัด Version ถ้าอยู่ในช่วง "7.4.0 through 7.4.11" = อยู่ในข่ายทั้ง 3 advisory ทางแก้ของทั้งหมดคือ "Upgrade to 7.4.12 or above"
+- FG-IR-26-251 "Improper neutralization of special elements used in an os command in GUI" (ต้องยืนยันตัวตน): "The vulnerability can be exploited via the JSON API if enabled (Disabled by default)"
+- FG-IR-26-236 "Improper limitation of a pathname to a restricted directory" (ต้องยืนยันตัวตน)
+- FG-IR-26-229 "Authentication bypass by spoofing" (ไม่ต้องยืนยันตัวตน): "fortilogd may allow an attacker to disrupt the HA state."
+วิธีแก้:
+- วางแผนอัปเกรดเป็น 7.4.12 ขึ้นไป
+- FG-IR-26-251 ถ้า admin profile เปิด JSON API ไว้ ลดความเสี่ยงได้ด้วยการวางเองใน CLI: `config system admin profile` / `edit <profile name>` / `set rpc-permit none` / `end`
+ระวัง: `set rpc-permit none` ตัดสิทธิ์ JSON API ของ profile นั้น ระบบที่เรียก API ของ FAZ ด้วย admin ใน profile นี้จะใช้ไม่ได้ การอัปเกรด firmware ทำให้เครื่อง reboot ต้องทำในช่วง maintenance
+ที่มา: FortiGuard PSIRT FG-IR-26-251 https://fortiguard.fortinet.com/psirt/FG-IR-26-251 และ FG-IR-26-236 https://fortiguard.fortinet.com/psirt/FG-IR-26-236 และ FG-IR-26-229 https://fortiguard.fortinet.com/psirt/FG-IR-26-229 และ FortiAnalyzer 7.4.0 CLI Reference system status https://docs.fortinet.com/document/fortianalyzer/7.4.0/cli-reference/714660/system-status
